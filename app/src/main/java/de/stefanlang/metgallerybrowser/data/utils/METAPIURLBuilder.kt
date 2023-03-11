@@ -1,21 +1,30 @@
 package de.stefanlang.metgallerybrowser.data.utils
 
 import android.net.Uri
-import java.net.URLEncoder
 
 object METAPIURLBuilder {
+    // region Properties
+
     private const val authority = "collectionapi.metmuseum.org";
     private const val version = "v1";
+
+    // endregion
+
+    // region Public API
 
     fun objectsSearchURL(query: String): String {
         val builder = prepareURLBuilder()
         builder.appendPath("search")
-        val queryEncoded = toHTMLEncodedString(query)
-        builder.appendQueryParameter("q", queryEncoded)
+        val queryWrapped = wrapSearchQuery(query)
+        builder.appendQueryParameter("q", queryWrapped)
 
         val retVal = builder.build().toString()
         return retVal
     }
+
+    // endregion
+
+    // region Private API
 
     private fun prepareURLBuilder(): Uri.Builder {
         val retVal = Uri.Builder()
@@ -29,9 +38,20 @@ object METAPIURLBuilder {
         return retVal
     }
 
-    private fun toHTMLEncodedString(string: String): String {
-        val retVal = URLEncoder.encode(string, "utf-8")
+    private fun wrapSearchQuery(query: String): String {
+        var retVal = query
+        val quotation = '\"'
+
+        if (!retVal.startsWith(quotation)) {
+            retVal = "$quotation$query"
+        }
+
+        if (!retVal.endsWith(quotation)) {
+            retVal = "$query$quotation"
+        }
+
         return retVal
     }
 
+    // endregion
 }

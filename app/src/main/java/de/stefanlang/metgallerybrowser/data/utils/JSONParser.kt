@@ -3,6 +3,7 @@ package de.stefanlang.metgallerybrowser.data.utils
 import com.fasterxml.jackson.databind.ObjectMapper
 
 object JSONParser {
+
     // region Properties
 
     val mapper: ObjectMapper by lazy {

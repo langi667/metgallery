@@ -6,4 +6,4 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 data class ObjectsSearchResult(
     var total: Int = 0,
     var objectIDs: List<Int>? = null
-) {}
+)

@@ -3,51 +3,68 @@ package de.stefanlang.metgallerybrowser.ui.objectssearch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import de.stefanlang.metgallerybrowser.data.models.ObjectsSearch
-import de.stefanlang.metgallerybrowser.data.models.ObjectsSearchResult
-import de.stefanlang.metgallerybrowser.data.utils.JSONParser
-import de.stefanlang.metgallerybrowser.data.utils.METAPIURLBuilder
-import de.stefanlang.network.NetworkAPI
+import de.stefanlang.metgallerybrowser.data.repositories.ObjectsSearchRepository
 import kotlinx.coroutines.flow.*
 
 class ObjectsSearchViewModel : ViewModel() {
 
-    private val _searchText = MutableStateFlow("")
-    val searchText: StateFlow<String> = _searchText.asStateFlow()
+    // region Types
 
-    private val _isSearching = MutableStateFlow(false)
-    val isSearching = _isSearching.asStateFlow()
+    sealed class State {
 
-    private val _search = MutableStateFlow(ObjectsSearch())
+        object Idle : State()
 
-    val search = searchText
+        object Loading : State()
+
+        class FinishedWithSuccess(val objectsSearch: ObjectsSearch) : State() {
+            val hasSearchResults: Boolean
+                get() {
+                    val retVal = objectsSearch.result?.objectIDs?.isEmpty() ?: false
+                    return retVal
+                }
+        }
+
+        class FinishedWithError(error: Throwable) : State()
+    }
+
+    // endregion
+
+    // region Properties
+
+    private val _searchQuery = MutableStateFlow("")
+    val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
+
+    private val _state = MutableStateFlow<State>(State.Idle)
+    val state = searchQuery
         .debounce(1000)
         .distinctUntilChanged()
         .map { query ->
             if (query.isEmpty()) {
-                return@map ObjectsSearch()
+                return@map _state.value
             }
 
-            val url = METAPIURLBuilder.objectsSearchURL(query);
-            val result = NetworkAPI.get(url)
-
-            val response = result.getOrElse { error ->
-                throw error
+            val result = ObjectsSearchRepository.search(searchQuery.value)
+            val objectsSearchResult = result.getOrElse { error ->
+                return@map State.FinishedWithError(error)
             }
 
-            val searchResult = JSONParser.mapObjectFrom<ObjectsSearchResult>(response.data)
-            val retVal = ObjectsSearch(query, searchResult)
-
+            val retVal = State.FinishedWithSuccess(objectsSearchResult)
             return@map retVal
 
         }.stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            _search.value
+            _state.value
         )
 
+    // endregion
+
+    // region Public API
+
     fun onSearchQueryChanged(query: String) {
-        _searchText.value = query
+        _searchQuery.value = query
     }
-    // TODO: rename to _searchQuery
+
+    // endregion
 
 }
