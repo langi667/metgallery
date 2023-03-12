@@ -1,5 +1,6 @@
 package de.stefanlang.metgallerybrowser.ui.objectssearch
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,11 +25,36 @@ import de.stefanlang.metgallerybrowser.ui.navigation.NavUtil
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
 // region Public API
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ObjectsSearchView(
     navController: NavController,
     viewModel: ObjectsSearchViewModel = viewModel()
 ) {
+    Scaffold(topBar = {
+        TopBar()
+    }) {
+        ContentView(navController, viewModel)
+    }
+}
+
+// endregion
+
+// region Private API
+
+@Composable
+private fun TopBar() {
+    TopAppBar(
+        title = { Text(text = stringResource(id = R.string.app_name)) }
+    )
+}
+
+@Composable
+private fun ContentView(
+    navController: NavController,
+    viewModel: ObjectsSearchViewModel
+) {
+
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
     val hideKeyboard = state.value is ObjectsSearchViewModel.State.Loading
@@ -56,16 +82,12 @@ fun ObjectsSearchView(
                 .fillMaxWidth()
                 .weight(1.0f)
         ) {
-            ViewForState(viewModel, state.value) {objectID ->
+            ViewForState(viewModel, state.value) { objectID ->
                 NavUtil.navigateToObjectDetail(navController, objectID)
             }
         }
     }
 }
-
-// endregion
-
-// region Private API
 
 @Composable
 private fun ViewForState(
