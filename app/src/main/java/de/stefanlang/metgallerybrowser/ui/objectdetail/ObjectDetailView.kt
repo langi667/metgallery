@@ -10,7 +10,9 @@ import androidx.navigation.NavController
 
 @Composable
 fun ObjectDetailView(navController: NavController, objectID: Int) {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Red))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Red)
+    )
 }

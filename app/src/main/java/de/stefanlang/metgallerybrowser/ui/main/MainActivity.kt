@@ -37,10 +37,11 @@ class MainActivity : ComponentActivity() {
                         composable("objectsSearchView") {
                             ObjectsSearchView(navController)
                         }
-                        composable(route = "objectDetailView/{objectID}", arguments = listOf(
-                            navArgument("objectID") {
-                                type = NavType.IntType
-                            })
+                        composable(
+                            route = "objectDetailView/{objectID}", arguments = listOf(
+                                navArgument("objectID") {
+                                    type = NavType.IntType
+                                })
                         ) {
                             val objectID = it.arguments?.getInt("objectID") ?: 0 // TODO: invalid id
                             ObjectDetailView(navController, objectID)

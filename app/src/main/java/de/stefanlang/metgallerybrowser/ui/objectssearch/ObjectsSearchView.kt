@@ -1,5 +1,6 @@
 package de.stefanlang.metgallerybrowser.ui.objectssearch
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -55,7 +56,9 @@ fun ObjectsSearchView(
                 .fillMaxWidth()
                 .weight(1.0f)
         ) {
-            ViewForState(viewModel, state.value)
+            ViewForState(viewModel, state.value) {objectID ->
+                navController.navigate("objectDetailView/$objectID")
+            }
         }
     }
 }
@@ -67,7 +70,8 @@ fun ObjectsSearchView(
 @Composable
 private fun ViewForState(
     viewModel: ObjectsSearchViewModel,
-    state: ObjectsSearchViewModel.State
+    state: ObjectsSearchViewModel.State,
+    onItemClick: (objectID: Int) -> Unit
 ) {
     when (state) {
         is ObjectsSearchViewModel.State.Idle -> {
@@ -80,7 +84,7 @@ private fun ViewForState(
 
         is ObjectsSearchViewModel.State.FinishedWithSuccess -> {
             if (state.hasSearchResults) {
-                ObjectsSearchResultList(viewModel, state.objectsSearch)
+                ObjectsSearchResultList(state.objectsSearch, onItemClick)
             } else {
                 NoSearchResultsHint()
             }
@@ -106,28 +110,35 @@ private fun LoadingStateView() {
 
 @Composable
 private fun ObjectsSearchResultList(
-    viewModel: ObjectsSearchViewModel,
-    objectsSearchResult: ObjectsSearch
+    objectsSearchResult: ObjectsSearch,
+    onItemSelected: (item: Int) -> Unit
 ) {
-    val query = objectsSearchResult.query
-
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
     ) {
         val objectIDs = objectsSearchResult.result?.objectIDs ?: emptyList()
         items(objectIDs) { currObjectID ->
-            ObjectsSearchItemView(currObjectID)
+            ObjectsSearchItemView(
+                objectID = currObjectID,
+                onItemSelected = onItemSelected
+            )
         }
     }
 }
 
 @Composable
-private fun ObjectsSearchItemView(objectID: Int, showSeparator: Boolean = true) {
+private fun ObjectsSearchItemView(
+    objectID: Int,
+    onItemSelected: (item: Int) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .clickable {
+                onItemSelected(objectID)
+            }
     ) {
         Text(
             text = "$objectID", modifier = Modifier
