@@ -8,6 +8,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import de.stefanlang.metgallerybrowser.R
@@ -24,6 +26,12 @@ import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 fun ObjectsSearchView(viewModel: ObjectsSearchViewModel) {
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
+
+    val hideKeyboard = state.value is ObjectsSearchViewModel.State.Loading
+
+    if (hideKeyboard) {
+        LocalFocusManager.current.clearFocus()
+    }
 
     Column(Modifier.fillMaxSize()) {
         TextField(
@@ -87,7 +95,7 @@ private fun LoadingStateView() {
         LinearProgressIndicator(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimen.s))
+                .padding(horizontal = Dimen.m))
         LoadingStateHint()
     }
 }
