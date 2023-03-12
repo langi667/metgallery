@@ -1,6 +1,9 @@
 package de.stefanlang.metgallerybrowser.ui.objectssearch
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,8 +11,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -54,13 +59,12 @@ private fun ContentView(
     navController: NavController,
     viewModel: ObjectsSearchViewModel
 ) {
-
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
-    val hideKeyboard = state.value is ObjectsSearchViewModel.State.Loading
+    val hideKeyboard = state.value is ObjectsSearchViewModel.State.FinishedWithSuccess
 
     if (hideKeyboard) {
-        LocalFocusManager.current.clearFocus()
+       // LocalFocusManager.current.clearFocus()
     }
 
     Column(Modifier.fillMaxSize()) {
@@ -95,6 +99,7 @@ private fun ViewForState(
     state: ObjectsSearchViewModel.State,
     onItemClick: (objectID: Int) -> Unit
 ) {
+
     when (state) {
         is ObjectsSearchViewModel.State.Idle -> {
             IdleStateHint()
@@ -120,11 +125,13 @@ private fun ViewForState(
 
 @Composable
 private fun LoadingStateView() {
+
     Box(contentAlignment = Alignment.TopCenter) {
         LinearProgressIndicator(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = Dimen.m)
+
         )
         LoadingStateHint()
     }

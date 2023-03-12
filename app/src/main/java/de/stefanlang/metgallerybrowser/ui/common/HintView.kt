@@ -24,11 +24,6 @@ fun HintView(image: Painter, text: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Image(
-            painter = image,
-            contentDescription = null
-        )
-
         Text(
             text = text,
             style = MaterialTheme.typography.h6,
@@ -36,6 +31,11 @@ fun HintView(image: Painter, text: String) {
                 .padding(Dimen.s)
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
+        )
+
+        Image(
+            painter = image,
+            contentDescription = null
         )
     }
 }
