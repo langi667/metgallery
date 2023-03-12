@@ -7,7 +7,7 @@ import de.stefanlang.metgallerybrowser.data.utils.METAPIURLBuilder
 import de.stefanlang.network.NetworkAPI
 
 // TODO: Singleton
-object ObjectsSearchRepository {
+class ObjectsSearchRepository {
 
     // region Public API
 

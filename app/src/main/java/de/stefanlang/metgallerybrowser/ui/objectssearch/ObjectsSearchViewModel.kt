@@ -14,7 +14,7 @@ class ObjectsSearchViewModel : ViewModel() {
 
         object Idle : State()
 
-        object Loading : State()
+        class Loading(val query: String) : State()
 
         class FinishedWithSuccess(val objectsSearch: ObjectsSearch) : State() {
             val hasSearchResults: Boolean
@@ -23,9 +23,12 @@ class ObjectsSearchViewModel : ViewModel() {
                     val retVal = !isEmpty
                     return retVal
                 }
+
+            val query: String
+                get() = objectsSearch.query
         }
 
-        class FinishedWithError(error: Throwable) : State()
+        class FinishedWithError(val error: Throwable, val query: String) : State()
     }
 
     // endregion
@@ -36,28 +39,52 @@ class ObjectsSearchViewModel : ViewModel() {
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     private val _state = MutableStateFlow<State>(State.Idle)
+    private val _isSearching = MutableStateFlow(false)
+
     val state = searchQuery
         .debounce(1000)
         .distinctUntilChanged()
-        .map { query ->
+        .combine(_isSearching) { query, isSearching ->
             if (query.isEmpty()) {
-                return@map State.Idle
+                return@combine State.Idle
             }
 
-            val result = ObjectsSearchRepository.search(searchQuery.value)
-            val objectsSearchResult = result.getOrElse { error ->
-                return@map State.FinishedWithError(error)
+            if (!isSearching && shouldStartSearching(query)) {
+                _isSearching.value = true
+                return@combine State.Loading(query)
             }
 
-            val retVal = State.FinishedWithSuccess(objectsSearchResult)
-            return@map retVal
+            if (!isSearching) {
+                return@combine _prevState
+            }
 
-        }.stateIn(
+            val result = repository.search(searchQuery.value)
+            val retVal: State
+            val value = result.getOrNull()
+
+            retVal = if (value != null) {
+                State.FinishedWithSuccess(value)
+            } else {
+                State.FinishedWithError(result.exceptionOrNull()!!, query)
+            }
+
+            _prevState = retVal
+            return@combine retVal
+
+        }
+        .onEach { newState ->
+            _isSearching.update {
+                newState is State.Loading
+            }
+        }
+        .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             _state.value
         )
 
+    private var _prevState = _state.value
+    private val repository = ObjectsSearchRepository()
     // endregion
 
     // region Public API
@@ -68,4 +95,23 @@ class ObjectsSearchViewModel : ViewModel() {
 
     // endregion
 
+    private fun shouldStartSearching(query: String): Boolean {
+        val stateValue = state.value
+        val retVal = when (stateValue) {
+            is State.FinishedWithSuccess -> {
+                stateValue.query != query
+            }
+
+            is State.FinishedWithError -> {
+                stateValue.query != query
+            }
+
+            is State.Idle -> {
+                true
+            }
+            else -> false
+        }
+
+        return retVal
+    }
 }
