@@ -9,9 +9,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.ObjectsSearch
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
@@ -21,9 +22,11 @@ import de.stefanlang.metgallerybrowser.ui.common.NoSearchResultsHint
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
 // region Public API
-
 @Composable
-fun ObjectsSearchView(viewModel: ObjectsSearchViewModel) {
+fun ObjectsSearchView(
+    navController: NavController,
+    viewModel: ObjectsSearchViewModel = viewModel()
+) {
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
 
@@ -95,7 +98,8 @@ private fun LoadingStateView() {
         LinearProgressIndicator(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = Dimen.m))
+                .padding(horizontal = Dimen.m)
+        )
         LoadingStateHint()
     }
 }
