@@ -19,7 +19,8 @@ class ObjectsSearchViewModel : ViewModel() {
         class FinishedWithSuccess(val objectsSearch: ObjectsSearch) : State() {
             val hasSearchResults: Boolean
                 get() {
-                    val retVal = objectsSearch.result?.objectIDs?.isEmpty() ?: false
+                    val isEmpty = objectsSearch.result?.objectIDs?.isEmpty() ?: true
+                    val retVal = !isEmpty
                     return retVal
                 }
         }
@@ -40,7 +41,7 @@ class ObjectsSearchViewModel : ViewModel() {
         .distinctUntilChanged()
         .map { query ->
             if (query.isEmpty()) {
-                return@map _state.value
+                return@map State.Idle
             }
 
             val result = ObjectsSearchRepository.search(searchQuery.value)

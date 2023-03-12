@@ -3,6 +3,7 @@ package de.stefanlang.metgallerybrowser.data.utils
 import android.net.Uri
 
 object METAPIURLBuilder {
+
     // region Properties
 
     private const val authority = "collectionapi.metmuseum.org";

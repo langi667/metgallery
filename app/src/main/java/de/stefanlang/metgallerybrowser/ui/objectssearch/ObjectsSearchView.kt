@@ -14,45 +14,21 @@ import androidx.compose.ui.unit.dp
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.ObjectsSearch
 import androidx.compose.foundation.lazy.items
+import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
+import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
+import de.stefanlang.metgallerybrowser.ui.common.NoSearchResultsHint
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
+
+// region Public API
 
 @Composable
 fun ObjectsSearchView(viewModel: ObjectsSearchViewModel) {
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
 
-    when (val stateValue = state.value) {
-        is ObjectsSearchViewModel.State.Idle -> {
-            // TODO:
-        }
-
-        is ObjectsSearchViewModel.State.Loading -> {
-            // TODO:
-        }
-
-        is ObjectsSearchViewModel.State.FinishedWithSuccess -> {
-            if (stateValue.hasSearchResults) {
-                ObjectsSearchResultList(viewModel, stateValue.objectsSearch)
-            }
-            else {
-                // TODO:
-            }
-        }
-
-        is ObjectsSearchViewModel.State.FinishedWithError -> {
-            // TODO:
-        }
-    }
-}
-
-@Composable
-private fun ObjectsSearchResultList(viewModel:ObjectsSearchViewModel,
-                                    objectsSearchResult: ObjectsSearch){
-    val query = objectsSearchResult.query
-
     Column(Modifier.fillMaxSize()) {
         TextField(
-            value = query,
+            value = searchText.value,
             onValueChange = viewModel::onSearchQueryChanged,
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,15 +40,56 @@ private fun ObjectsSearchResultList(viewModel:ObjectsSearchViewModel,
 
         Spacer(modifier = Modifier.height(Dimen.s))
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-        ) {
-            val objectIDs = objectsSearchResult.result?.objectIDs ?: emptyList()
-            items(objectIDs) {currObjectID ->
-                ObjectsSearchItemView(currObjectID)
+        Box(modifier = Modifier
+            .fillMaxWidth()
+            .weight(1.0f)) {
+            ViewForState(viewModel, state.value)
+        }
+    }
+}
+
+// endregion
+
+// region Private API
+
+@Composable
+private fun ViewForState(viewModel:ObjectsSearchViewModel,
+                         state: ObjectsSearchViewModel.State) {
+    when (state) {
+        is ObjectsSearchViewModel.State.Idle -> {
+            IdleStateHint()
+        }
+
+        is ObjectsSearchViewModel.State.Loading -> {
+            // TODO: loading
+        }
+
+        is ObjectsSearchViewModel.State.FinishedWithSuccess -> {
+            if (state.hasSearchResults) {
+                ObjectsSearchResultList(viewModel, state.objectsSearch)
             }
+            else {
+                NoSearchResultsHint()
+            }
+        }
+
+        is ObjectsSearchViewModel.State.FinishedWithError -> {
+            ErrorStateHint()
+        }
+    }
+}
+@Composable
+private fun ObjectsSearchResultList(viewModel:ObjectsSearchViewModel,
+                                    objectsSearchResult: ObjectsSearch){
+    val query = objectsSearchResult.query
+
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        val objectIDs = objectsSearchResult.result?.objectIDs ?: emptyList()
+        items(objectIDs) {currObjectID ->
+            ObjectsSearchItemView(currObjectID)
         }
     }
 }
@@ -91,3 +108,5 @@ private fun ObjectsSearchItemView(objectID: Int, showSeparator: Boolean = true) 
         Divider(thickness = 1.dp, color = MaterialTheme.colors.secondary)
     }
 }
+
+// endregion
