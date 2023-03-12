@@ -20,6 +20,7 @@ import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
 import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
 import de.stefanlang.metgallerybrowser.ui.common.NoSearchResultsHint
+import de.stefanlang.metgallerybrowser.ui.navigation.NavUtil
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
 // region Public API
@@ -30,7 +31,6 @@ fun ObjectsSearchView(
 ) {
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
-
     val hideKeyboard = state.value is ObjectsSearchViewModel.State.Loading
 
     if (hideKeyboard) {
@@ -57,7 +57,7 @@ fun ObjectsSearchView(
                 .weight(1.0f)
         ) {
             ViewForState(viewModel, state.value) {objectID ->
-                navController.navigate("objectDetailView/$objectID")
+                NavUtil.navigateToObjectDetail(navController, objectID)
             }
         }
     }

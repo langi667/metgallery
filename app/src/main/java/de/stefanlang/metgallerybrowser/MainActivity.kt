@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.ui.main
+package de.stefanlang.metgallerybrowser
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import de.stefanlang.metgallerybrowser.ui.navigation.NavRoute
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
 import de.stefanlang.metgallerybrowser.ui.objectssearch.ObjectsSearchView
 import de.stefanlang.metgallerybrowser.ui.theme.METGalleryBrowserTheme
@@ -32,13 +33,13 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "objectsSearchView"
+                        startDestination = NavRoute.ObjectsSearch.route
                     ) {
-                        composable("objectsSearchView") {
+                        composable(NavRoute.ObjectsSearch.route) {
                             ObjectsSearchView(navController)
                         }
                         composable(
-                            route = "objectDetailView/{objectID}", arguments = listOf(
+                            route = NavRoute.ObjectDetail.route, arguments = listOf(
                                 navArgument("objectID") {
                                     type = NavType.IntType
                                 })
