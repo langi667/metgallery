@@ -44,11 +44,11 @@ object METAPIURLBuilder {
         val quotation = '\"'
 
         if (!retVal.startsWith(quotation)) {
-            retVal = "$quotation$query"
+            retVal = "$quotation$retVal"
         }
 
         if (!retVal.endsWith(quotation)) {
-            retVal = "$query$quotation"
+            retVal = "$retVal$quotation"
         }
 
         return retVal

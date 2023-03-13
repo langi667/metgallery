@@ -44,20 +44,15 @@ class ObjectsSearchRepository {
         _isSearching.update { false }
     }
     suspend fun search(query: String) {
-        cancel()
-        val scope = CoroutineScope(coroutineContext)
+        this.query = query
+        //_isSearching.update { true }
 
-        currJob = scope.launch(Dispatchers.IO) {
-            this@ObjectsSearchRepository.query = query
-            _isSearching.update { true }
+        val url = METAPIURLBuilder.objectsSearchURL(query);
+        val result = NetworkAPI.get(url)
+        val newResult = resultForResponse(result)
 
-            val url = METAPIURLBuilder.objectsSearchURL(query);
-            val result = NetworkAPI.get(url)
-            val newResult = resultForResponse(result)
-
-            this@ObjectsSearchRepository.result = newResult
-            _isSearching.update { false }
-        }
+        this.result = newResult
+       // _isSearching.update { false }
     }
 
     // endregion

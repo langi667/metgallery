@@ -7,7 +7,9 @@ import de.stefanlang.metgallerybrowser.data.models.ObjectsSearchResult
 import de.stefanlang.metgallerybrowser.data.repositories.ObjectsSearchRepository
 import de.stefanlang.metgallerybrowser.data.utils.JSONParser
 import de.stefanlang.network.NetworkError
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.runBlocking
 
 class ObjectsSearchViewModel : ViewModel() {
 
@@ -16,8 +18,6 @@ class ObjectsSearchViewModel : ViewModel() {
     sealed class State {
 
         object Idle : State()
-
-        class Loading(val query: String) : State()
 
         class FinishedWithSuccess(val objectsSearch: ObjectsSearch) : State() {
             val hasSearchResults: Boolean
@@ -41,50 +41,36 @@ class ObjectsSearchViewModel : ViewModel() {
     private val _searchQuery = MutableStateFlow("")
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
+    private val _isSearching = MutableStateFlow(false)
+    val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
+
     private val _state = MutableStateFlow<State>(State.Idle)
     private val repository = ObjectsSearchRepository()
 
     val state = searchQuery
         .debounce(1000)
+        .onEach { _isSearching.update { true } }
         .distinctUntilChanged()
-        .combine(repository.isSearching) { query, isSearching ->
+        .map{ query ->
+            repository.cancel()
+
             if (query.isEmpty()) {
-                repository.cancel()
-                return@combine State.Idle
+                return@map State.Idle
             }
 
-            // query has changed and the repository is not busy, starting to search
-            if (!isSearching && repository.query != query){
-                repository.search(query)
-                return@combine State.Loading(query)
+            repository.search(query)
+            var retVal: State = State.Idle
+            repository.result?.getOrNull()?.let { objectSearch ->
+                retVal = State.FinishedWithSuccess(objectSearch)
             }
 
-            // current search is going on
-            if (isSearching && query == repository.query) {
-                return@combine State.Loading(query)
+            repository.result?.exceptionOrNull()?.let {error ->
+                retVal = State.FinishedWithError(error, query)
             }
 
-            // current search is going on, but the query changed in between
-            if (isSearching && query != repository.query) {
-                repository.search(query)
-                return@combine State.Loading(query)
-            }
-
-            // done searching, computing result
-            if (!isSearching && repository.query == query && repository.result != null){
-                repository.result?.getOrNull()?.let { objectSearch ->
-                    return@combine State.FinishedWithSuccess(objectSearch)
-                }
-
-                repository.result?.exceptionOrNull()?.let {error ->
-                    return@combine State.FinishedWithError(error, query)
-                }
-
-                return@combine State.FinishedWithError(NetworkError.InvalidState, query)
-            }
-
-            return@combine State.Idle
+            return@map retVal
         }
+        .onEach { _isSearching.update { false } }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),

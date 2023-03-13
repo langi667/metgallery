@@ -61,11 +61,7 @@ private fun ContentView(
 ) {
     val searchText = viewModel.searchQuery.collectAsState()
     val state = viewModel.state.collectAsState()
-    val hideKeyboard = state.value is ObjectsSearchViewModel.State.FinishedWithSuccess
-
-    if (hideKeyboard) {
-       // LocalFocusManager.current.clearFocus()
-    }
+    val isSearching = viewModel.isSearching.collectAsState()
 
     Column(Modifier.fillMaxSize()) {
         TextField(
@@ -86,6 +82,13 @@ private fun ContentView(
                 .fillMaxWidth()
                 .weight(1.0f)
         ) {
+            if (isSearching.value){
+                LinearProgressIndicator(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Dimen.m) )
+            }
+
             ViewForState(viewModel, state.value) { objectID ->
                 NavUtil.navigateToObjectDetail(navController, objectID)
             }
@@ -105,9 +108,6 @@ private fun ViewForState(
             IdleStateHint()
         }
 
-        is ObjectsSearchViewModel.State.Loading -> {
-            LoadingStateView()
-        }
 
         is ObjectsSearchViewModel.State.FinishedWithSuccess -> {
             if (state.hasSearchResults) {
@@ -125,16 +125,7 @@ private fun ViewForState(
 
 @Composable
 private fun LoadingStateView() {
-
-    Box(contentAlignment = Alignment.TopCenter) {
-        LinearProgressIndicator(
-            Modifier
-                .fillMaxWidth()
-                .padding(horizontal = Dimen.m)
-
-        )
-        LoadingStateHint()
-    }
+    LoadingStateHint()
 }
 
 @Composable
