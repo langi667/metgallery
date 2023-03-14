@@ -1,16 +1,21 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import de.stefanlang.metgallerybrowser.data.models.ImageData
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
 import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -64,7 +69,7 @@ class ObjectDetailViewModel : ViewModel() {
     private val repository = METObjectsRepository()
     private val imageRepository = ImageRepository() // TODO: check if maybe object makes sense
 
-    private val metObject: METObjectUIRepresentable?
+    private val metObjectUIRepresentable: METObjectUIRepresentable?
         get(){
             (state.value as? State.LoadedWithSuccess)?.let { state ->
                 return state.metObjectUIRepresentable
@@ -77,13 +82,6 @@ class ObjectDetailViewModel : ViewModel() {
             launch {
                 state.collect { _ ->
                     handleStateChanged()
-                }
-            }
-
-            // TODO: cancel !
-            launch {
-                imageRepository.latest.collect { imageData ->
-                    images.add(imageData)
                 }
             }
         }
@@ -116,10 +114,23 @@ class ObjectDetailViewModel : ViewModel() {
     }
 
     private suspend fun loadImages() {
-        metObject?.metObject?.imageData?.forEach {
-            imageRepository.fetch(it.imageURL)
+        val imageData = metObjectUIRepresentable?.metObject?.imageData ?: return
+
+        imageData.forEach {currImageData ->
+            viewModelScope.launch {
+                val url = currImageData.smallImageURL ?: currImageData.imageURL
+                val imageResult = imageRepository.fetchImage(url)
+
+                handleImageLoaded(url, imageResult)
+            }
         }
     }
+
+    private fun handleImageLoaded(url: String, imageResult: Result<Bitmap>) =
+        MainScope().launch(Dispatchers.Main) {
+            val imageEntry = ImageRepositoryEntry(url, imageResult) // TODO: refactor, should use own model
+            images.add(imageEntry)
+        }
 
     private fun handleStateChanged() {
         if (state.value is State.LoadedWithSuccess) {

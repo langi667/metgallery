@@ -19,24 +19,7 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
 
     // endregion
 
-    // region Private API
-
-    override suspend fun performFetch(url: String) {
-        val fetchedImageResult = fetchImage(url, true)
-        val entry = ImageRepositoryEntry(url, fetchedImageResult)
-
-        _latest.update { entry }
-    }
-
-    private fun cachedImageForURL(url: String): Bitmap? {
-        val retVal = cachedImages.firstOrNull { currItem ->
-            currItem.query == url
-        }
-
-        return retVal?.result?.getOrNull()
-    }
-
-    private suspend fun fetchImage(url: String, cache: Boolean = true): Result<Bitmap> {
+    suspend fun fetchImage(url: String, cache: Boolean = true): Result<Bitmap> {
         val cachedImage = cachedImageForURL(url)
         cachedImage?.let {
             return Result.success(cachedImage)
@@ -54,6 +37,25 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
 
         return Result.success(bitmap)
     }
+
+
+    // region Private API
+
+    override suspend fun performFetch(url: String) {
+        val fetchedImageResult = fetchImage(url, true)
+        val entry = ImageRepositoryEntry(url, fetchedImageResult)
+
+        _latest.update { entry }
+    }
+
+    private fun cachedImageForURL(url: String): Bitmap? {
+        val retVal = cachedImages.firstOrNull { currItem ->
+            currItem.query == url
+        }
+
+        return retVal?.result?.getOrNull()
+    }
+
 
     private fun cacheImage(image: Bitmap, key: String) {
         reduceCacheIfNeeded()
