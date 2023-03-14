@@ -1,22 +1,24 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
+import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
+import de.stefanlang.metgallerybrowser.ui.common.HyperlinkText
 import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
+import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
 // region Public API
 
@@ -27,12 +29,6 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
 
     val state = viewModel.state.collectAsState()
     viewModel.loadObjectForID(objectID)
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red)
-    )
 
     Scaffold(topBar = {
         TopBar(navController)
@@ -58,18 +54,52 @@ private fun TopBar(navController: NavController) {
 
 @Composable
 private fun ContentView(state: ObjectDetailViewModel.State) {
-    when(state) {
-        is ObjectDetailViewModel.State.Loading -> {
-            LoadingStateHint()
-        }
+    Box(modifier = Modifier.padding(Dimen.s)) {
+        when (state) {
+            is ObjectDetailViewModel.State.Loading -> {
+                LoadingStateHint()
+            }
 
-        is ObjectDetailViewModel.State.FinishedWithError -> {
-            ErrorStateHint()
+            is ObjectDetailViewModel.State.FinishedWithError -> {
+                ErrorStateHint()
+            }
+        
+            is ObjectDetailViewModel.State.FinishedWithSuccess -> {
+                METObjectDetailView(state.metObjectUIRepresentable)
+            }
         }
-        // TODO: implement
-        is ObjectDetailViewModel.State.FinishedWithSuccess -> {
-            Text("Success")
+    }
+}
+
+@Composable
+private fun METObjectDetailView(metObjectUIRepresentable: METObjectUIRepresentable) {
+    METObjectEntriesView(metObjectUIRepresentable.entries)
+}
+
+@Composable
+private fun METObjectEntriesView(entries: List<METObjectUIRepresentable.Entry>) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        items(entries) { currEntry ->
+            METObjectEntryView(currEntry)
+            Spacer(modifier = Modifier.height(Dimen.xs))
         }
+    }
+}
+
+@Composable
+private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
+    Column {
+        Text(text = entry.name, style = MaterialTheme.typography.h6) // TODO: bold
+        Spacer(modifier = Modifier.height(Dimen.xxs))
+        HyperlinkText(
+            fullText = entry.value,
+            modifier = Modifier.padding(start = Dimen.xs),
+            hyperlinks = entry.hyperlinks,
+            linkTextColor = MaterialTheme.colors.primary
+        )
     }
 }
 

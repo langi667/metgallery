@@ -43,9 +43,12 @@ class METObject {
 
     var artistEndDate: String? = null
     var artistGender: String? = null
-    var artistWikidata_URL: String? = null
 
-    var artistULAN_URL: String? = null
+    @JsonProperty("artistWikidata_URL")
+    var artistWikidataURL: String? = null
+
+    @JsonProperty("artistULAN_URL")
+    var artistULANURL: String? = null
     var objectDate: String? = null
     var objectBeginDate: Int? = null
 
@@ -74,14 +77,21 @@ class METObject {
     var rightsAndReproduction: String? = null
 
     var linkResource: String? = null
+
     @JsonFormat
-        (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", timezone = "GMT")
+        (
+        shape = JsonFormat.Shape.STRING,
+        pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
+        timezone = "GMT"
+    )
     var metadataDate: Date? = null
     var repository: String? = null
 
     var objectURL: String? = null
     var tags: List<METObjectTag>? = null
-    var objectWikidata_URL: String? = null
+
+    @JsonProperty("objectWikidata_URL")
+    var objectWikidataURL: String? = null
 
     var isTimelineWork: Boolean? = null
 

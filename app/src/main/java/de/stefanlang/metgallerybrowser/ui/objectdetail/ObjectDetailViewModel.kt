@@ -2,18 +2,20 @@ package de.stefanlang.metgallerybrowser.ui.objectdetail
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.stefanlang.metgallerybrowser.data.models.METObject
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
+import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 
 class ObjectDetailViewModel : ViewModel() {
 
     sealed class State {
         object Loading : State()
 
-        class FinishedWithSuccess(val metObject: METObject) : State()
+        class FinishedWithSuccess(val metObjectUIRepresentable: METObjectUIRepresentable) : State()
         class FinishedWithError(val error: Throwable, val objectID: Int) : State()
     }
 
@@ -21,7 +23,7 @@ class ObjectDetailViewModel : ViewModel() {
     private val objectID = MutableStateFlow(0) // TODO: Invalid id
 
     val state = objectID
-        .map {newID ->
+        .map { newID ->
             repository.fetch(newID)
 
             val newState: State
@@ -29,7 +31,13 @@ class ObjectDetailViewModel : ViewModel() {
             val metObject = latest.result?.getOrNull()
 
             newState = if (metObject != null) {
-                State.FinishedWithSuccess(metObject)
+
+                State.FinishedWithSuccess(
+                    METObjectUIRepresentable(
+                        metObject = metObject,
+                        createEntriesImmediately = true
+                    )
+                )
             } else {
                 val error = latest.error ?: NetworkError.InvalidState
                 State.FinishedWithError(error, newID)

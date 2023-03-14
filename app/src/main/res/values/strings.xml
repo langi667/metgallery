@@ -1,11 +1,37 @@
 <resources>
     <string name="app_name">MET Gallery Browser</string>
     <string name="search_placeholder">Search</string>
+    <string name="common_yes">Yes</string>
+    <string name="common_no">No</string>
+    <string name="no_value"> - </string>
+
     <string name="idle_state_hint">Type in your search term.</string>
 
     <string name="no_results_state_hint">Sorry no results 😏 Try another!</string>
     <string name="error_state_hint">Oopsi, something went wrong 😔\nCheck internet connection and try again.</string>
     <string name="loading_state_hint">Searching for it!</string>
+
+    <string name="object_title">Title</string>
+    <string name="department_title">Department</string>
+    <string name="object_default_title">Object</string>
+
+    <string name="accession_title">Accession</string>
+    <string name="accession_text">"Number: %1$s\nYear: %2$s\nPublic: %3$s"</string>
+
+    <string name="culture_title">Culture</string>
+    <string name="culture_text">"Culture: %1$s\nPeriod: %2$s\nDynasty: %3$s"</string>
+
+    <string name="object_details_title">Object Details</string>
+    <string name="object_details_text">Name: %1$s\nDate: %2$s\nBegin Date: %3$s\nEnd Date: %4$s\nURL: %5$s\nWikidata URL: %6$s\nTimelineWork: %7$s\nGallery: %8$s\nPortfolio: %9$s\nMedium: %10$s\nDimensions: %11$s\nClassification: %12$s</string>
+
+    <string name="artist_title">Artist</string>
+    <string name="artist_text">Name: %1$s\nRole: %2$s\nGender: %3$s\nNationality: %4$s\nBorn: %5$s\nPassed: %6$s\nBiography: \n\n%7$s\n\nWikidata URL: %8$s\nULAN URL: %9$s\n</string>
+
+    <string name="geography_title">Geographical Details</string>
+    <string name="geography_text">Type: %1$s\nExcavation: %2$s\nCity: %3$s\nCounty: %4$s\nState: %5$s\nSubregion: %6$s\nRegion: %7$s\nLocale: %8$s\nLocus: %9$s</string>
+
+    <string name="misc_title">Miscellaneous</string>
+    <string name="misc_text">Credit Line: %1$s\nRights And Reproduction: %2$s\nLink: %3$s\nRepository: %4$s</string>
 
 
 </resources>
