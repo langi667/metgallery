@@ -8,7 +8,7 @@ import de.stefanlang.network.NetworkResponse
 
 typealias METObjectsRepositoryEntry = Repository.Entry<Int, METObject>
 
-class METObjectsRepository : Repository<Int, METObject>() {
+class METObjectsRepository : SingleEntryRepository<Int, METObject>() {
 
     // region Private API
 
@@ -17,7 +17,7 @@ class METObjectsRepository : Repository<Int, METObject>() {
         val result = NetworkAPI.get(url)
 
         val entry = entryForResponse(objectID, result)
-        _latest.value = entry
+        latest = entry
     }
 
     private fun entryForResponse(

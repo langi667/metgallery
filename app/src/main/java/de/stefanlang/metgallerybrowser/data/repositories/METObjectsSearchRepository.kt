@@ -8,7 +8,7 @@ import de.stefanlang.network.NetworkResponse
 
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>
 
-class METObjectsSearchRepository : Repository<String, METObjectsSearchResult>() {
+class METObjectsSearchRepository : SingleEntryRepository<String, METObjectsSearchResult>() {
 
     // region Private API
 
@@ -18,7 +18,8 @@ class METObjectsSearchRepository : Repository<String, METObjectsSearchResult>() 
         val newResult = resultForResponse(query, result)
 
         val search = METObjectsSearchRepositoryEntry(query, newResult)
-        _latest.value = search
+
+        latest = search
     }
 
     private fun resultForResponse(

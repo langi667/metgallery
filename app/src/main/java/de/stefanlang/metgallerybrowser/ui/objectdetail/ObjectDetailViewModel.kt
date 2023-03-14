@@ -44,7 +44,7 @@ class ObjectDetailViewModel : ViewModel() {
             repository.fetch(newID)
 
             val newState: State
-            val latest = repository.latest.value
+            val latest = repository.latest
             val metObject = latest.result?.getOrNull()
 
             newState = if (metObject != null) {

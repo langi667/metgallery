@@ -54,13 +54,6 @@ abstract class Repository<QUERY, RESULT> {
 
     // endregion
 
-    // region Properties
-
-    protected var _latest = MutableStateFlow(Entry<QUERY, RESULT>())
-    var latest = _latest.asStateFlow()
-
-    // endregion
-
     suspend fun fetch(query: QUERY) = withContext(Dispatchers.IO) {
         performFetch(query)
     }
@@ -70,4 +63,14 @@ abstract class Repository<QUERY, RESULT> {
     protected inline fun <reified RESULT> mapObjectFrom(byteArray: ByteArray): RESULT {
         return JSONParser.mapper.readValue(byteArray, RESULT::class.java)
     }
+}
+
+// TODO: move to separate file
+
+abstract class SingleEntryRepository<QUERY, RESULT>: Repository<QUERY, RESULT>() {
+
+    // region Properties
+    var latest = Entry<QUERY, RESULT>()
+        protected set
+    // endregion
 }

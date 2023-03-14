@@ -38,14 +38,10 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
         return Result.success(bitmap)
     }
 
-
     // region Private API
 
     override suspend fun performFetch(url: String) {
-        val fetchedImageResult = fetchImage(url, true)
-        val entry = ImageRepositoryEntry(url, fetchedImageResult)
-
-        _latest.update { entry }
+        fetchImage(url, true)
     }
 
     private fun cachedImageForURL(url: String): Bitmap? {
@@ -55,7 +51,6 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
 
         return retVal?.result?.getOrNull()
     }
-
 
     private fun cacheImage(image: Bitmap, key: String) {
         reduceCacheIfNeeded()

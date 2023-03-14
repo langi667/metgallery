@@ -86,11 +86,11 @@ class ObjectsSearchViewModel : ViewModel() {
         repository.fetch(_searchQuery.value)
         var newState: State = State.Idle
 
-        repository.latest.value.result?.getOrNull()?.let { objectSearch ->
+        repository.latest.result?.getOrNull()?.let { objectSearch ->
             newState = State.FinishedWithSuccess(objectSearch)
         }
 
-        repository.latest.value.error?.let { error ->
+        repository.latest.error?.let { error ->
             newState = State.FinishedWithError(error)
         }
 
