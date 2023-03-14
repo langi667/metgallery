@@ -92,7 +92,7 @@ private fun METObjectEntriesView(entries: List<METObjectUIRepresentable.Entry>) 
 @Composable
 private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
     Column {
-        Text(text = entry.name, style = MaterialTheme.typography.h6) // TODO: bold
+        Text(text = entry.name, style = MaterialTheme.typography.h6)
         Spacer(modifier = Modifier.height(Dimen.xxs))
         HyperlinkText(
             fullText = entry.value,

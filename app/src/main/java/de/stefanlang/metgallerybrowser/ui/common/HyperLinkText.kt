@@ -10,7 +10,7 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.TextUnit
-import de.stefanlang.metgallerybrowser.domain.HyperLink
+import de.stefanlang.core.models.HyperLink
 
 /** Credits go to Stefan Jovanovic
  * https://gist.github.com/stevdza-san/ff9dbec0e072d8090e1e6d16e6b73c91

@@ -1,20 +1,28 @@
 package de.stefanlang.metgallerybrowser.domain
 
 import android.content.res.Resources
+import de.stefanlang.core.models.HyperLink
 import de.stefanlang.metgallerybrowser.METGalleryBrowserApplication
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.core.utils.Empty.allNullOrBlank
 
 /**
  * Wrapper around the METObject to prepare and provide UI representations of METObject properties
  */
 data class METObjectUIRepresentable(val metObject: METObject) {
 
+    // region Types
+
     data class Entry(
         val name: String,
         val value: String,
         val hyperlinks: List<HyperLink> = emptyList()
     )
+
+    // endregion
+
+    // region Properties
 
     val entries: List<Entry> by lazy { createEntries() }
 
@@ -25,11 +33,19 @@ data class METObjectUIRepresentable(val metObject: METObject) {
     private val resources: Resources
         get() = METGalleryBrowserApplication.appContext.resources
 
+    // endregion
+
+    // region Public API
+
     constructor(metObject: METObject, createEntriesImmediately: Boolean) : this(metObject) {
         if (createEntriesImmediately) {
             entries
         }
     }
+
+    // endregion
+
+    // region Private API
 
     private fun createEntries(): List<Entry> {
         val retVal = mutableListOf<Entry>()
@@ -148,7 +164,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
 
         val isTimelineWork: Boolean? = metObject.isTimelineWork
         val galleryNumber: String? = metObject.galleryNumber
-        var portfolio: String? = metObject.portfolio
+        val portfolio: String? = metObject.portfolio
 
         val medium: String? = metObject.medium
         val dimensions: String? = metObject.dimensions
@@ -187,7 +203,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(classification)
             )
 
-            val hyperlinks = createHyperLinksList(objectURL, objectWikidataURL)
+            val hyperlinks = HyperLink.createList(objectURL, objectWikidataURL)
             val entry =
                 Entry(resources.getString(R.string.object_details_title), content, hyperlinks)
 
@@ -237,7 +253,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(artistWikidataURL),
                 stringOrEmpty(artistULANURL))
 
-            val hyperlinks = createHyperLinksList(artistWikidataURL, artistULANURL)
+            val hyperlinks = HyperLink.createList(artistWikidataURL, artistULANURL)
             val entry = Entry(resources.getString(R.string.artist_title), content, hyperlinks)
 
             entry
@@ -317,7 +333,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(stringOrEmpty(linkResource)),
                 stringOrEmpty(stringOrEmpty(repository)))
 
-            val hyperlinks = createHyperLinksList(linkResource)
+            val hyperlinks = HyperLink.createList(linkResource)
             val entry = Entry(resources.getString(R.string.misc_title), content, hyperlinks)
             entry
         }
@@ -325,42 +341,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    // TODO: move to Common lib
-    private fun allNull(vararg args: Any?): Boolean {
-        val firstNotNull = args.find {currArg ->
-            currArg != null
-        }
-
-        val retVal = firstNotNull == null
-        return retVal
-    }
-
-    // TODO: move to Common lib
-    private fun allNullOrBlank(vararg args: Any?): Boolean {
-        val firstNotNull = args.find {currArg ->
-            var retVal = currArg != null
-
-            if (currArg is String){
-                retVal = currArg.isNotBlank()
-            }
-
-            retVal
-        }
-
-        val retVal = firstNotNull == null
-        return retVal
-    }
-
-    private fun createHyperLinksList(vararg args: String?): List<HyperLink> {
-        val retVal = mutableListOf<HyperLink>()
-        args.forEach { currLink ->
-            if (currLink?.isNotBlank() == true) {
-                retVal.add(HyperLink(currLink))
-            }
-        }
-
-        return retVal
-    }
+    // endregion
 
     private fun stringOrEmpty(string: String?): String {
         val retVal = if (string.isNullOrBlank()) {
@@ -393,6 +374,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
+    // endregion
 }
 
 

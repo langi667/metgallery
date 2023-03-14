@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 rootProject.name = "MET Gallery Browser"
 include ':app'
 include ':network'
+include ':core'
