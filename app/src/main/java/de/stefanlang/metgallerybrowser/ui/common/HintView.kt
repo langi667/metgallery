@@ -16,6 +16,8 @@ import androidx.compose.ui.text.style.TextAlign
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
+// region Public API
+
 @Composable
 fun HintView(image: Painter, text: String) {
     Column(
@@ -64,4 +66,7 @@ fun ErrorStateHint() {
 fun LoadingStateHint() {
     HintView(imgRes = R.drawable.loading_state_img, textRes = R.string.loading_state_hint)
 }
+
+// endregion
+
 

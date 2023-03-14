@@ -16,8 +16,18 @@ object METAPIURLBuilder {
     fun objectsSearchURL(query: String): String {
         val builder = prepareURLBuilder()
         builder.appendPath("search")
+
         val queryWrapped = wrapSearchQuery(query)
         builder.appendQueryParameter("q", queryWrapped)
+        val retVal = builder.build().toString()
+
+        return retVal
+    }
+
+    fun objectURL(objectID: Int): String {
+        val builder = prepareURLBuilder()
+        builder.appendPath("objects")
+        builder.appendPath("$objectID")
 
         val retVal = builder.build().toString()
         return retVal

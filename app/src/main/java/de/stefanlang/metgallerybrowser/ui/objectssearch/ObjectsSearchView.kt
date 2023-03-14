@@ -1,33 +1,27 @@
 package de.stefanlang.metgallerybrowser.ui.objectssearch
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.data.models.ObjectsSearch
+import de.stefanlang.metgallerybrowser.data.models.METObjectsSearch
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
-import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
 import de.stefanlang.metgallerybrowser.ui.common.NoSearchResultsHint
-import de.stefanlang.metgallerybrowser.ui.navigation.NavUtil
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
+import kotlinx.coroutines.*
 
 // region Public API
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -67,6 +61,14 @@ private fun ContentView(
         TextField(
             value = searchText.value,
             onValueChange = viewModel::onSearchQueryChanged,
+            keyboardOptions = KeyboardOptions(
+                imeAction = androidx.compose.ui.text.input.ImeAction.Go
+            ),
+            keyboardActions = KeyboardActions(
+                onGo = {
+                    viewModel.startSearch()
+                }
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimen.s),
@@ -82,15 +84,16 @@ private fun ContentView(
                 .fillMaxWidth()
                 .weight(1.0f)
         ) {
-            if (isSearching.value){
+            if (isSearching.value) {
                 LinearProgressIndicator(
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = Dimen.m) )
+                        .padding(horizontal = Dimen.m)
+                )
             }
 
             ViewForState(viewModel, state.value) { objectID ->
-                NavUtil.navigateToObjectDetail(navController, objectID)
+                viewModel.onObjectIDSelected(objectID, navController)
             }
         }
     }
@@ -108,7 +111,6 @@ private fun ViewForState(
             IdleStateHint()
         }
 
-
         is ObjectsSearchViewModel.State.FinishedWithSuccess -> {
             if (state.hasSearchResults) {
                 ObjectsSearchResultList(state.objectsSearch, onItemClick)
@@ -124,13 +126,8 @@ private fun ViewForState(
 }
 
 @Composable
-private fun LoadingStateView() {
-    LoadingStateHint()
-}
-
-@Composable
 private fun ObjectsSearchResultList(
-    objectsSearchResult: ObjectsSearch,
+    objectsSearchResult: METObjectsSearch,
     onItemSelected: (item: Int) -> Unit
 ) {
     LazyColumn(

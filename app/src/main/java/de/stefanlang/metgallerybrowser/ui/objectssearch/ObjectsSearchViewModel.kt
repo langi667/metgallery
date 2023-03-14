@@ -2,14 +2,15 @@ package de.stefanlang.metgallerybrowser.ui.objectssearch
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import de.stefanlang.metgallerybrowser.data.models.ObjectsSearch
-import de.stefanlang.metgallerybrowser.data.models.ObjectsSearchResult
-import de.stefanlang.metgallerybrowser.data.repositories.ObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.data.utils.JSONParser
-import de.stefanlang.network.NetworkError
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.runBlocking
+import androidx.navigation.NavController
+import de.stefanlang.metgallerybrowser.data.models.METObjectsSearch
+import de.stefanlang.metgallerybrowser.data.repositories.METObjectsSearchRepository
+import de.stefanlang.metgallerybrowser.ui.navigation.NavUtil
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ObjectsSearchViewModel : ViewModel() {
 
@@ -19,7 +20,7 @@ class ObjectsSearchViewModel : ViewModel() {
 
         object Idle : State()
 
-        class FinishedWithSuccess(val objectsSearch: ObjectsSearch) : State() {
+        class FinishedWithSuccess(val objectsSearch: METObjectsSearch) : State() {
             val hasSearchResults: Boolean
                 get() {
                     val isEmpty = objectsSearch.result?.objectIDs?.isEmpty() ?: true
@@ -45,37 +46,17 @@ class ObjectsSearchViewModel : ViewModel() {
     val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
 
     private val _state = MutableStateFlow<State>(State.Idle)
-    private val repository = ObjectsSearchRepository()
+    val state = _state.asStateFlow()
 
-    val state = searchQuery
-        .debounce(1000)
-        .onEach { _isSearching.update { true } }
-        .distinctUntilChanged()
-        .map{ query ->
-            repository.cancel()
+    private val repository = METObjectsSearchRepository()
 
-            if (query.isEmpty()) {
-                return@map State.Idle
-            }
+    private val currentSearch: METObjectsSearch?
+        get() {
+            val stateSearchResults = state.value as? State.FinishedWithSuccess ?: return null
+            val retVal = stateSearchResults.objectsSearch
 
-            repository.search(query)
-            var retVal: State = State.Idle
-            repository.result?.getOrNull()?.let { objectSearch ->
-                retVal = State.FinishedWithSuccess(objectSearch)
-            }
-
-            repository.result?.exceptionOrNull()?.let {error ->
-                retVal = State.FinishedWithError(error, query)
-            }
-
-            return@map retVal
+            return retVal
         }
-        .onEach { _isSearching.update { false } }
-        .stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5000),
-            _state.value
-        )
 
     // endregion
 
@@ -85,25 +66,51 @@ class ObjectsSearchViewModel : ViewModel() {
         _searchQuery.value = query
     }
 
-    // endregion
-
-    private fun shouldStartSearching(query: String): Boolean {
-        val stateValue = state.value
-        val retVal = when (stateValue) {
-            is State.FinishedWithSuccess -> {
-                stateValue.query != query
-            }
-
-            is State.FinishedWithError -> {
-                stateValue.query != query
-            }
-
-            is State.Idle -> {
-                true
-            }
-            else -> false
+    fun startSearch() {
+        if (searchQuery.value.isEmpty()) {
+            _state.value = State.Idle
+            return
         }
 
-        return retVal
+        val currentSearch = this.currentSearch
+
+        if (currentSearch != null // query is the same and we already have results, nothing to do so far
+            && currentSearch.hasResult
+            && currentSearch.query == searchQuery.value
+        ) {
+            return
+        }
+
+        viewModelScope.launch {
+            performSearch()
+        }
     }
+
+    fun onObjectIDSelected(objectID: Int, navController: NavController) {
+        NavUtil.navigateToObjectDetail(navController, objectID)
+    }
+
+    // endregion
+
+    // region Private API
+
+    private suspend fun performSearch() {
+        _isSearching.update { true }
+
+        repository.fetch(_searchQuery.value)
+        var newState: State = State.Idle
+
+        repository.latestSearchRequest.value.search?.let { objectSearch ->
+            newState = State.FinishedWithSuccess(objectSearch)
+        }
+
+        repository.latestSearchRequest.value.error?.let { error ->
+            newState = State.FinishedWithError(error, searchQuery.value)
+        }
+
+        _state.value = newState
+        _isSearching.update { false }
+    }
+
+    // endregion
 }

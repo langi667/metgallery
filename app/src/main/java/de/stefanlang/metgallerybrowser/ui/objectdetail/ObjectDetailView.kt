@@ -8,15 +8,26 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
+import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
+import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
+
+// region Public API
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ObjectDetailView(navController: NavController, objectID: Int) {
+    val viewModel: ObjectDetailViewModel = viewModel()
+
+    val state = viewModel.state.collectAsState()
+    viewModel.loadObjectForID(objectID)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -26,7 +37,7 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
     Scaffold(topBar = {
         TopBar(navController)
     }) {
-        ContentView(navController, objectID)
+        ContentView(state.value)
     }
 }
 
@@ -38,13 +49,28 @@ private fun TopBar(navController: NavController) {
             IconButton(onClick = { navController.popBackStack() }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back"
+                    contentDescription = "Back" // TODO: localise
                 )
             }
         }
     )
 }
 
-private fun ContentView(navController: NavController, objectID: Int) {
+@Composable
+private fun ContentView(state: ObjectDetailViewModel.State) {
+    when(state) {
+        is ObjectDetailViewModel.State.Loading -> {
+            LoadingStateHint()
+        }
 
+        is ObjectDetailViewModel.State.FinishedWithError -> {
+            ErrorStateHint()
+        }
+        // TODO: implement
+        is ObjectDetailViewModel.State.FinishedWithSuccess -> {
+            Text("Success")
+        }
+    }
 }
+
+// endregion
