@@ -15,8 +15,7 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
 
     // region Properties
 
-    private val _cachedImages = mutableStateListOf<ImageRepositoryEntry>()
-    val cachedImages = _cachedImages.asFlow()
+    private val cachedImages = mutableListOf<ImageRepositoryEntry>()
 
     // endregion
 
@@ -30,7 +29,7 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
     }
 
     private fun cachedImageForURL(url: String): Bitmap? {
-        val retVal = _cachedImages.firstOrNull { currItem ->
+        val retVal = cachedImages.firstOrNull { currItem ->
             currItem.query == url
         }
 
@@ -60,16 +59,16 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
         reduceCacheIfNeeded()
         val item = ImageRepositoryEntry(key, Result.success(image))
 
-        _cachedImages.add(item)
+        cachedImages.add(item)
     }
 
     private fun reduceCacheIfNeeded() {
-        if (_cachedImages.size < maxCachedImages) {
+        if (cachedImages.size < maxCachedImages) {
             return
         }
 
-        while (_cachedImages.size >= maxCachedImages) {
-            _cachedImages.removeAt(0)
+        while (cachedImages.size >= maxCachedImages) {
+            cachedImages.removeAt(0)
         }
     }
 

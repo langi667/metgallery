@@ -16,13 +16,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun RoundedImageView(
     modifier: Modifier,
-    image: ImageBitmap?,
+    painter: Painter?,
+    alignment: Alignment = Alignment.TopCenter,
     imageScale: ContentScale = ContentScale.FillWidth
 ) {
     Box(
@@ -33,25 +36,47 @@ fun RoundedImageView(
             .fillMaxSize()
 
     ) {
-
         val overlayAlpha: Float by animateFloatAsState(
-            targetValue = if (image == null) 1f else 0f,
+            targetValue = if (painter == null) 1f else 0f,
             animationSpec = tween(
                 durationMillis = 500,
                 easing = LinearEasing,
             )
         )
 
-        Image(
-            bitmap = image ?: ImageBitmap(1, 1),
+        if (painter != null) {
+            Image(painter = painter,
             contentDescription = null,
             contentScale = imageScale,
-            alignment = Alignment.TopCenter,
+            alignment = alignment,
             modifier = Modifier
                 .clip(MaterialTheme.shapes.small)
                 .fillMaxSize()
-        )
+            )
+        }
 
         LoadingOverlay(alpha = overlayAlpha)
     }
 }
+
+@Composable
+fun RoundedImageView(
+    modifier: Modifier,
+    image: ImageBitmap?,
+    alignment: Alignment = Alignment.TopCenter,
+    imageScale: ContentScale = ContentScale.FillWidth
+) {
+    val painter = if(image != null) {
+        BitmapPainter(image)
+    }
+    else {
+        null
+    }
+
+    RoundedImageView(
+        modifier = modifier,
+        painter = painter, alignment = alignment,
+        imageScale = imageScale
+    )
+}
+

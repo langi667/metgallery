@@ -43,6 +43,12 @@ abstract class Repository<QUERY, RESULT> {
                 val retVal = result?.exceptionOrNull()
                 return retVal
             }
+
+        val resultValue: R?
+            get() {
+                val retVal = result?.getOrNull()
+                return retVal
+            }
     }
 
     // endregion

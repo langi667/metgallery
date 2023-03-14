@@ -34,7 +34,7 @@ object METAPIURLBuilder {
     }
 
     fun smallImageURLForImageURL(url: String): String {
-        val retVal = url.replace("CRDImages/ep/original/", "CRDImages/ep/web-large/")
+        val retVal = url.replace("/original/", "/web-large/")
         return retVal
     }
 

@@ -1,6 +1,9 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
 import android.annotation.SuppressLint
+import android.graphics.Bitmap
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -8,8 +11,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -38,17 +46,34 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
     Scaffold(topBar = {
         TopBar(navController)
     }) {
-        ContentView(state.value, images)
+        ContentView(state.value, images, viewModel.selectedImage.value?.result?.getOrNull())
+
+        val selectedImage = viewModel.selectedImage.value?.resultValue
+
+        if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
+            Box(modifier = Modifier
+                .padding(Dimen.s)
+                .fillMaxSize()
+                .background(MaterialTheme.colors.onPrimary.copy(alpha = 0.7f))
+                .clickable {
+                    viewModel.deselectImage()
+                }) {
+                RoundedImageView(modifier = Modifier.fillMaxSize(), image = selectedImage?.asImageBitmap(), alignment = Alignment.Center)
+            }
+
+        }
     }
 }
 
 @Composable
 private fun TopBar(navController: NavController) {
+    val viewModel: ObjectDetailViewModel = viewModel()
+
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.app_name)) },
         navigationIcon = {
             IconButton(onClick = {
-                navController.popBackStack() // TODO: call view model
+                viewModel.onBackPressed(navController)
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
@@ -60,10 +85,15 @@ private fun TopBar(navController: NavController) {
 }
 
 @Composable
-private fun ContentView(state: ObjectDetailViewModel.State, images: List<ImageRepositoryEntry>) {
+private fun ContentView(state: ObjectDetailViewModel.State, images: List<ImageRepositoryEntry>, selectedImage: Bitmap?) {
     Box(modifier = Modifier.padding(Dimen.s)) {
         when (state) {
             is ObjectDetailViewModel.State.Loading -> {
+                LinearProgressIndicator(
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = Dimen.m)
+                )
                 LoadingStateHint()
             }
 
@@ -93,19 +123,39 @@ private fun METObjectDetailView(metObjectUIRepresentable: METObjectUIRepresentab
 }
 
 @Composable
-private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable, loadedImages: List<ImageRepositoryEntry>) {
+private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable,
+                           loadedImages: List<ImageRepositoryEntry>) {
+
     val images = metObjectUIRepresentable.metObject.imageData
-    val height = 150.dp
-    val width = height * 0.75f
+    val width = (LocalConfiguration.current.screenWidthDp - 2 * Dimen.s.value) / 3
+    val height = 150.dp * (4 / 3) // default ratio of the primary image
 
     FlowRow() {
-        repeat(images.size) {
+        repeat(images.size) { it ->
 
-            val image = loadedImages.getOrNull(it)?.result?.getOrNull()
+            var painter: Painter? = null
+            val currImageData = images.getOrNull(it)
+
+            val imageData = loadedImages.firstOrNull { currEntry ->
+                currImageData?.containsURL(currEntry.query) == true
+            }
+
+            imageData?.result?.getOrNull()?.let {loadedImage ->
+                painter = BitmapPainter(loadedImage.asImageBitmap())
+            }
+
+            // error during loading
+            imageData?.result?.exceptionOrNull()?.let { _ ->
+                painter = painterResource(id = R.drawable.error_state_img)
+            }
+
+            val viewModel: ObjectDetailViewModel = viewModel()
+
             RoundedImageView(
-                modifier = Modifier
-                    .size(width, height)
-                    , image?.asImageBitmap())
+                modifier = Modifier.clickable { imageData?.isSuccess
+                    viewModel.onImageSelected(imageData)
+                }.size(width.dp, height)
+                , painter)
         }
     }
 }

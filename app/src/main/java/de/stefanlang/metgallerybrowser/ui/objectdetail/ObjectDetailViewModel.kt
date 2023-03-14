@@ -1,11 +1,14 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
+import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.flow.*
@@ -21,12 +24,18 @@ class ObjectDetailViewModel : ViewModel() {
     }
 
     val images = mutableStateListOf<ImageRepositoryEntry>()
+    val selectedImage = mutableStateOf<ImageRepositoryEntry?>(null)
 
     private val _state = MutableStateFlow<State>(State.Loading)
-    private val objectID = MutableStateFlow(0) // TODO: Invalid id
+    private val objectID = MutableStateFlow(Defines.InvalidID)
 
     val state = objectID
+        .debounce(500)
         .map { newID ->
+            if (newID == Defines.InvalidID){
+                return@map State.Loading
+            }
+
             repository.fetch(newID)
 
             val newState: State
@@ -82,6 +91,28 @@ class ObjectDetailViewModel : ViewModel() {
 
     fun loadObjectForID(objectID: Int) {
         this.objectID.value = objectID
+    }
+
+    fun onImageSelected(imageData: ImageRepositoryEntry?) {
+        if (imageData == null) {
+            return
+        }
+
+        selectedImage.value = imageData
+    }
+
+    fun onBackPressed(navController: NavController) {
+        if(selectedImage.value != null){
+            selectedImage.value = null
+        }
+        else {
+            // TODO: cancel, clear
+            navController.popBackStack()
+        }
+    }
+
+    fun deselectImage() {
+        selectedImage.value = null
     }
 
     private suspend fun loadImages() {
