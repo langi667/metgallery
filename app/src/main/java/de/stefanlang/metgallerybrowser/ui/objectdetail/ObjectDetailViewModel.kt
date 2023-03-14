@@ -1,27 +1,26 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
-import androidx.lifecycle.Lifecycle
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.viewModelScope
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
+import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ObjectDetailViewModel : ViewModel() {
 
     sealed class State {
         object Loading : State()
 
-        class FinishedWithSuccess(val metObjectUIRepresentable: METObjectUIRepresentable) : State()
-        class FinishedWithError(val error: Throwable, val objectID: Int) : State()
+        class LoadedWithSuccess(val metObjectUIRepresentable: METObjectUIRepresentable) : State()
+        class LoadedWithError(val error: Throwable, val objectID: Int) : State()
     }
+
+    val images = mutableStateListOf<ImageRepositoryEntry>()
 
     private val _state = MutableStateFlow<State>(State.Loading)
     private val objectID = MutableStateFlow(0) // TODO: Invalid id
@@ -35,7 +34,7 @@ class ObjectDetailViewModel : ViewModel() {
             val metObject = latest.result?.getOrNull()
 
             newState = if (metObject != null) {
-                State.FinishedWithSuccess(
+                State.LoadedWithSuccess(
                     METObjectUIRepresentable(
                         metObject = metObject,
                         createEntriesImmediately = true
@@ -43,7 +42,7 @@ class ObjectDetailViewModel : ViewModel() {
                 )
             } else {
                 val error = latest.error ?: NetworkError.InvalidState
-                State.FinishedWithError(error, newID)
+                State.LoadedWithError(error, newID)
             }
 
             newState
@@ -58,7 +57,7 @@ class ObjectDetailViewModel : ViewModel() {
 
     private val metObject: METObjectUIRepresentable?
         get(){
-            (state.value as? State.FinishedWithSuccess)?.let { state ->
+            (state.value as? State.LoadedWithSuccess)?.let { state ->
                 return state.metObjectUIRepresentable
             }
 
@@ -74,8 +73,8 @@ class ObjectDetailViewModel : ViewModel() {
 
             // TODO: cancel !
             launch {
-                imageRepository.latest.collect { _ ->
-                    print("")
+                imageRepository.latest.collect { imageData ->
+                    images.add(imageData)
                 }
             }
         }
@@ -85,14 +84,14 @@ class ObjectDetailViewModel : ViewModel() {
         this.objectID.value = objectID
     }
 
-    suspend fun loadImages() {
+    private suspend fun loadImages() {
         metObject?.metObject?.imageData?.forEach {
             imageRepository.fetch(it.imageURL)
         }
     }
 
     private fun handleStateChanged() {
-        if (state.value is State.FinishedWithSuccess) {
+        if (state.value is State.LoadedWithSuccess) {
             viewModelScope.launch {
                 loadImages()
             }

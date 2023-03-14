@@ -1,30 +1,17 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.gestures.ScrollableState
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.GridItemSpan
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
@@ -33,8 +20,8 @@ import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.HyperlinkText
 import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
-import com.google.accompanist.flowlayout.FlowColumn
 import com.google.accompanist.flowlayout.FlowRow
+import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.uicore.RoundedImageView
 
 // region Public API
@@ -43,14 +30,15 @@ import de.stefanlang.uicore.RoundedImageView
 @Composable
 fun ObjectDetailView(navController: NavController, objectID: Int) {
     val viewModel: ObjectDetailViewModel = viewModel()
-
     val state = viewModel.state.collectAsState()
     viewModel.loadObjectForID(objectID)
+
+    val images = viewModel.images.toList()
 
     Scaffold(topBar = {
         TopBar(navController)
     }) {
-        ContentView(state.value)
+        ContentView(state.value, images)
     }
 }
 
@@ -72,31 +60,30 @@ private fun TopBar(navController: NavController) {
 }
 
 @Composable
-private fun ContentView(state: ObjectDetailViewModel.State) {
+private fun ContentView(state: ObjectDetailViewModel.State, images: List<ImageRepositoryEntry>) {
     Box(modifier = Modifier.padding(Dimen.s)) {
         when (state) {
             is ObjectDetailViewModel.State.Loading -> {
                 LoadingStateHint()
             }
 
-            is ObjectDetailViewModel.State.FinishedWithError -> {
+            is ObjectDetailViewModel.State.LoadedWithError -> {
                 ErrorStateHint()
             }
 
-            is ObjectDetailViewModel.State.FinishedWithSuccess -> {
-                METObjectDetailView(state.metObjectUIRepresentable)
+            is ObjectDetailViewModel.State.LoadedWithSuccess -> {
+                METObjectDetailView(state.metObjectUIRepresentable, images)
             }
         }
     }
 }
 
 @Composable
-private fun METObjectDetailView(metObjectUIRepresentable: METObjectUIRepresentable) {
+private fun METObjectDetailView(metObjectUIRepresentable: METObjectUIRepresentable, loadedImages: List<ImageRepositoryEntry>) {
     LazyColumn {
-
         items(metObjectUIRepresentable.entries.size + 1){currIndex ->
             if (currIndex == 0){
-                METGalleryView(metObjectUIRepresentable)
+                METGalleryView(metObjectUIRepresentable,loadedImages)
             }
             else {
                 METObjectEntryView(metObjectUIRepresentable.entries[currIndex - 1])
@@ -106,17 +93,19 @@ private fun METObjectDetailView(metObjectUIRepresentable: METObjectUIRepresentab
 }
 
 @Composable
-private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable) {
+private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable, loadedImages: List<ImageRepositoryEntry>) {
     val images = metObjectUIRepresentable.metObject.imageData
     val height = 150.dp
     val width = height * 0.75f
 
     FlowRow() {
         repeat(images.size) {
+
+            val image = loadedImages.getOrNull(it)?.result?.getOrNull()
             RoundedImageView(
                 modifier = Modifier
                     .size(width, height)
-                    , null)
+                    , image?.asImageBitmap())
         }
     }
 }
