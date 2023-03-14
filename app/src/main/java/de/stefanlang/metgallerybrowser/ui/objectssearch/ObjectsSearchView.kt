@@ -8,6 +8,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
@@ -69,6 +71,15 @@ private fun ContentView(
                     viewModel.startSearch()
                 }
             ),
+
+            trailingIcon = {Icon(Icons.Default.Clear,
+                contentDescription = "clear text", // TODO: localise
+                modifier = Modifier
+                    .clickable {
+                        viewModel.onSearchClear()
+                    }
+            )},
+
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(Dimen.s),

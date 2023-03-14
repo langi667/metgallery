@@ -10,6 +10,7 @@ abstract class Repository<QUERY, RESULT> {
 
     // region Types
 
+    // TODO: tests
     data class Entry<Q, R>(
         val query: Q? = null,
         val result: Result<R>? = null
@@ -60,10 +61,8 @@ abstract class Repository<QUERY, RESULT> {
 
     // endregion
 
-    suspend fun fetch(query: QUERY) {
-        withContext(Dispatchers.IO) {
-            performFetch(query)
-        }
+    suspend fun fetch(query: QUERY) = withContext(Dispatchers.IO) {
+        performFetch(query)
     }
 
     protected abstract suspend fun performFetch(query: QUERY)

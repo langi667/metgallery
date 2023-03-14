@@ -20,6 +20,7 @@ class ObjectsSearchViewModel : ViewModel() {
 
         object Idle : State()
 
+        // TODO: test
         class FinishedWithSuccess(val objectsSearch: METObjectsSearchResult) : State() {
             val hasSearchResults: Boolean
                 get() {
@@ -55,13 +56,18 @@ class ObjectsSearchViewModel : ViewModel() {
         _searchQuery.value = query
     }
 
+    fun onSearchClear() {
+        _searchQuery.value = ""
+        _state.update { State.Idle }
+    }
+
     fun startSearch() {
         if (searchQuery.value.isEmpty()) {
             _state.value = State.Idle
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.launch() {
             performSearch()
         }
     }
