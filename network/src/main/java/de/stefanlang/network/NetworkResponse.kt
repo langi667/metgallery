@@ -35,10 +35,5 @@ data class NetworkResponse(val id: Int, val data: ByteArray) {
         return result
     }
 
-    fun responseDataAsString(charset: Charset = StandardCharsets.UTF_8): String {
-        val retVal = String(data, charset)
-        return retVal
-    }
-
     // endregion
 }
