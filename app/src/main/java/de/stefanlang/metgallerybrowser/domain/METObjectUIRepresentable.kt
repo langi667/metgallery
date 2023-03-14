@@ -2,10 +2,10 @@ package de.stefanlang.metgallerybrowser.domain
 
 import android.content.res.Resources
 import de.stefanlang.core.models.HyperLink
+import de.stefanlang.core.utils.Empty.allNullOrBlank
 import de.stefanlang.metgallerybrowser.METGalleryBrowserApplication
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.METObject
-import de.stefanlang.core.utils.Empty.allNullOrBlank
 
 /**
  * Wrapper around the METObject to prepare and provide UI representations of METObject properties
@@ -87,7 +87,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         val entryValue = metObject.title
         val entryTitle = resources.getString(R.string.object_title)
 
-        val retVal: Entry = if (entryValue?.isNullOrBlank() == true) {
+        val retVal: Entry = if (entryValue == null || entryValue.isBlank()) {
             Entry(entryTitle, resources.getString(R.string.object_default_title))
         } else {
             Entry(entryTitle, entryValue)
@@ -100,7 +100,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         val entryValue = metObject.department
         val entryTitle = resources.getString(R.string.department_title)
 
-        val retVal: Entry? = if (entryValue?.isNullOrBlank() == true) {
+        val retVal: Entry? = if (entryValue == null || entryValue.isBlank()) {
             null
         } else {
             Entry(entryTitle, entryValue)
@@ -251,7 +251,8 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(artistEndDate),
                 stringOrEmpty(artistDisplayBio),
                 stringOrEmpty(artistWikidataURL),
-                stringOrEmpty(artistULANURL))
+                stringOrEmpty(artistULANURL)
+            )
 
             val hyperlinks = HyperLink.createList(artistWikidataURL, artistULANURL)
             val entry = Entry(resources.getString(R.string.artist_title), content, hyperlinks)
@@ -302,7 +303,8 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(stringOrEmpty(subregion)),
                 stringOrEmpty(stringOrEmpty(region)),
                 stringOrEmpty(stringOrEmpty(locale)),
-                stringOrEmpty(stringOrEmpty(locus)))
+                stringOrEmpty(stringOrEmpty(locus))
+            )
 
             val entry = Entry(resources.getString(R.string.geography_title), content)
             entry
@@ -331,7 +333,8 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(stringOrEmpty(creditLine)),
                 stringOrEmpty(stringOrEmpty(rightsAndReproduction)),
                 stringOrEmpty(stringOrEmpty(linkResource)),
-                stringOrEmpty(stringOrEmpty(repository)))
+                stringOrEmpty(stringOrEmpty(repository))
+            )
 
             val hyperlinks = HyperLink.createList(linkResource)
             val entry = Entry(resources.getString(R.string.misc_title), content, hyperlinks)

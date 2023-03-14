@@ -10,6 +10,9 @@ data class NetworkError(val code: Int, val text: String = "NetworkError") : Thro
 
         val InvalidState =
             NetworkError(InvalidStateError, "Invalid request state ${InvalidStateError}")
+
+        val Unknown =
+            NetworkError(UnknownNetworkError, "Unknown error")
     }
 
     // endregion

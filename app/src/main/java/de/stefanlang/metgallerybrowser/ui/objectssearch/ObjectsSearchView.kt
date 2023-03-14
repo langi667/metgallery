@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.data.models.METObjectsSearch
+import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
 import de.stefanlang.metgallerybrowser.ui.common.NoSearchResultsHint
@@ -127,14 +127,14 @@ private fun ViewForState(
 
 @Composable
 private fun ObjectsSearchResultList(
-    objectsSearchResult: METObjectsSearch,
+    objectsSearchResult: METObjectsSearchResult,
     onItemSelected: (item: Int) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        val objectIDs = objectsSearchResult.result?.objectIDs ?: emptyList()
+        val objectIDs = objectsSearchResult.objectIDs ?: emptyList()
         items(objectIDs) { currObjectID ->
             ObjectsSearchItemView(
                 objectID = currObjectID,

@@ -3,14 +3,10 @@ package de.stefanlang.metgallerybrowser
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import de.stefanlang.network.NetworkAPI
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
-import kotlin.coroutines.coroutineContext
 
 /**
  * Instrumented test, which will execute on an Android device.

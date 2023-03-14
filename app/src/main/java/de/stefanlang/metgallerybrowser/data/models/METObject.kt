@@ -3,6 +3,7 @@ package de.stefanlang.metgallerybrowser.data.models
 import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
 import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -97,4 +98,44 @@ class METObject {
 
     @JsonProperty("GalleryNumber")
     var galleryNumber: String? = null
+
+    // TODO: test
+    val imageData: List<ImageData>
+    get() {
+        return createImageDataList()
+    }
+
+    private fun createImageDataList(): List<ImageData> {
+        val retVal = mutableListOf<ImageData>()
+
+        imageDataFromURLs(primaryImage, true, primaryImageSmall)?.let { imageData ->
+            retVal.add(imageData)
+        }
+
+        additionalImages?.forEach { currImageURL ->
+            imageDataFromURLs(
+                currImageURL,
+                false,
+                METAPIURLBuilder.smallImageURLForImageURL(currImageURL)
+            )?.let {currImageData ->
+                retVal.add(currImageData)
+            }
+        }
+
+        return retVal
+    }
+
+    private fun imageDataFromURLs(
+        imageURL: String?,
+        isPrimary: Boolean,
+        smallImageURL: String?
+    ): ImageData? {
+        val retVal: ImageData? = if (imageURL == null || imageURL.isBlank()) {
+            null
+        } else {
+            ImageData(imageURL, isPrimary, smallImageURL)
+        }
+
+        return retVal
+    }
 }

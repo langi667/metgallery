@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.data.utils
+package de.stefanlang.metgallerybrowser.domain
 
 import android.net.Uri
 
@@ -30,6 +30,11 @@ object METAPIURLBuilder {
         builder.appendPath("$objectID")
 
         val retVal = builder.build().toString()
+        return retVal
+    }
+
+    fun smallImageURLForImageURL(url: String): String {
+        val retVal = url.replace("CRDImages/ep/original/", "CRDImages/ep/web-large/")
         return retVal
     }
 

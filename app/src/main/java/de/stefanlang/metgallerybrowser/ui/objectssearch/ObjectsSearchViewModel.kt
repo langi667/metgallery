@@ -3,9 +3,9 @@ package de.stefanlang.metgallerybrowser.ui.objectssearch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import de.stefanlang.metgallerybrowser.data.models.METObjectsSearch
+import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.ui.navigation.NavUtil
+import de.stefanlang.metgallerybrowser.ui.navigation.Navigation.navigateToObjectDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -20,19 +20,16 @@ class ObjectsSearchViewModel : ViewModel() {
 
         object Idle : State()
 
-        class FinishedWithSuccess(val objectsSearch: METObjectsSearch) : State() {
+        class FinishedWithSuccess(val objectsSearch: METObjectsSearchResult) : State() {
             val hasSearchResults: Boolean
                 get() {
-                    val isEmpty = objectsSearch.result?.objectIDs?.isEmpty() ?: true
+                    val isEmpty = objectsSearch.objectIDs?.isEmpty() ?: true
                     val retVal = !isEmpty
                     return retVal
                 }
-
-            val query: String
-                get() = objectsSearch.query
         }
 
-        class FinishedWithError(val error: Throwable, val query: String) : State()
+        class FinishedWithError(val error: Throwable) : State()
     }
 
     // endregion
@@ -50,14 +47,6 @@ class ObjectsSearchViewModel : ViewModel() {
 
     private val repository = METObjectsSearchRepository()
 
-    private val currentSearch: METObjectsSearch?
-        get() {
-            val stateSearchResults = state.value as? State.FinishedWithSuccess ?: return null
-            val retVal = stateSearchResults.objectsSearch
-
-            return retVal
-        }
-
     // endregion
 
     // region Public API
@@ -72,22 +61,13 @@ class ObjectsSearchViewModel : ViewModel() {
             return
         }
 
-        val currentSearch = this.currentSearch
-
-        if (currentSearch != null // query is the same and we already have results, nothing to do so far
-            && currentSearch.hasResult
-            && currentSearch.query == searchQuery.value
-        ) {
-            return
-        }
-
         viewModelScope.launch {
             performSearch()
         }
     }
 
     fun onObjectIDSelected(objectID: Int, navController: NavController) {
-        NavUtil.navigateToObjectDetail(navController, objectID)
+        navController.navigateToObjectDetail(navController, objectID)
     }
 
     // endregion
@@ -100,12 +80,12 @@ class ObjectsSearchViewModel : ViewModel() {
         repository.fetch(_searchQuery.value)
         var newState: State = State.Idle
 
-        repository.latestSearchRequest.value.search?.let { objectSearch ->
+        repository.latest.value.result?.getOrNull()?.let { objectSearch ->
             newState = State.FinishedWithSuccess(objectSearch)
         }
 
-        repository.latestSearchRequest.value.error?.let { error ->
-            newState = State.FinishedWithError(error, searchQuery.value)
+        repository.latest.value.error?.let { error ->
+            newState = State.FinishedWithError(error)
         }
 
         _state.value = newState
