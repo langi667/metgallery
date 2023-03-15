@@ -10,6 +10,7 @@ import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
 import de.stefanlang.metgallerybrowser.domain.Defines
+import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +27,8 @@ class ObjectDetailViewModel : ViewModel() {
         class LoadedWithError(val error: Throwable, val objectID: Int) : State()
     }
 
-    val images = mutableStateListOf<ImageRepositoryEntry>()
-    val selectedImage = mutableStateOf<ImageRepositoryEntry?>(null)
+    val images = mutableStateListOf<ImageLoadResult>()
+    val selectedImage = mutableStateOf<ImageLoadResult?>(null)
 
     private val _state = MutableStateFlow<State>(State.Loading)
     private val objectID = MutableStateFlow(Defines.InvalidID)
@@ -65,7 +66,7 @@ class ObjectDetailViewModel : ViewModel() {
         )
 
     private val repository = METObjectsRepository()
-    private val imageRepository = ImageRepository() // TODO: check if maybe object makes sense
+    private val imageRepository = ImageRepository()
 
     private val metObjectUIRepresentable: METObjectUIRepresentable?
         get() {
@@ -90,7 +91,7 @@ class ObjectDetailViewModel : ViewModel() {
         this.objectID.value = objectID
     }
 
-    fun onImageSelected(imageData: ImageRepositoryEntry?) {
+    fun onImageSelected(imageData: ImageLoadResult?) {
         if (imageData == null) {
             return
         }
@@ -126,9 +127,10 @@ class ObjectDetailViewModel : ViewModel() {
 
     private fun handleImageLoaded(url: String, imageResult: Result<Bitmap>) =
         MainScope().launch(Dispatchers.Main) {
-            val imageEntry =
-                ImageRepositoryEntry(url, imageResult) // TODO: refactor, should use own model
-            images.add(imageEntry)
+            val imageEntry = ImageRepositoryEntry(url, imageResult)
+            val result = imageLoadResultFromEntry(imageEntry)
+
+            images.add(result)
         }
 
     private fun handleStateChanged() {
@@ -137,5 +139,17 @@ class ObjectDetailViewModel : ViewModel() {
                 loadImages()
             }
         }
+    }
+
+    private fun imageLoadResultFromEntry(entry: ImageRepositoryEntry): ImageLoadResult {
+        val image = entry.resultValue
+        val retVal: ImageLoadResult = if( image != null){
+            ImageLoadResult.Success(entry.query ?: "", image)
+        }
+        else {
+            ImageLoadResult.Failure(entry.query ?: "", entry.error ?: NetworkError.InvalidState)
+        }
+
+        return retVal
     }
 }

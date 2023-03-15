@@ -20,7 +20,6 @@ class ObjectsSearchViewModel : ViewModel() {
 
         object Idle : State()
 
-        // TODO: test
         class FinishedWithSuccess(val objectsSearch: METObjectsSearchResult) : State() {
             val hasSearchResults: Boolean
                 get() {

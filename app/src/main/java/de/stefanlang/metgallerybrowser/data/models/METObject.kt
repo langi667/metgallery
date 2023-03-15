@@ -1,6 +1,5 @@
 package de.stefanlang.metgallerybrowser.data.models
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
@@ -80,7 +79,7 @@ class METObject {
     @JsonProperty("GalleryNumber")
     var galleryNumber: String? = null
 
-    val imageData: List<ImageData>
+    val imageData: List<METObjectImageData>
         get() {
             return createImageDataList()
         }
@@ -89,8 +88,8 @@ class METObject {
 
     // region Private API
 
-    private fun createImageDataList(): List<ImageData> {
-        val retVal = mutableListOf<ImageData>()
+    private fun createImageDataList(): List<METObjectImageData> {
+        val retVal = mutableListOf<METObjectImageData>()
 
         imageDataFromURLs(primaryImage, true, primaryImageSmall)?.let { imageData ->
             retVal.add(imageData)
@@ -113,11 +112,11 @@ class METObject {
         imageURL: String?,
         isPrimary: Boolean,
         smallImageURL: String?
-    ): ImageData? {
-        val retVal: ImageData? = if (imageURL == null || imageURL.isBlank()) {
+    ): METObjectImageData? {
+        val retVal: METObjectImageData? = if (imageURL == null || imageURL.isBlank()) {
             null
         } else {
-            ImageData(imageURL, isPrimary, smallImageURL)
+            METObjectImageData(imageURL, isPrimary, smallImageURL)
         }
 
         return retVal

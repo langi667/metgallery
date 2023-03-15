@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
+import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.HyperlinkText
@@ -46,8 +47,8 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
     Scaffold(topBar = {
         TopBar(navController)
     }) {
-        ContentView(state.value, images, viewModel.selectedImage.value?.result?.getOrNull())
-        val selectedImage = viewModel.selectedImage.value?.resultValue
+        ContentView(state.value, images)
+        val selectedImage = (viewModel.selectedImage.value as? ImageLoadResult.Success)?.image
 
         if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
             ImageDetailView(viewModel, selectedImage)
@@ -77,8 +78,7 @@ private fun TopBar(navController: NavController) {
 @Composable
 private fun ContentView(
     state: ObjectDetailViewModel.State,
-    images: List<ImageRepositoryEntry>,
-    selectedImage: Bitmap?
+    images: List<ImageLoadResult>
 ) {
     Box(modifier = Modifier.padding(Dimen.s)) {
         when (state) {
@@ -105,7 +105,7 @@ private fun ContentView(
 @Composable
 private fun METObjectDetailView(
     metObjectUIRepresentable: METObjectUIRepresentable,
-    loadedImages: List<ImageRepositoryEntry>
+    loadedImages: List<ImageLoadResult>
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(text = metObjectUIRepresentable.metObject.title ?: stringResource(id = R.string.object_default_title),
@@ -125,13 +125,12 @@ private fun METObjectDetailView(
             }
         }
     }
-    
 }
 
 @Composable
 private fun METGalleryView(
     metObjectUIRepresentable: METObjectUIRepresentable,
-    loadedImages: List<ImageRepositoryEntry>
+    loadedImages: List<ImageLoadResult>
 ) {
     val images = metObjectUIRepresentable.metObject.imageData
     val width = (LocalConfiguration.current.screenWidthDp - 2 * Dimen.s.value) / 3
@@ -140,28 +139,24 @@ private fun METGalleryView(
     FlowRow() {
         repeat(images.size) { it ->
 
-            var painter: Painter? = null
             val currImageData = images.getOrNull(it)
 
             val imageData = loadedImages.firstOrNull { currEntry ->
-                currImageData?.containsURL(currEntry.query) == true
+                currImageData?.containsURL(currEntry.url) == true
             }
 
-            imageData?.result?.getOrNull()?.let { loadedImage ->
-                painter = BitmapPainter(loadedImage.asImageBitmap())
+            val painter: Painter? = when (imageData) {
+                is ImageLoadResult.Success -> BitmapPainter(imageData.image.asImageBitmap())
+                is ImageLoadResult.Failure -> painterResource(id = R.drawable.error_state_img)
+                else-> {null}
             }
 
-            // error during loading
-            imageData?.result?.exceptionOrNull()?.let { _ ->
-                painter = painterResource(id = R.drawable.error_state_img)
-            }
-
+            val isClickable = imageData is ImageLoadResult.Success
             val viewModel: ObjectDetailViewModel = viewModel()
 
             RoundedImageView(
                 modifier = Modifier
-                    .clickable {
-                        imageData?.isSuccess
+                    .clickable { isClickable
                         viewModel.onImageSelected(imageData)
                     }
                     .size(width.dp, height.dp), painter

@@ -12,7 +12,6 @@ class JSONParserUnitTest {
         var title: String = "",
         var siblings: List<Int> = emptyList(),
         var children: List<TestClass> = emptyList()
-
     )
 
     @Test

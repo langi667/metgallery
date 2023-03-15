@@ -17,8 +17,7 @@ object METAPIURLBuilder {
         val builder = prepareURLBuilder()
         builder.appendPath("search")
 
-        val queryWrapped = wrapSearchQuery(query)
-        builder.appendQueryParameter("q", queryWrapped)
+        builder.appendQueryParameter("q", query)
         val retVal = builder.build().toString()
 
         return retVal
@@ -50,21 +49,6 @@ object METAPIURLBuilder {
             .appendPath("public")
             .appendPath("collection")
             .appendPath(version)
-
-        return retVal
-    }
-
-    private fun wrapSearchQuery(query: String): String {
-        var retVal = query
-        val quotation = '\"'
-
-        if (!retVal.startsWith(quotation)) {
-            retVal = "$quotation$retVal"
-        }
-
-        if (!retVal.endsWith(quotation)) {
-            retVal = "$retVal$quotation"
-        }
 
         return retVal
     }

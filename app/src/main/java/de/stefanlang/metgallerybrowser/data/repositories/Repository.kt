@@ -8,7 +8,6 @@ abstract class Repository<QUERY, RESULT> {
 
     // region Types
 
-    // TODO: tests
     data class Entry<Q, R>(
         val query: Q? = null,
         val result: Result<R>? = null
@@ -44,14 +43,4 @@ abstract class Repository<QUERY, RESULT> {
     protected inline fun <reified RESULT> mapObjectFrom(byteArray: ByteArray): RESULT {
         return JSONParser.mapObjectFrom(byteArray)
     }
-}
-
-// TODO: move to separate file
-
-abstract class SingleEntryRepository<QUERY, RESULT> : Repository<QUERY, RESULT>() {
-
-    // region Properties
-    var latest = Entry<QUERY, RESULT>()
-        protected set
-    // endregion
 }

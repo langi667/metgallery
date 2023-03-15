@@ -6,13 +6,19 @@ import androidx.annotation.IntRange
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 
+
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
+
+// TODO: multi Value Repository
 
 class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<String, Bitmap>() {
 
     // region Properties
 
-    private val cachedImages = mutableListOf<ImageRepositoryEntry>()
+    val images: List<ImageRepositoryEntry>
+        get() = entries
+
+    private val entries = mutableListOf<ImageRepositoryEntry>()
 
     // endregion
 
@@ -26,43 +32,51 @@ class ImageRepository(@IntRange(1) val maxCachedImages: Int = 10) : Repository<S
         val imageData = result.getOrNull()?.data ?: return Result.failure(
             result.exceptionOrNull() ?: NetworkError.Unknown
         )
-        val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
 
-        if (cache) {
-            cacheImage(bitmap, url)
+        val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
+        val retVal: Result<Bitmap> = if (bitmap == null) {
+            Result.failure(NetworkError.Decode)
+        }
+        else {
+            Result.success(bitmap)
         }
 
-        return Result.success(bitmap)
+        if (cache) {
+            add(url, retVal)
+        }
+
+        return retVal
     }
 
     // region Private API
 
-    override suspend fun performFetch(url: String) {
-        fetchImage(url, true)
+    override suspend fun performFetch(query: String) {
+        fetchImage(query, true)
     }
 
     private fun cachedImageForURL(url: String): Bitmap? {
-        val retVal = cachedImages.firstOrNull { currItem ->
+        val retVal = entries.firstOrNull { currItem ->
             currItem.query == url
         }
 
         return retVal?.result?.getOrNull()
     }
 
-    private fun cacheImage(image: Bitmap, key: String) {
+    private fun add(entry: ImageRepositoryEntry) {
         reduceCacheIfNeeded()
-        val item = ImageRepositoryEntry(key, Result.success(image))
-
-        cachedImages.add(item)
+        entries.add(entry)
+    }
+    private fun add(query: String, result: Result<Bitmap>) {
+        add(ImageRepositoryEntry(query, result))
     }
 
     private fun reduceCacheIfNeeded() {
-        if (cachedImages.size < maxCachedImages) {
+        if (entries.size < maxCachedImages) {
             return
         }
 
-        while (cachedImages.size >= maxCachedImages) {
-            cachedImages.removeAt(0)
+        while (entries.size >= maxCachedImages) {
+            entries.removeAt(0)
         }
     }
 
