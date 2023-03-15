@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import de.stefanlang.metgallerybrowser.data.models.ImageData
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
@@ -14,7 +13,6 @@ import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -37,7 +35,7 @@ class ObjectDetailViewModel : ViewModel() {
     val state = objectID
         .debounce(500)
         .map { newID ->
-            if (newID == Defines.InvalidID){
+            if (newID == Defines.InvalidID) {
                 return@map State.Loading
             }
 
@@ -70,13 +68,14 @@ class ObjectDetailViewModel : ViewModel() {
     private val imageRepository = ImageRepository() // TODO: check if maybe object makes sense
 
     private val metObjectUIRepresentable: METObjectUIRepresentable?
-        get(){
+        get() {
             (state.value as? State.LoadedWithSuccess)?.let { state ->
                 return state.metObjectUIRepresentable
             }
 
             return null
         }
+
     init {
         viewModelScope.launch {
             launch {
@@ -100,10 +99,9 @@ class ObjectDetailViewModel : ViewModel() {
     }
 
     fun onBackPressed(navController: NavController) {
-        if(selectedImage.value != null){
+        if (selectedImage.value != null) {
             selectedImage.value = null
-        }
-        else {
+        } else {
             // TODO: cancel, clear
             navController.popBackStack()
         }
@@ -116,7 +114,7 @@ class ObjectDetailViewModel : ViewModel() {
     private suspend fun loadImages() {
         val imageData = metObjectUIRepresentable?.metObject?.imageData ?: return
 
-        imageData.forEach {currImageData ->
+        imageData.forEach { currImageData ->
             viewModelScope.launch {
                 val url = currImageData.smallImageURL ?: currImageData.imageURL
                 val imageResult = imageRepository.fetchImage(url)
@@ -128,7 +126,8 @@ class ObjectDetailViewModel : ViewModel() {
 
     private fun handleImageLoaded(url: String, imageResult: Result<Bitmap>) =
         MainScope().launch(Dispatchers.Main) {
-            val imageEntry = ImageRepositoryEntry(url, imageResult) // TODO: refactor, should use own model
+            val imageEntry =
+                ImageRepositoryEntry(url, imageResult) // TODO: refactor, should use own model
             images.add(imageEntry)
         }
 

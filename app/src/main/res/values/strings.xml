@@ -3,6 +3,7 @@
     <string name="search_placeholder">Search</string>
     <string name="common_yes">Yes</string>
     <string name="common_no">No</string>
+    <string name="common_back">Back</string>
     <string name="no_value"> - </string>
 
     <string name="idle_state_hint">Type in your search term.</string>

@@ -10,6 +10,8 @@ import de.stefanlang.metgallerybrowser.data.models.METObject
 /**
  * Wrapper around the METObject to prepare and provide UI representations of METObject properties
  */
+
+// TODO: tests
 data class METObjectUIRepresentable(val metObject: METObject) {
 
     // region Types
@@ -50,48 +52,15 @@ data class METObjectUIRepresentable(val metObject: METObject) {
     private fun createEntries(): List<Entry> {
         val retVal = mutableListOf<Entry>()
 
-        retVal.add(createTitleEntry())
+        createAccessionEntry()?.let { entry -> retVal.add(entry) }
+        createDepartmentEntry()?.let { entry -> retVal.add(entry) }
+        createCultureEntry()?.let { entry -> retVal.add(entry) }
 
-        createAccessionEntry()?.let { entry ->
-            retVal.add(entry)
-        }
+        createObjectDetailsEntry()?.let { entry -> retVal.add(entry) }
+        createArtistEntry()?.let { entry -> retVal.add(entry) }
+        createLocationEntry()?.let { entry -> retVal.add(entry) }
 
-        createDepartmentEntry()?.let { entry ->
-            retVal.add(entry)
-        }
-
-        createCultureEntry()?.let { entry ->
-            retVal.add(entry)
-        }
-
-        createObjectDetailsEntry()?.let { entry ->
-            retVal.add(entry)
-        }
-
-        createArtistEntry()?.let { entry ->
-            retVal.add(entry)
-        }
-
-        createLocationEntry()?.let { entry ->
-            retVal.add(entry)
-        }
-
-        createMiscEntry()?.let { entry ->
-            retVal.add(entry)
-        }
-
-        return retVal
-    }
-
-    private fun createTitleEntry(): Entry {
-        val entryValue = metObject.title
-        val entryTitle = resources.getString(R.string.object_title)
-
-        val retVal: Entry = if (entryValue == null || entryValue.isBlank()) {
-            Entry(entryTitle, resources.getString(R.string.object_default_title))
-        } else {
-            Entry(entryTitle, entryValue)
-        }
+        createMiscEntry()?.let { entry -> retVal.add(entry) }
 
         return retVal
     }
@@ -240,7 +209,6 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         ) {
             null
         } else {
-
             val content = resources.getString(
                 R.string.artist_text,
                 stringOrEmpty(artistDisplayName),
@@ -253,7 +221,6 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(artistWikidataURL),
                 stringOrEmpty(artistULANURL)
             )
-
             val hyperlinks = HyperLink.createList(artistWikidataURL, artistULANURL)
             val entry = Entry(resources.getString(R.string.artist_title), content, hyperlinks)
 
@@ -305,8 +272,8 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(stringOrEmpty(locale)),
                 stringOrEmpty(stringOrEmpty(locus))
             )
-
             val entry = Entry(resources.getString(R.string.geography_title), content)
+
             entry
         }
 
@@ -335,9 +302,9 @@ data class METObjectUIRepresentable(val metObject: METObject) {
                 stringOrEmpty(stringOrEmpty(linkResource)),
                 stringOrEmpty(stringOrEmpty(repository))
             )
-
             val hyperlinks = HyperLink.createList(linkResource)
             val entry = Entry(resources.getString(R.string.misc_title), content, hyperlinks)
+
             entry
         }
 

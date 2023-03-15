@@ -8,10 +8,13 @@ import androidx.navigation.navArgument
 
 enum class NavRoute(val route: String, val navArgs: List<NamedNavArgument> = emptyList()) {
     ObjectsSearch("objectsSearch"),
-    ObjectDetail("objectDetail/{objectID}",
-        navArgs = listOf( navArgument("objectID") {
+
+    ObjectDetail(
+        "objectDetail/{objectID}",
+        navArgs = listOf(navArgument("objectID") {
             type = NavType.IntType
-        })),
+        })
+    ),
 }
 
 // endregion

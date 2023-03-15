@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.ui.navigation.Navigation.navigateToObjectDetail
+import de.stefanlang.metgallerybrowser.ui.navigation.navigateToObjectDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

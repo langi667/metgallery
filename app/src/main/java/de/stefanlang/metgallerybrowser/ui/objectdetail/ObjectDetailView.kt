@@ -22,14 +22,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.metgallerybrowser.R
+import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.HyperlinkText
 import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
-import com.google.accompanist.flowlayout.FlowRow
-import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.uicore.RoundedImageView
 
 // region Public API
@@ -39,28 +39,18 @@ import de.stefanlang.uicore.RoundedImageView
 fun ObjectDetailView(navController: NavController, objectID: Int) {
     val viewModel: ObjectDetailViewModel = viewModel()
     val state = viewModel.state.collectAsState()
-    viewModel.loadObjectForID(objectID)
 
+    viewModel.loadObjectForID(objectID)
     val images = viewModel.images.toList()
 
     Scaffold(topBar = {
         TopBar(navController)
     }) {
         ContentView(state.value, images, viewModel.selectedImage.value?.result?.getOrNull())
-
         val selectedImage = viewModel.selectedImage.value?.resultValue
 
         if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
-            Box(modifier = Modifier
-                .padding(Dimen.s)
-                .fillMaxSize()
-                .background(MaterialTheme.colors.onPrimary.copy(alpha = 0.7f))
-                .clickable {
-                    viewModel.deselectImage()
-                }) {
-                RoundedImageView(modifier = Modifier.fillMaxSize(), image = selectedImage?.asImageBitmap(), alignment = Alignment.Center)
-            }
-
+            ImageDetailView(viewModel, selectedImage)
         }
     }
 }
@@ -77,7 +67,7 @@ private fun TopBar(navController: NavController) {
             }) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
-                    contentDescription = "Back" // TODO: localise
+                    contentDescription = stringResource(id = R.string.common_back)
                 )
             }
         }
@@ -85,7 +75,11 @@ private fun TopBar(navController: NavController) {
 }
 
 @Composable
-private fun ContentView(state: ObjectDetailViewModel.State, images: List<ImageRepositoryEntry>, selectedImage: Bitmap?) {
+private fun ContentView(
+    state: ObjectDetailViewModel.State,
+    images: List<ImageRepositoryEntry>,
+    selectedImage: Bitmap?
+) {
     Box(modifier = Modifier.padding(Dimen.s)) {
         when (state) {
             is ObjectDetailViewModel.State.Loading -> {
@@ -109,26 +103,39 @@ private fun ContentView(state: ObjectDetailViewModel.State, images: List<ImageRe
 }
 
 @Composable
-private fun METObjectDetailView(metObjectUIRepresentable: METObjectUIRepresentable, loadedImages: List<ImageRepositoryEntry>) {
-    LazyColumn {
-        items(metObjectUIRepresentable.entries.size + 1){currIndex ->
-            if (currIndex == 0){
-                METGalleryView(metObjectUIRepresentable,loadedImages)
-            }
-            else {
-                METObjectEntryView(metObjectUIRepresentable.entries[currIndex - 1])
+private fun METObjectDetailView(
+    metObjectUIRepresentable: METObjectUIRepresentable,
+    loadedImages: List<ImageRepositoryEntry>
+) {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(text = metObjectUIRepresentable.metObject.title ?: stringResource(id = R.string.object_default_title),
+        style = MaterialTheme.typography.h5)
+
+        Spacer(modifier = Modifier.height(Dimen.s))
+        
+        LazyColumn {
+            items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
+                if (currIndex == 0) {
+                    METGalleryView(metObjectUIRepresentable, loadedImages)
+                } else {
+                    val spacerHeight = if (currIndex == 1) { Dimen.s } else { Dimen.xs }
+                    Spacer(modifier = Modifier.height(spacerHeight))
+                    METObjectEntryView(metObjectUIRepresentable.entries[currIndex - 1])
+                }
             }
         }
     }
+    
 }
 
 @Composable
-private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable,
-                           loadedImages: List<ImageRepositoryEntry>) {
-
+private fun METGalleryView(
+    metObjectUIRepresentable: METObjectUIRepresentable,
+    loadedImages: List<ImageRepositoryEntry>
+) {
     val images = metObjectUIRepresentable.metObject.imageData
     val width = (LocalConfiguration.current.screenWidthDp - 2 * Dimen.s.value) / 3
-    val height = 150.dp * (4 / 3) // default ratio of the primary image
+    val height = width * (4 / 3) // default ratio of the primary image
 
     FlowRow() {
         repeat(images.size) { it ->
@@ -140,7 +147,7 @@ private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable,
                 currImageData?.containsURL(currEntry.query) == true
             }
 
-            imageData?.result?.getOrNull()?.let {loadedImage ->
+            imageData?.result?.getOrNull()?.let { loadedImage ->
                 painter = BitmapPainter(loadedImage.asImageBitmap())
             }
 
@@ -152,10 +159,13 @@ private fun METGalleryView(metObjectUIRepresentable: METObjectUIRepresentable,
             val viewModel: ObjectDetailViewModel = viewModel()
 
             RoundedImageView(
-                modifier = Modifier.clickable { imageData?.isSuccess
-                    viewModel.onImageSelected(imageData)
-                }.size(width.dp, height)
-                , painter)
+                modifier = Modifier
+                    .clickable {
+                        imageData?.isSuccess
+                        viewModel.onImageSelected(imageData)
+                    }
+                    .size(width.dp, height.dp), painter
+            )
         }
     }
 }
@@ -170,6 +180,23 @@ private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
             modifier = Modifier.padding(start = Dimen.xs),
             hyperlinks = entry.hyperlinks,
             linkTextColor = MaterialTheme.colors.primary
+        )
+    }
+}
+
+@Composable
+private fun ImageDetailView(viewModel: ObjectDetailViewModel, selectedImage: Bitmap) {
+    Box(modifier = Modifier
+        .padding(Dimen.s)
+        .fillMaxSize()
+        .background(MaterialTheme.colors.onPrimary.copy(alpha = 0.7f))
+        .clickable {
+            viewModel.deselectImage()
+        }) {
+        RoundedImageView(
+            modifier = Modifier.fillMaxSize(),
+            image = selectedImage.asImageBitmap(),
+            alignment = Alignment.Center
         )
     }
 }

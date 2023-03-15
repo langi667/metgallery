@@ -3,11 +3,8 @@ package de.stefanlang.metgallerybrowser.data.repositories
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.annotation.IntRange
-import androidx.compose.runtime.mutableStateListOf
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.update
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
 

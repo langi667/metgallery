@@ -2,8 +2,6 @@ package de.stefanlang.metgallerybrowser.data.repositories
 
 import de.stefanlang.metgallerybrowser.data.utils.JSONParser
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.withContext
 
 abstract class Repository<QUERY, RESULT> {
@@ -67,7 +65,7 @@ abstract class Repository<QUERY, RESULT> {
 
 // TODO: move to separate file
 
-abstract class SingleEntryRepository<QUERY, RESULT>: Repository<QUERY, RESULT>() {
+abstract class SingleEntryRepository<QUERY, RESULT> : Repository<QUERY, RESULT>() {
 
     // region Properties
     var latest = Entry<QUERY, RESULT>()

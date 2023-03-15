@@ -72,13 +72,15 @@ private fun ContentView(
                 }
             ),
 
-            trailingIcon = {Icon(Icons.Default.Clear,
-                contentDescription = "clear text", // TODO: localise
-                modifier = Modifier
-                    .clickable {
-                        viewModel.onSearchClear()
-                    }
-            )},
+            trailingIcon = {
+                Icon(Icons.Default.Clear,
+                    contentDescription = "clear text", // TODO: localise
+                    modifier = Modifier
+                        .clickable {
+                            viewModel.onSearchClear()
+                        }
+                )
+            },
 
             modifier = Modifier
                 .fillMaxWidth()

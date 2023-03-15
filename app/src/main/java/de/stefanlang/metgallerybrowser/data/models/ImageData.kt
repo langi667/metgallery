@@ -9,8 +9,7 @@ data class ImageData(
     fun containsURL(url: String?): Boolean {
         val retVal = if (url == null) {
             false
-        }
-        else {
+        } else {
             imageURL == url || smallImageURL == url
         }
 

@@ -99,11 +99,13 @@ class METObject {
     @JsonProperty("GalleryNumber")
     var galleryNumber: String? = null
 
-    // TODO: test
+    // TODO: test, check if lazy
     val imageData: List<ImageData>
-    get() {
-        return createImageDataList()
-    }
+        get() {
+            return createImageDataList()
+        }
+
+
 
     private fun createImageDataList(): List<ImageData> {
         val retVal = mutableListOf<ImageData>()
@@ -117,7 +119,7 @@ class METObject {
                 currImageURL,
                 false,
                 METAPIURLBuilder.smallImageURLForImageURL(currImageURL)
-            )?.let {currImageData ->
+            )?.let { currImageData ->
                 retVal.add(currImageData)
             }
         }
