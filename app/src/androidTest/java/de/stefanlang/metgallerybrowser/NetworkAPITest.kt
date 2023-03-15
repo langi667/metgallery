@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 
 
 @RunWith(AndroidJUnit4::class)
-class NetworkAPIInstrumentedTest: NetworkInstrumentedTest() {
+class NetworkAPITest : NetworkInstrumentedTest() {
     @Test
     fun testNetworkAPISuccess() {
         runBlocking {

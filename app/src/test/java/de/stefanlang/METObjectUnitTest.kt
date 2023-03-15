@@ -1,11 +1,28 @@
 package de.stefanlang
 
 import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.metgallerybrowser.domain.Defines
+import org.junit.Assert.*
 import org.junit.Test
 
-import org.junit.Assert.*
-
 class METObjectUnitTest {
+
+    @Test
+    fun test_isValid() {
+        val objInvalid1 = METObject()
+        assertFalse(objInvalid1.isValid)
+
+        val objInvalid2 = METObject()
+        objInvalid2.objectID = Defines.InvalidID
+
+        assertFalse(objInvalid2.isValid)
+
+        val objInvalid3 = METObject()
+        objInvalid3.objectID = 12345
+
+        assertTrue(objInvalid3.isValid)
+    }
+
     @Test
     fun test_imageDate() {
         val testPrimaryURL = "http://d.android.com/tools/testing"

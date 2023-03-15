@@ -2,6 +2,7 @@ package de.stefanlang.metgallerybrowser.data.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
 import java.util.*
 
@@ -76,12 +77,19 @@ class METObject {
     var objectWikidataURL: String? = null
 
     var isTimelineWork: Boolean? = null
+
     @JsonProperty("GalleryNumber")
     var galleryNumber: String? = null
 
     val imageData: List<METObjectImageData>
         get() {
             return createImageDataList()
+        }
+
+    val isValid: Boolean
+        get() {
+            val retVal = objectID != null && objectID != Defines.InvalidID
+            return retVal
         }
 
     // endregion

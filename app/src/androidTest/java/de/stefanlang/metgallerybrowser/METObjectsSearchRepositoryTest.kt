@@ -9,15 +9,16 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class METObjectsSearchRepositoryInstrumentedTest: NetworkInstrumentedTest() {
+class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
     @Test
-    fun testSearchEmpty(){
-        val repo =  METObjectsSearchRepository()
+    fun testSearchEmpty() {
+        val repo = METObjectsSearchRepository()
         assertNull(repo.latest.query)
         assertNull(repo.latest.result)
     }
+
     @Test
-    fun testSearchSuccess(){
+    fun testSearchSuccess() {
         val repo = METObjectsSearchRepository()
 
         runBlocking {

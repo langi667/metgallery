@@ -1,6 +1,5 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
-import android.graphics.Bitmap
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -15,7 +14,10 @@ import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class ObjectDetailViewModel : ViewModel() {
@@ -24,7 +26,7 @@ class ObjectDetailViewModel : ViewModel() {
         object Loading : State()
 
         class LoadedWithSuccess(val metObjectUIRepresentable: METObjectUIRepresentable) : State()
-        class LoadedWithError(val error: Throwable, val objectID: Int) : State()
+        class LoadedWithError(val objectID: Int) : State()
     }
 
     val images = mutableStateListOf<ImageLoadResult>()
@@ -34,7 +36,6 @@ class ObjectDetailViewModel : ViewModel() {
     private val objectID = MutableStateFlow(Defines.InvalidID)
 
     val state = objectID
-        .debounce(500)
         .map { newID ->
             if (newID == Defines.InvalidID) {
                 return@map State.Loading
@@ -54,8 +55,7 @@ class ObjectDetailViewModel : ViewModel() {
                     )
                 )
             } else {
-                val error = latest.error ?: NetworkError.InvalidState
-                State.LoadedWithError(error, newID)
+                State.LoadedWithError(newID)
             }
 
             newState
@@ -118,20 +118,22 @@ class ObjectDetailViewModel : ViewModel() {
         imageData.forEach { currImageData ->
             viewModelScope.launch {
                 val url = currImageData.smallImageURL ?: currImageData.imageURL
-                val imageResult = imageRepository.fetchImage(url)
+                imageRepository.fetch(url)
+                val imageResult = imageRepository.entryForQuery(url)
 
-                handleImageLoaded(url, imageResult)
+                handleImageLoaded(imageResult)
             }
         }
     }
 
-    private fun handleImageLoaded(url: String, imageResult: Result<Bitmap>) =
-        MainScope().launch(Dispatchers.Main) {
-            val imageEntry = ImageRepositoryEntry(url, imageResult)
-            val result = imageLoadResultFromEntry(imageEntry)
+    private fun handleImageLoaded(entry: ImageRepositoryEntry?) {
+        entry ?: return
 
+        MainScope().launch(Dispatchers.Main) {
+            val result = imageLoadResultFromEntry(entry)
             images.add(result)
         }
+    }
 
     private fun handleStateChanged() {
         if (state.value is State.LoadedWithSuccess) {

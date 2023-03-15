@@ -12,11 +12,11 @@ class METObjectsRepository : SingleEntryRepository<Int, METObject>() {
 
     // region Private API
 
-    override suspend fun performFetch(objectID: Int) {
-        val url = METAPIURLBuilder.objectURL(objectID);
+    override suspend fun performFetch(query: Int) {
+        val url = METAPIURLBuilder.objectURL(query)
         val result = NetworkAPI.get(url)
 
-        val entry = entryForResponse(objectID, result)
+        val entry = entryForResponse(query, result)
         latest = entry
     }
 
@@ -25,11 +25,16 @@ class METObjectsRepository : SingleEntryRepository<Int, METObject>() {
         networkResult: Result<NetworkResponse>
     ): METObjectsRepositoryEntry {
         val retVal: METObjectsRepositoryEntry
-        val response = networkResult.getOrNull();
+        val response = networkResult.getOrNull()
 
         retVal = if (response != null) {
             val metObject = mapObjectFrom<METObject>(response.data)
-            Entry(objectID, Result.success(metObject))
+            if (metObject.isValid) {
+                Entry(objectID, Result.success(metObject))
+            } else {
+                Entry(objectID, Result.failure(NetworkError.NotFound))
+            }
+
         } else {
             val error = networkResult.exceptionOrNull() ?: NetworkError.InvalidState
             Entry(objectID, Result.failure(error))

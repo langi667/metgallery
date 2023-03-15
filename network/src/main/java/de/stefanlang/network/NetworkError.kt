@@ -8,6 +8,7 @@ data class NetworkError(val code: Int, val text: String = "NetworkError") : Thro
         const val InvalidStateError = -1
         const val UnknownNetworkError = -2
         const val DecodeError = -3
+        const val NotFoundError = 404
 
         val InvalidState =
             NetworkError(InvalidStateError, "Invalid request state ${InvalidStateError}")
@@ -17,6 +18,9 @@ data class NetworkError(val code: Int, val text: String = "NetworkError") : Thro
 
         val Decode =
             NetworkError(DecodeError, "Error decoding object")
+
+        val NotFound =
+            NetworkError(NotFoundError, "Unable to find requested object")
     }
 
     // endregion
