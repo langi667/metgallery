@@ -48,7 +48,8 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageCache() {
-        val images = listOf("https://images.metmuseum.org/CRDImages/gr/web-large/DP337517.jpg",
+        val images = listOf(
+            "https://images.metmuseum.org/CRDImages/gr/web-large/DP337517.jpg",
             "https://images.metmuseum.org/CRDImages/gr/web-large/DP337524.jpg",
             "https://images.metmuseum.org/CRDImages/gr/web-large/DP337525.jpg",
             "https://images.metmuseum.org/CRDImages/gr/web-large/DP337526.jpg",
@@ -86,8 +87,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
                 if (index == 0) { // cache removes the first one, so this is supposed to be dropped
                     assertNull(cachedImage)
-                }
-                else {
+                } else {
                     assertNotNull(cachedImage)
                 }
             }

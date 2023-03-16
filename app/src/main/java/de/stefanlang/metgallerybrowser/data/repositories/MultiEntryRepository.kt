@@ -1,6 +1,7 @@
 package de.stefanlang.metgallerybrowser.data.repositories
 
 import androidx.annotation.IntRange
+
 // TODO: Consider either 0 or null as no limits
 abstract class MultiEntryRepository<QUERY, RESULT>(@IntRange(1) val maxEntries: Int = 15) :
     Repository<QUERY, RESULT>() {

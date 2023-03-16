@@ -50,8 +50,7 @@ class ImageRepository(maxEntries: Int = 15) : MultiEntryRepository<String, Bitma
         val bitmap = BitmapFactory.decodeByteArray(imageData, 0, imageData.size)
         val retVal: Result<Bitmap> = if (bitmap == null) {
             Result.failure(NetworkError.Decode)
-        }
-        else {
+        } else {
             Result.success(bitmap)
         }
         return retVal

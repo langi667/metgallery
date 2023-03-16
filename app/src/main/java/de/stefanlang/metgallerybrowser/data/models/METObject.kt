@@ -42,8 +42,10 @@ class METObject {
     var artistEndDate: String? = null
 
     var artistGender: String? = null
+
     @JsonProperty("artistWikidata_URL")
     var artistWikidataURL: String? = null
+
     @JsonProperty("artistULAN_URL")
     var artistULANURL: String? = null
 
@@ -73,6 +75,7 @@ class METObject {
 
     var linkResource: String? = null
     var objectURL: String? = null
+
     @JsonProperty("objectWikidata_URL")
     var objectWikidataURL: String? = null
 

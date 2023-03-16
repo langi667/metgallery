@@ -11,7 +11,6 @@ import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
 import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
-import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -145,11 +144,10 @@ class ObjectDetailViewModel : ViewModel() {
 
     private fun imageLoadResultFromEntry(entry: ImageRepositoryEntry): ImageLoadResult {
         val image = entry.resultValue
-        val retVal: ImageLoadResult = if( image != null){
+        val retVal: ImageLoadResult = if (image != null) {
             ImageLoadResult.Success(entry.query ?: "", image)
-        }
-        else {
-            ImageLoadResult.Failure(entry.query ?: "", entry.error ?: NetworkError.InvalidState)
+        } else {
+            ImageLoadResult.Failure(entry.query ?: "")
         }
 
         return retVal

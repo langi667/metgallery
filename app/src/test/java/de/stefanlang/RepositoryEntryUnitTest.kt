@@ -2,18 +2,18 @@ package de.stefanlang
 
 import de.stefanlang.metgallerybrowser.data.repositories.Repository
 import de.stefanlang.network.NetworkError
+import org.junit.Assert.*
 import org.junit.Test
 
-import org.junit.Assert.*
-
 typealias TestRepoEntry = Repository.Entry<Int, String>
+
 class RepositoryEntryUnitTest {
-    val successEntry = TestRepoEntry(1, Result.success("success"));
-    val errorEntry = TestRepoEntry(1, Result.failure(NetworkError.InvalidState));
+    val successEntry = TestRepoEntry(1, Result.success("success"))
+    val errorEntry = TestRepoEntry(1, Result.failure(NetworkError.InvalidState))
 
     @Test
     fun test_isSuccess() {
-        var entry = TestRepoEntry();
+        var entry = TestRepoEntry()
         assertFalse(entry.isSuccess)
 
         entry = successEntry

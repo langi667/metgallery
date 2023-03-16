@@ -40,7 +40,7 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
     }
 
     @Test
-    fun testSearchNoResults(){
+    fun testSearchNoResults() {
         val repo = METObjectsSearchRepository()
 
         runBlocking {
@@ -61,7 +61,7 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
     }
 
     @Test
-    fun testSearchSuccessSpecialChars(){
+    fun testSearchSuccessSpecialChars() {
         val repo = METObjectsSearchRepository()
 
         runBlocking {

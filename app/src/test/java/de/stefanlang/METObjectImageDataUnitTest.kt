@@ -1,9 +1,9 @@
 package de.stefanlang
 
 import de.stefanlang.metgallerybrowser.data.models.METObjectImageData
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
-
-import org.junit.Assert.*
 
 /**
  * Example local unit test, which will execute on the development machine (host).
@@ -19,16 +19,16 @@ class METObjectImageDataUnitTest {
 
         val dataAll = METObjectImageData(testURL1, true, testURL2)
 
-        assertTrue( dataAll.containsURL(testURL1) )
-        assertTrue( dataAll.containsURL(testURL2) )
-        assertFalse( dataAll.containsURL(testURL3) )
+        assertTrue(dataAll.containsURL(testURL1))
+        assertTrue(dataAll.containsURL(testURL2))
+        assertFalse(dataAll.containsURL(testURL3))
 
         val dataPrimaryOnly = METObjectImageData(testURL1, true, null)
-        assertTrue( dataPrimaryOnly.containsURL(testURL1) )
-        assertFalse( dataPrimaryOnly.containsURL(testURL2) )
+        assertTrue(dataPrimaryOnly.containsURL(testURL1))
+        assertFalse(dataPrimaryOnly.containsURL(testURL2))
 
         val dataSecondaryOnly = METObjectImageData("", true, testURL2)
-        assertFalse( dataSecondaryOnly.containsURL(testURL1) )
-        assertTrue( dataSecondaryOnly.containsURL(testURL2) )
+        assertFalse(dataSecondaryOnly.containsURL(testURL1))
+        assertTrue(dataSecondaryOnly.containsURL(testURL2))
     }
 }

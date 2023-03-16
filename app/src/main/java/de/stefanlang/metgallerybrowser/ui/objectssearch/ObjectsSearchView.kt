@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -84,7 +85,8 @@ private fun ContentView(
 
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimen.s),
+                .padding(Dimen.s)
+                .testTag(Tags.SEARCH_FIELD.name),
             placeholder = {
                 Text(text = stringResource(R.string.search_placeholder))
             }
@@ -102,10 +104,11 @@ private fun ContentView(
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Dimen.m)
+                        .testTag(Tags.PROGRESSBAR.name)
                 )
             }
 
-            ViewForState(viewModel, state.value) { objectID ->
+            ViewForState(state.value) { objectID ->
                 viewModel.onObjectIDSelected(objectID, navController)
             }
         }
@@ -114,7 +117,6 @@ private fun ContentView(
 
 @Composable
 private fun ViewForState(
-    viewModel: ObjectsSearchViewModel,
     state: ObjectsSearchViewModel.State,
     onItemClick: (objectID: Int) -> Unit
 ) {
@@ -146,6 +148,7 @@ private fun ObjectsSearchResultList(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
+            .testTag(Tags.SEARCH_RESULTS_LIST.name)
     ) {
         val objectIDs = objectsSearchResult.objectIDs ?: emptyList()
         items(objectIDs) { currObjectID ->
@@ -166,6 +169,7 @@ private fun ObjectsSearchItemView(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
+            .testTag(Tags.SEARCH_RESULT_ENTRY.name)
             .clickable {
                 onItemSelected(objectID)
             }

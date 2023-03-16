@@ -24,7 +24,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
@@ -108,17 +107,24 @@ private fun METObjectDetailView(
     loadedImages: List<ImageLoadResult>
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
-        Text(text = metObjectUIRepresentable.metObject.title ?: stringResource(id = R.string.object_default_title),
-        style = MaterialTheme.typography.h5)
+        Text(
+            text = metObjectUIRepresentable.metObject.title
+                ?: stringResource(id = R.string.object_default_title),
+            style = MaterialTheme.typography.h5
+        )
 
         Spacer(modifier = Modifier.height(Dimen.s))
-        
+
         LazyColumn {
             items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
                 if (currIndex == 0) {
                     METGalleryView(metObjectUIRepresentable, loadedImages)
                 } else {
-                    val spacerHeight = if (currIndex == 1) { Dimen.s } else { Dimen.xs }
+                    val spacerHeight = if (currIndex == 1) {
+                        Dimen.s
+                    } else {
+                        Dimen.xs
+                    }
                     Spacer(modifier = Modifier.height(spacerHeight))
                     METObjectEntryView(metObjectUIRepresentable.entries[currIndex - 1])
                 }
@@ -148,15 +154,16 @@ private fun METGalleryView(
             val painter: Painter? = when (imageData) {
                 is ImageLoadResult.Success -> BitmapPainter(imageData.image.asImageBitmap())
                 is ImageLoadResult.Failure -> painterResource(id = R.drawable.error_state_img)
-                else-> {null}
+                else -> {
+                    null
+                }
             }
 
-            val isClickable = imageData is ImageLoadResult.Success
             val viewModel: ObjectDetailViewModel = viewModel()
 
             RoundedImageView(
                 modifier = Modifier
-                    .clickable { isClickable
+                    .clickable {
                         viewModel.onImageSelected(imageData)
                     }
                     .size(width.dp, height.dp), painter
