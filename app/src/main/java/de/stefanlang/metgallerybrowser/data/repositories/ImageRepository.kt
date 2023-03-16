@@ -18,9 +18,6 @@ class ImageRepository(maxEntries: Int = 15) : MultiEntryRepository<String, Bitma
 
     // endregion
 
-
-    // endregion
-
     // region Public API
 
     suspend fun fetchImage(url: String): Result<Bitmap>? {

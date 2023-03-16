@@ -18,7 +18,6 @@ class METObjectsSearchRepository : SingleEntryRepository<String, METObjectsSearc
         val newResult = resultForResponse(query, result)
 
         val search = METObjectsSearchRepositoryEntry(query, newResult)
-
         latest = search
     }
 

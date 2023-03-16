@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.ui.navigation.NavRoute
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
 import de.stefanlang.metgallerybrowser.ui.objectssearch.ObjectsSearchView
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
                             route = NavRoute.ObjectDetail.route,
                             arguments = NavRoute.ObjectDetail.navArgs
                         ) {
-                            val objectID = it.arguments?.getInt("objectID") ?: 0 // TODO: invalid id
+                            val objectID = it.arguments?.getInt("objectID") ?: Defines.InvalidID
                             ObjectDetailView(navController, objectID)
                         }
                     }

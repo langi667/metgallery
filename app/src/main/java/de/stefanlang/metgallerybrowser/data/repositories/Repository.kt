@@ -12,7 +12,6 @@ abstract class Repository<QUERY, RESULT> {
         val query: Q? = null,
         val result: Result<R>? = null
     ) {
-
         val isSuccess: Boolean
             get() {
                 val retVal = result?.isSuccess ?: false
