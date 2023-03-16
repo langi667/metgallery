@@ -1,19 +1,12 @@
 package de.stefanlang.metgallerybrowser.ui
 
 import androidx.compose.ui.test.*
-import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import de.stefanlang.metgallerybrowser.MainActivity
-import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.ui.objectssearch.Tags
 import org.junit.Assert.assertTrue
-import org.junit.Rule
 import org.junit.Test
 
-class ObjectsSearchScreenTest : NetworkInstrumentedTest() {
-
-    @get:Rule
-    val rule = createAndroidComposeRule<MainActivity>()
+class ObjectsSearchScreenTest : MainActivityTest() {
 
     @Test
     fun testIdleState() {
