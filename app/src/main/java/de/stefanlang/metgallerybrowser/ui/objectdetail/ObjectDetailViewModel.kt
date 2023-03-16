@@ -5,13 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import de.stefanlang.metgallerybrowser.data.models.METObject
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
 import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
-import de.stefanlang.metgallerybrowser.domain.Defines
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
-import kotlinx.coroutines.Dispatchers
+import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,41 +24,30 @@ class ObjectDetailViewModel : ViewModel() {
     sealed class State {
         object Loading : State()
 
+        object NotFound : State()
         class LoadedWithSuccess(val metObjectUIRepresentable: METObjectUIRepresentable) : State()
-        class LoadedWithError(val objectID: Int) : State()
+        class LoadedWithError() : State()
     }
 
     val images = mutableStateListOf<ImageLoadResult>()
     val selectedImage = mutableStateOf<ImageLoadResult?>(null)
 
     private val _state = MutableStateFlow<State>(State.Loading)
-    private val objectID = MutableStateFlow(Defines.InvalidID)
+    private val objectID = MutableStateFlow<Int?>(null)
 
     val state = objectID
         .map { newID ->
-            if (newID == Defines.InvalidID) {
+            if (newID == null) {
                 return@map State.Loading
             }
 
             repository.fetch(newID)
+            val latest = repository.latest.result
 
-            val newState: State
-            val latest = repository.latest
-            val metObject = latest.result?.getOrNull()
-
-            newState = if (metObject != null) {
-                State.LoadedWithSuccess(
-                    METObjectUIRepresentable(
-                        metObject = metObject,
-                        createEntriesImmediately = true
-                    )
-                )
-            } else {
-                State.LoadedWithError(newID)
-            }
-
-            newState
-        }.stateIn(
+            stateForResult(latest)
+        }
+        // TODO: add onEach and add clear ?? ?
+        .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
             _state.value
@@ -128,7 +117,7 @@ class ObjectDetailViewModel : ViewModel() {
     private fun handleImageLoaded(entry: ImageRepositoryEntry?) {
         entry ?: return
 
-        MainScope().launch(Dispatchers.Main) {
+        MainScope().launch {
             val result = imageLoadResultFromEntry(entry)
             images.add(result)
         }
@@ -140,6 +129,28 @@ class ObjectDetailViewModel : ViewModel() {
                 loadImages()
             }
         }
+    }
+
+    private fun stateForResult(result: Result<METObject>?): State {
+        result ?: return State.Loading
+
+        val metObject = result.getOrNull()
+        val error = result.exceptionOrNull()
+
+        val retVal = if (metObject != null) {
+            State.LoadedWithSuccess(
+                METObjectUIRepresentable(
+                    metObject = metObject,
+                    createEntriesImmediately = true
+                )
+            )
+        } else if (error != null && error != NetworkError.NotFound) {
+            State.LoadedWithError()
+        } else {
+            State.NotFound
+        }
+
+        return retVal
     }
 
     private fun imageLoadResultFromEntry(entry: ImageRepositoryEntry): ImageLoadResult {

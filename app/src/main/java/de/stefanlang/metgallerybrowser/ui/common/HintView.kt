@@ -53,7 +53,7 @@ fun IdleStateHint() {
 }
 
 @Composable
-fun NoSearchResultsHint() {
+fun NoResultsHint() {
     HintView(imgRes = R.drawable.no_results_state_img, textRes = R.string.no_results_state_hint)
 }
 

@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,6 +30,8 @@ import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.HyperlinkText
 import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
+import de.stefanlang.metgallerybrowser.ui.common.NoResultsHint
+import de.stefanlang.metgallerybrowser.ui.objectssearch.Tags
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 import de.stefanlang.uicore.RoundedImageView
 
@@ -86,12 +89,17 @@ private fun ContentView(
                     Modifier
                         .fillMaxWidth()
                         .padding(horizontal = Dimen.m)
+                        .testTag(Tags.PROGRESSBAR.name)
                 )
                 LoadingStateHint()
             }
 
             is ObjectDetailViewModel.State.LoadedWithError -> {
                 ErrorStateHint()
+            }
+
+            is ObjectDetailViewModel.State.NotFound -> {
+                NoResultsHint()
             }
 
             is ObjectDetailViewModel.State.LoadedWithSuccess -> {

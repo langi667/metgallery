@@ -22,7 +22,7 @@ import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
-import de.stefanlang.metgallerybrowser.ui.common.NoSearchResultsHint
+import de.stefanlang.metgallerybrowser.ui.common.NoResultsHint
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 import kotlinx.coroutines.*
 
@@ -130,7 +130,7 @@ private fun ViewForState(
             if (state.hasSearchResults) {
                 ObjectsSearchResultList(state.objectsSearch, onItemClick)
             } else {
-                NoSearchResultsHint()
+                NoResultsHint()
             }
         }
 
