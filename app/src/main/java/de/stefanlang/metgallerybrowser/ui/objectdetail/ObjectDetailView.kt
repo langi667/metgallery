@@ -27,11 +27,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
-import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
-import de.stefanlang.metgallerybrowser.ui.common.HyperlinkText
-import de.stefanlang.metgallerybrowser.ui.common.LoadingStateHint
-import de.stefanlang.metgallerybrowser.ui.common.NoResultsHint
-import de.stefanlang.metgallerybrowser.ui.objectssearch.Tags
+import de.stefanlang.metgallerybrowser.ui.common.*
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 import de.stefanlang.uicore.RoundedImageView
 
@@ -67,7 +63,7 @@ private fun TopBar(navController: NavController) {
         navigationIcon = {
             IconButton(onClick = {
                 viewModel.onBackPressed(navController)
-            }) {
+            }, modifier = Modifier.testTag(Tags.BACK_BUTTON.name)) {
                 Icon(
                     imageVector = Icons.Filled.ArrowBack,
                     contentDescription = stringResource(id = R.string.common_back)
@@ -82,13 +78,13 @@ private fun ContentView(
     state: ObjectDetailViewModel.State,
     images: List<ImageLoadResult>
 ) {
-    Box(modifier = Modifier.padding(Dimen.s)) {
+    Box(modifier = Modifier.padding(Dimen.S)) {
         when (state) {
             is ObjectDetailViewModel.State.Loading -> {
                 LinearProgressIndicator(
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = Dimen.m)
+                        .padding(horizontal = Dimen.M)
                         .testTag(Tags.PROGRESSBAR.name)
                 )
                 LoadingStateHint()
@@ -121,7 +117,7 @@ private fun METObjectDetailView(
             style = MaterialTheme.typography.h5
         )
 
-        Spacer(modifier = Modifier.height(Dimen.s))
+        Spacer(modifier = Modifier.height(Dimen.S))
 
         LazyColumn {
             items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
@@ -129,9 +125,9 @@ private fun METObjectDetailView(
                     METGalleryView(metObjectUIRepresentable, loadedImages)
                 } else {
                     val spacerHeight = if (currIndex == 1) {
-                        Dimen.s
+                        Dimen.S
                     } else {
-                        Dimen.xs
+                        Dimen.XS
                     }
                     Spacer(modifier = Modifier.height(spacerHeight))
                     METObjectEntryView(metObjectUIRepresentable.entries[currIndex - 1])
@@ -147,23 +143,31 @@ private fun METGalleryView(
     loadedImages: List<ImageLoadResult>
 ) {
     val images = metObjectUIRepresentable.metObject.imageData
-    val width = (LocalConfiguration.current.screenWidthDp - 2 * Dimen.s.value) / 3
+    val width = (LocalConfiguration.current.screenWidthDp - 2 * Dimen.S.value) / 3
     val height = width * (4 / 3) // default ratio of the primary image
 
     FlowRow() {
         repeat(images.size) { it ->
-
             val currImageData = images.getOrNull(it)
-
-            val imageData = loadedImages.firstOrNull { currEntry ->
+            val imageLoadResult = loadedImages.firstOrNull { currEntry ->
                 currImageData?.containsURL(currEntry.url) == true
             }
 
-            val painter: Painter? = when (imageData) {
-                is ImageLoadResult.Success -> BitmapPainter(imageData.image.asImageBitmap())
-                is ImageLoadResult.Failure -> painterResource(id = R.drawable.error_state_img)
+            val painter: Painter?
+            val contentDescription: String?
+
+            when (imageLoadResult) {
+                is ImageLoadResult.Success -> {
+                    painter = BitmapPainter(imageLoadResult.image.asImageBitmap())
+                    contentDescription = imageLoadResult.url
+                }
+                is ImageLoadResult.Failure -> {
+                    painter = painterResource(id = R.drawable.error_state_img)
+                    contentDescription = null
+                }
                 else -> {
-                    null
+                    painter = null
+                    contentDescription = null
                 }
             }
 
@@ -172,9 +176,12 @@ private fun METGalleryView(
             RoundedImageView(
                 modifier = Modifier
                     .clickable {
-                        viewModel.onImageSelected(imageData)
+                        viewModel.onImageSelected(imageLoadResult)
                     }
-                    .size(width.dp, height.dp), painter
+                    .size(width.dp, height.dp)
+                    .testTag(Tags.GALLERY_IMAGE_PREVIEW.name),
+                painter = painter,
+                contentDescription = contentDescription
             )
         }
     }
@@ -184,10 +191,10 @@ private fun METGalleryView(
 private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
     Column {
         Text(text = entry.name, style = MaterialTheme.typography.h6)
-        Spacer(modifier = Modifier.height(Dimen.xxs))
+        Spacer(modifier = Modifier.height(Dimen.XXS))
         HyperlinkText(
             fullText = entry.value,
-            modifier = Modifier.padding(start = Dimen.xs),
+            modifier = Modifier.padding(start = Dimen.XS),
             hyperlinks = entry.hyperlinks,
             linkTextColor = MaterialTheme.colors.primary
         )
@@ -197,9 +204,10 @@ private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
 @Composable
 private fun ImageDetailView(viewModel: ObjectDetailViewModel, selectedImage: Bitmap) {
     Box(modifier = Modifier
-        .padding(Dimen.s)
+        .padding(Dimen.S)
         .fillMaxSize()
         .background(MaterialTheme.colors.onPrimary.copy(alpha = 0.7f))
+        .testTag(Tags.GALLERY_SELECTED_IMAGE.name)
         .clickable {
             viewModel.deselectImage()
         }) {

@@ -23,6 +23,7 @@ import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
 import de.stefanlang.metgallerybrowser.ui.common.NoResultsHint
+import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 import kotlinx.coroutines.*
 
@@ -85,14 +86,14 @@ private fun ContentView(
 
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(Dimen.s)
+                .padding(Dimen.S)
                 .testTag(Tags.SEARCH_FIELD.name),
             placeholder = {
                 Text(text = stringResource(R.string.search_placeholder))
             }
         )
 
-        Spacer(modifier = Modifier.height(Dimen.s))
+        Spacer(modifier = Modifier.height(Dimen.S))
 
         Box(
             modifier = Modifier
@@ -103,7 +104,7 @@ private fun ContentView(
                 LinearProgressIndicator(
                     Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = Dimen.m)
+                        .padding(horizontal = Dimen.M)
                         .testTag(Tags.PROGRESSBAR.name)
                 )
             }

@@ -2,7 +2,7 @@ package de.stefanlang.metgallerybrowser.ui
 
 import androidx.compose.ui.test.*
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.ui.objectssearch.Tags
+import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithTag
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithText
 import org.junit.Assert.assertTrue
@@ -20,8 +20,7 @@ class ObjectsSearchViewTest : MainActivityTest() {
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performTextInput("a")
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performImeAction()
 
-        rule.waitUntilFoundWithTag(5000, Tags.SEARCH_FIELD.name)
-
+        rule.waitUntilFoundWithTag(Timeout.LONG, Tags.SEARCH_FIELD.name)
     }
 
     @Test
@@ -29,15 +28,14 @@ class ObjectsSearchViewTest : MainActivityTest() {
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performTextInput("jjrerjkejdncdskerwkrmf")
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performImeAction()
 
-        rule.waitUntilFoundWithText(5000, getString(R.string.no_results_state_hint))
-
+        rule.waitUntilFoundWithText(Timeout.LONG, getString(R.string.no_results_state_hint))
     }
 
     @Test
     fun testSearchResult() {
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performTextInput("Müller")
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performImeAction()
-        rule.waitUntilFoundWithTag(5000, Tags.SEARCH_RESULTS_LIST.name)
+        rule.waitUntilFoundWithTag(Timeout.LONG, Tags.SEARCH_RESULTS_LIST.name)
 
         val isNotEmpty = rule.onAllNodesWithTag(Tags.SEARCH_RESULT_ENTRY.name)
             .fetchSemanticsNodes()

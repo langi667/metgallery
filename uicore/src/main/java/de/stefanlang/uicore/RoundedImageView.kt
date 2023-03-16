@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 fun RoundedImageView(
     modifier: Modifier,
     painter: Painter?,
+    contentDescription: String? = null,
     alignment: Alignment = Alignment.TopCenter,
     imageScale: ContentScale = ContentScale.FillWidth
 ) {
@@ -45,13 +46,14 @@ fun RoundedImageView(
         )
 
         if (painter != null) {
-            Image(painter = painter,
-            contentDescription = null,
-            contentScale = imageScale,
-            alignment = alignment,
-            modifier = Modifier
-                .clip(MaterialTheme.shapes.small)
-                .fillMaxSize()
+            Image(
+                painter = painter,
+                contentDescription = contentDescription,
+                contentScale = imageScale,
+                alignment = alignment,
+                modifier = Modifier
+                    .clip(MaterialTheme.shapes.small)
+                    .fillMaxSize()
             )
         }
 
@@ -63,6 +65,7 @@ fun RoundedImageView(
 fun RoundedImageView(
     modifier: Modifier,
     image: ImageBitmap?,
+    contentDescription: String? = null,
     alignment: Alignment = Alignment.TopCenter,
     imageScale: ContentScale = ContentScale.FillWidth
 ) {
@@ -76,7 +79,8 @@ fun RoundedImageView(
     RoundedImageView(
         modifier = modifier,
         painter = painter, alignment = alignment,
-        imageScale = imageScale
+        imageScale = imageScale,
+        contentDescription = contentDescription
     )
 }
 

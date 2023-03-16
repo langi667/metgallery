@@ -1,32 +1,24 @@
 package de.stefanlang.metgallerybrowser.ui
 
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
+import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
-import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.R
+import de.stefanlang.metgallerybrowser.*
+import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
-import de.stefanlang.metgallerybrowser.ui.objectssearch.Tags
-import de.stefanlang.metgallerybrowser.waitUntilFoundWithText
 import org.junit.Rule
 import org.junit.Test
 
 class ObjectDetailViewTest : NetworkInstrumentedTest() {
 
-    val objectID: Int = 253343
+    private val objectID: Int = 253343
+
 
     @get:Rule
     val rule = createComposeRule()
-
-    fun setupRule(objectID: Int = this.objectID) {
-        rule.setContent {
-            ObjectDetailView(
-                navController = rememberNavController(),
-                objectID = objectID
-            )
-        }
-    }
 
     @Test
     fun testLoadingState() {
@@ -38,6 +30,43 @@ class ObjectDetailViewTest : NetworkInstrumentedTest() {
     @Test
     fun testNotFound() {
         setupRule(-1)
-        rule.waitUntilFoundWithText(5000, getString(R.string.no_results_state_hint))
+        rule.waitUntilFoundWithText(Timeout.LONG, getString(R.string.no_results_state_hint))
+    }
+
+    @Test
+    fun testFound() {
+        setupRule()
+
+        rule.waitUntilFoundWithText(Timeout.LONG, "Chalcedony scaraboid")
+        rule.waitUntilFoundWithText(Timeout.LONG, "Greek and Roman Art")
+        rule.waitAndFindAtLeastWithTag(Timeout.LONG, Tags.GALLERY_IMAGE_PREVIEW.name, 3)
+    }
+
+    @Test
+    fun testGallery() {
+        setupRule() // TODO: Timeouts.NetworkOperation as constant
+        val contentDescription = "https://images.metmuseum.org/CRDImages/gr/web-large/DP328403.jpg"
+
+        rule.waitUntilFoundWithContentDescription(Timeout.VERY_LONG, contentDescription)
+        rule.onNodeWithContentDescription(contentDescription).performClick().assertExists()
+        rule.waitUntilFoundWithTag(Timeout.MEDIUM, Tags.GALLERY_SELECTED_IMAGE.name)
+
+        rule.onNodeWithTag(Tags.GALLERY_SELECTED_IMAGE.name).performClick()
+        rule.waitUntilNotFoundWithTag(Timeout.LONG, Tags.GALLERY_SELECTED_IMAGE.name)
+
+        rule.onNodeWithContentDescription(contentDescription).performClick().assertExists()
+        rule.waitUntilFoundWithTag(Timeout.MEDIUM, Tags.GALLERY_SELECTED_IMAGE.name)
+
+        rule.onNodeWithTag(Tags.BACK_BUTTON.name).performClick()
+        rule.waitUntilNotFoundWithTag(Timeout.LONG, Tags.GALLERY_SELECTED_IMAGE.name)
+    }
+
+    private fun setupRule(objectID: Int = this.objectID) {
+        rule.setContent {
+            ObjectDetailView(
+                navController = rememberNavController(),
+                objectID = objectID
+            )
+        }
     }
 }

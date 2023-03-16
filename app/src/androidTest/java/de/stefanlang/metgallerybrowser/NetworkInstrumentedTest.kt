@@ -7,10 +7,16 @@ import de.stefanlang.network.NetworkAPI
 import org.junit.Assert
 
 open class NetworkInstrumentedTest {
-    val appContext: Context
+
+    object Timeout {
+        const val MEDIUM = 2000L
+        const val LONG = 5000L
+        const val VERY_LONG = 10000L
+    }
+
+    private val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     init {
-        appContext = InstrumentationRegistry.getInstrumentation().targetContext
         Assert.assertNotNull(appContext)
         NetworkAPI.setup(appContext)
     }

@@ -30,7 +30,7 @@ fun HintView(image: Painter, text: String) {
             text = text,
             style = MaterialTheme.typography.h6,
             modifier = Modifier
-                .padding(Dimen.s)
+                .padding(Dimen.S)
                 .fillMaxWidth(),
             textAlign = TextAlign.Center
         )
