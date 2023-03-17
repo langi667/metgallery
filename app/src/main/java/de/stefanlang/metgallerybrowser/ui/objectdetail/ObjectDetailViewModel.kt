@@ -1,16 +1,17 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
+import android.graphics.Bitmap
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.metgallerybrowser.data.repository.ImageRepositoryInterface
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepository
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryEntry
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectsRepository
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepository
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +19,13 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ObjectDetailViewModel : ViewModel() {
+@HiltViewModel
+class ObjectDetailViewModel @Inject constructor(
+    private val imageRepository: ImageRepositoryInterface,
+    private val objectsRepository: METObjectRepository,
+) : ViewModel() {
 
     sealed class State {
         object Loading : State()
@@ -41,7 +47,7 @@ class ObjectDetailViewModel : ViewModel() {
                 return@map State.Loading
             }
 
-            val latest = repository.fetchObjectForResult(newID)
+            val latest = objectsRepository.fetchObjectForResult(newID)
             stateForResult(latest)
         }
         // TODO: add onEach and add clear ?? ?
@@ -50,9 +56,6 @@ class ObjectDetailViewModel : ViewModel() {
             SharingStarted.WhileSubscribed(5000),
             _state.value
         )
-
-    private val repository = METObjectsRepository()
-    private val imageRepository = ImageRepository()
 
     private val metObjectUIRepresentable: METObjectUIRepresentable?
         get() {
@@ -116,20 +119,19 @@ class ObjectDetailViewModel : ViewModel() {
         imageData.forEach { currImageData ->
             viewModelScope.launch {
                 val url = currImageData.smallImageURL ?: currImageData.imageURL
-                imageRepository.fetch(url)
-                val imageResult = imageRepository.entryForQuery(url)
+                val imageResult = imageRepository.fetchImage(url)
 
-                handleImageLoaded(imageResult)
+                handleImageLoaded(url, imageResult)
             }
         }
     }
 
-    private fun handleImageLoaded(entry: ImageRepositoryEntry?) {
-        entry ?: return
+    private fun handleImageLoaded(url: String, result: Result<Bitmap>?) {
+        result ?: return
 
         MainScope().launch {
-            val result = imageLoadResultFromEntry(entry)
-            images.add(result)
+            val imageLoadResult = imageLoadResultForResult(url, result)
+            images.add(imageLoadResult)
         }
     }
 
@@ -163,12 +165,12 @@ class ObjectDetailViewModel : ViewModel() {
         return retVal
     }
 
-    private fun imageLoadResultFromEntry(entry: ImageRepositoryEntry): ImageLoadResult {
-        val image = entry.resultValue
+    private fun imageLoadResultForResult(url: String, result: Result<Bitmap>): ImageLoadResult {
+        val image = result.getOrNull()
         val retVal: ImageLoadResult = if (image != null) {
-            ImageLoadResult.Success(entry.query ?: "", image)
+            ImageLoadResult.Success(url, image)
         } else {
-            ImageLoadResult.Failure(entry.query ?: "")
+            ImageLoadResult.Failure(url)
         }
 
         return retVal

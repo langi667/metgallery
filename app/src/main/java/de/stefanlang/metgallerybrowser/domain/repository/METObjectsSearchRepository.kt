@@ -8,10 +8,13 @@ import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 import de.stefanlang.network.NetworkResponse
+import javax.inject.Inject
 
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>
 
-class METObjectsSearchRepository : SingleEntryRepository<String, METObjectsSearchResult>(),
+
+class METObjectsSearchRepository @Inject constructor() :
+    SingleEntryRepository<String, METObjectsSearchResult>(),
     METObjectsSearchRepositoryInterface {
 
     // region Private API

@@ -3,25 +3,25 @@ package de.stefanlang.metgallerybrowser.data
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
 import de.stefanlang.metgallerybrowser.domain.Defines
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectsRepository
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class METObjectsRepositoryTest : NetworkInstrumentedTest() {
+class METObjectRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testEmpty() {
-        val repo = METObjectsRepository()
+        val repo = METObjectRepository()
         Assert.assertNull(repo.latest.query)
         Assert.assertNull(repo.latest.result)
     }
 
     @Test
     fun testFetchSuccess() {
-        val repo = METObjectsRepository()
+        val repo = METObjectRepository()
 
         runBlocking {
             val objectID = 253343
@@ -41,7 +41,7 @@ class METObjectsRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchNoResult() {
-        val repo = METObjectsRepository()
+        val repo = METObjectRepository()
 
         runBlocking {
             val objectID = Defines.InvalidID

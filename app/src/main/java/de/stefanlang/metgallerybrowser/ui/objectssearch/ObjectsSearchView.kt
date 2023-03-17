@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
@@ -32,7 +32,7 @@ import kotlinx.coroutines.*
 @Composable
 fun ObjectsSearchView(
     navController: NavController,
-    viewModel: ObjectsSearchViewModel = viewModel()
+    viewModel: ObjectsSearchViewModel = hiltViewModel()
 ) {
     Scaffold(topBar = {
         TopBar()

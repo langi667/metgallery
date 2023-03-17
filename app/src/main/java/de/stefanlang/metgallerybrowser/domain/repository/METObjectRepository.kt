@@ -8,10 +8,12 @@ import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 import de.stefanlang.network.NetworkResponse
+import javax.inject.Inject
 
 typealias METObjectsRepositoryEntry = Repository.Entry<Int, METObject>
 
-class METObjectsRepository : SingleEntryRepository<Int, METObject>(),
+class METObjectRepository @Inject constructor() :
+    SingleEntryRepository<Int, METObject>(),
     METObjectRepositoryInterface {
 
     // region Public API
@@ -19,8 +21,8 @@ class METObjectsRepository : SingleEntryRepository<Int, METObject>(),
     // TODO: test case
     override suspend fun fetchObjectForResult(id: Int): Result<METObject>? {
         fetch(id)
-        val retVal = entryForQuery(id)?.result
 
+        val retVal = entryForQuery(id)?.result
         return retVal
     }
 

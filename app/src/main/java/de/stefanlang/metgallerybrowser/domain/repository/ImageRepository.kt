@@ -7,11 +7,12 @@ import de.stefanlang.metgallerybrowser.data.repository.MultiEntryRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
+import javax.inject.Inject
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
 
-class ImageRepository(maxEntries: Int = 15) :
-    MultiEntryRepository<String, Bitmap>(maxEntries),
+class ImageRepository @Inject constructor(maxImages: Int) :
+    MultiEntryRepository<String, Bitmap>(maxImages),
     ImageRepositoryInterface {
 
     // region Properties

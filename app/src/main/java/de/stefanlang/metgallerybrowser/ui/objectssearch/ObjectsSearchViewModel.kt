@@ -3,16 +3,21 @@ package de.stefanlang.metgallerybrowser.ui.objectssearch
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import dagger.hilt.android.lifecycle.HiltViewModel
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepository
+import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepositoryInterface
 import de.stefanlang.metgallerybrowser.ui.navigation.navigateToObjectDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ObjectsSearchViewModel : ViewModel() {
+@HiltViewModel
+class ObjectsSearchViewModel @Inject constructor(
+    private val repository: METObjectsSearchRepositoryInterface
+) : ViewModel() {
 
     // region Types
 
@@ -45,7 +50,7 @@ class ObjectsSearchViewModel : ViewModel() {
     private val _state = MutableStateFlow<State>(State.Idle)
     val state = _state.asStateFlow()
 
-    private val repository = METObjectsSearchRepository()
+    // private val repository = METObjectsSearchRepository()
 
     // endregion
 

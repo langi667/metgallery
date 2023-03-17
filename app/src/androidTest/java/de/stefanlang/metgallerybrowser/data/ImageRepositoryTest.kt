@@ -13,7 +13,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageSuccess() {
-        val repo = ImageRepository()
+        val repo = ImageRepository(15)
         runBlocking {
             val result =
                 repo.fetchImage("https://images.metmuseum.org/CRDImages/gr/web-large/DP337517.jpg")
@@ -25,7 +25,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageFailInvalidURL() {
-        val repo = ImageRepository()
+        val repo = ImageRepository(15)
         runBlocking {
             val result = repo.fetchImage("https://no/address")
             assertNotNull(result)
@@ -36,7 +36,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageFailNoImage() {
-        val repo = ImageRepository()
+        val repo = ImageRepository(15)
 
         runBlocking {
             val result = repo.fetchImage("https://google.com")

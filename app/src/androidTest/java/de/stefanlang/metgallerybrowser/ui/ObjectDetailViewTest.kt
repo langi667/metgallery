@@ -16,7 +16,6 @@ class ObjectDetailViewTest : NetworkInstrumentedTest() {
 
     private val objectID: Int = 253343
 
-
     @get:Rule
     val rule = createComposeRule()
 

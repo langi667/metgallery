@@ -11,7 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
@@ -24,7 +24,7 @@ import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ObjectDetailView(navController: NavController, objectID: Int) {
-    val viewModel: ObjectDetailViewModel = viewModel()
+    val viewModel: ObjectDetailViewModel = hiltViewModel()
     val state = viewModel.state.collectAsState()
 
     viewModel.loadObjectForID(objectID)
@@ -46,7 +46,7 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
 
 @Composable
 private fun TopBar(navController: NavController) {
-    val viewModel: ObjectDetailViewModel = viewModel()
+    val viewModel: ObjectDetailViewModel = hiltViewModel()
 
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.app_name)) },
@@ -108,7 +108,7 @@ private fun METObjectDetailView(
         )
 
         Spacer(modifier = Modifier.height(Dimen.S))
-        val viewModel: ObjectDetailViewModel = viewModel()
+        val viewModel: ObjectDetailViewModel = hiltViewModel()
 
         LazyColumn {
             items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
