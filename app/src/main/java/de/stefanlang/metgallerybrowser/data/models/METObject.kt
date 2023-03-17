@@ -84,7 +84,7 @@ class METObject {
     @JsonProperty("GalleryNumber")
     var galleryNumber: String? = null
 
-    val imageData: List<METObjectImageData>
+    val imageData: List<ImageData>
         get() {
             return createImageDataList()
         }
@@ -99,8 +99,8 @@ class METObject {
 
     // region Private API
 
-    private fun createImageDataList(): List<METObjectImageData> {
-        val retVal = mutableListOf<METObjectImageData>()
+    private fun createImageDataList(): List<ImageData> {
+        val retVal = mutableListOf<ImageData>()
 
         imageDataFromURLs(primaryImage, true, primaryImageSmall)?.let { imageData ->
             retVal.add(imageData)
@@ -123,11 +123,11 @@ class METObject {
         imageURL: String?,
         isPrimary: Boolean,
         smallImageURL: String?
-    ): METObjectImageData? {
-        val retVal: METObjectImageData? = if (imageURL == null || imageURL.isBlank()) {
+    ): ImageData? {
+        val retVal: ImageData? = if (imageURL == null || imageURL.isBlank()) {
             null
         } else {
-            METObjectImageData(imageURL, isPrimary, smallImageURL)
+            ImageData(imageURL, isPrimary, smallImageURL)
         }
 
         return retVal

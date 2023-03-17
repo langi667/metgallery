@@ -25,4 +25,9 @@ open class NetworkInstrumentedTest {
         val retVal = appContext.resources.getString(id)
         return retVal
     }
+
+    fun getString(@StringRes id: Int, varargs: Any): String {
+        val retVal = appContext.resources.getString(id, varargs)
+        return retVal
+    }
 }

@@ -79,6 +79,18 @@ class ObjectDetailViewModel : ViewModel() {
         this.objectID.value = objectID
     }
 
+    fun allLoadedImages(): List<ImageLoadResult.Success> {
+        val retVal = this.images.mapNotNull { currImageLoadResult ->
+            if (currImageLoadResult is ImageLoadResult.Success) {
+                currImageLoadResult
+            } else {
+                null
+            }
+        }
+
+        return retVal
+    }
+
     fun onImageSelected(imageData: ImageLoadResult?) {
         if (imageData == null) {
             return

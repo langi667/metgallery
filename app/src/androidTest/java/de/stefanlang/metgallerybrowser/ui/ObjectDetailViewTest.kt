@@ -45,20 +45,23 @@ class ObjectDetailViewTest : NetworkInstrumentedTest() {
     @Test
     fun testGallery() {
         setupRule()
-        val contentDescription = "https://images.metmuseum.org/CRDImages/gr/web-large/DP328403.jpg"
+        val contentDescriptionGallery =
+            "https://images.metmuseum.org/CRDImages/gr/web-large/DP328403.jpg"
+        val contentDescriptionPreview =
+            getString(id = R.string.preview_content_description, contentDescriptionGallery)
 
-        rule.waitUntilFoundWithContentDescription(Timeout.VERY_LONG, contentDescription)
-        rule.onNodeWithContentDescription(contentDescription).performClick().assertExists()
-        rule.waitUntilFoundWithTag(Timeout.MEDIUM, Tags.GALLERY_SELECTED_IMAGE.name)
+        rule.waitUntilFoundWithContentDescription(Timeout.VERY_LONG, contentDescriptionPreview)
+        rule.onNodeWithContentDescription(contentDescriptionPreview).performClick().assertExists()
+        rule.waitUntilFoundWithTag(Timeout.MEDIUM, Tags.GALLERY_BACKGROUND.name)
 
-        rule.onNodeWithTag(Tags.GALLERY_SELECTED_IMAGE.name).performClick()
-        rule.waitUntilNotFoundWithTag(Timeout.LONG, Tags.GALLERY_SELECTED_IMAGE.name)
+        rule.onNodeWithContentDescription(contentDescriptionGallery).performClick()
+        rule.waitUntilNotFoundWithTag(Timeout.LONG, Tags.GALLERY_BACKGROUND.name)
 
-        rule.onNodeWithContentDescription(contentDescription).performClick().assertExists()
-        rule.waitUntilFoundWithTag(Timeout.MEDIUM, Tags.GALLERY_SELECTED_IMAGE.name)
+        rule.onNodeWithContentDescription(contentDescriptionPreview).performClick().assertExists()
+        rule.waitUntilFoundWithTag(Timeout.MEDIUM, Tags.GALLERY_BACKGROUND.name)
 
         rule.onNodeWithTag(Tags.BACK_BUTTON.name).performClick()
-        rule.waitUntilNotFoundWithTag(Timeout.LONG, Tags.GALLERY_SELECTED_IMAGE.name)
+        rule.waitUntilNotFoundWithTag(Timeout.LONG, Tags.GALLERY_BACKGROUND.name)
     }
 
     private fun setupRule(objectID: Int = this.objectID) {

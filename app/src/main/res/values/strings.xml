@@ -12,6 +12,7 @@
     <string name="no_results_state_hint">Sorry no results 😏 Try another!</string>
     <string name="error_state_hint">Oopsi, something went wrong 😔\nCheck internet connection and try again.</string>
     <string name="loading_state_hint">Searching for it!</string>
+    <string name="preview_content_description">Preview: %1$s</string>
 
     <string name="object_title">Title</string>
     <string name="department_title">Department</string>

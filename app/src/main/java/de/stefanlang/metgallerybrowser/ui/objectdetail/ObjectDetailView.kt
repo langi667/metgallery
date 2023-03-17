@@ -1,9 +1,6 @@
 package de.stefanlang.metgallerybrowser.ui.objectdetail
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.*
@@ -11,25 +8,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
 import de.stefanlang.metgallerybrowser.ui.common.*
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
-import de.stefanlang.uicore.RoundedImageView
 
 // region Public API
 
@@ -46,10 +34,12 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
         TopBar(navController)
     }) {
         ContentView(state.value, images)
-        val selectedImage = (viewModel.selectedImage.value as? ImageLoadResult.Success)?.image
+        val selectedImage = (viewModel.selectedImage.value as? ImageLoadResult.Success)
 
         if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
-            ImageDetailView(viewModel, selectedImage)
+            GalleryView(viewModel.allLoadedImages(), selectedImage) {
+                viewModel.deselectImage()
+            }
         }
     }
 }
@@ -118,11 +108,17 @@ private fun METObjectDetailView(
         )
 
         Spacer(modifier = Modifier.height(Dimen.S))
+        val viewModel: ObjectDetailViewModel = viewModel()
 
         LazyColumn {
             items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
                 if (currIndex == 0) {
-                    METGalleryView(metObjectUIRepresentable, loadedImages)
+                    GalleryPreviewView(
+                        metObjectUIRepresentable.metObject.imageData,
+                        loadedImages
+                    ) { imageLoadResult ->
+                        viewModel.onImageSelected(imageLoadResult)
+                    }
                 } else {
                     val spacerHeight = if (currIndex == 1) {
                         Dimen.S
@@ -138,56 +134,6 @@ private fun METObjectDetailView(
 }
 
 @Composable
-private fun METGalleryView(
-    metObjectUIRepresentable: METObjectUIRepresentable,
-    loadedImages: List<ImageLoadResult>
-) {
-    val images = metObjectUIRepresentable.metObject.imageData
-    val width = (LocalConfiguration.current.screenWidthDp - 2 * Dimen.S.value) / 3
-    val height = width * (4 / 3) // default ratio of the primary image
-
-    FlowRow() {
-        repeat(images.size) { it ->
-            val currImageData = images.getOrNull(it)
-            val imageLoadResult = loadedImages.firstOrNull { currEntry ->
-                currImageData?.containsURL(currEntry.url) == true
-            }
-
-            val painter: Painter?
-            val contentDescription: String?
-
-            when (imageLoadResult) {
-                is ImageLoadResult.Success -> {
-                    painter = BitmapPainter(imageLoadResult.image.asImageBitmap())
-                    contentDescription = imageLoadResult.url
-                }
-                is ImageLoadResult.Failure -> {
-                    painter = painterResource(id = R.drawable.error_state_img)
-                    contentDescription = null
-                }
-                else -> {
-                    painter = null
-                    contentDescription = null
-                }
-            }
-
-            val viewModel: ObjectDetailViewModel = viewModel()
-
-            RoundedImageView(
-                modifier = Modifier
-                    .clickable {
-                        viewModel.onImageSelected(imageLoadResult)
-                    }
-                    .size(width.dp, height.dp)
-                    .testTag(Tags.GALLERY_IMAGE_PREVIEW.name),
-                painter = painter,
-                contentDescription = contentDescription
-            )
-        }
-    }
-}
-
-@Composable
 private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
     Column {
         Text(text = entry.name, style = MaterialTheme.typography.h6)
@@ -197,24 +143,6 @@ private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
             modifier = Modifier.padding(start = Dimen.XS),
             hyperlinks = entry.hyperlinks,
             linkTextColor = MaterialTheme.colors.primary
-        )
-    }
-}
-
-@Composable
-private fun ImageDetailView(viewModel: ObjectDetailViewModel, selectedImage: Bitmap) {
-    Box(modifier = Modifier
-        .padding(Dimen.S)
-        .fillMaxSize()
-        .background(MaterialTheme.colors.onPrimary.copy(alpha = 0.7f))
-        .testTag(Tags.GALLERY_SELECTED_IMAGE.name)
-        .clickable {
-            viewModel.deselectImage()
-        }) {
-        RoundedImageView(
-            modifier = Modifier.fillMaxSize(),
-            image = selectedImage.asImageBitmap(),
-            alignment = Alignment.Center
         )
     }
 }
