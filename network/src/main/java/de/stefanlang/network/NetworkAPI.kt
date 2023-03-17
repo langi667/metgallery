@@ -13,7 +13,6 @@ import kotlin.coroutines.suspendCoroutine
 /**
  * Provides basic network communications, such as GET, POST, ...
  */
-
 object NetworkAPI {
 
     // region Properties

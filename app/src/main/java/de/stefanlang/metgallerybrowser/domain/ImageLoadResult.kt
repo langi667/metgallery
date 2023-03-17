@@ -79,7 +79,6 @@ sealed class ImageLoadResult(val url: String) {
     }
 }
 
-
 fun List<ImageLoadResult>.imageLoadResultForImage(image: Bitmap): ImageLoadResult.Success? {
     val retVal = this.firstOrNull { currLoadResult ->
         if (currLoadResult is ImageLoadResult.Success) {
