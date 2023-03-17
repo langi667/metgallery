@@ -44,7 +44,7 @@ class ObjectDetailViewTest : NetworkInstrumentedTest() {
 
     @Test
     fun testGallery() {
-        setupRule() // TODO: Timeouts.NetworkOperation as constant
+        setupRule()
         val contentDescription = "https://images.metmuseum.org/CRDImages/gr/web-large/DP328403.jpg"
 
         rule.waitUntilFoundWithContentDescription(Timeout.VERY_LONG, contentDescription)

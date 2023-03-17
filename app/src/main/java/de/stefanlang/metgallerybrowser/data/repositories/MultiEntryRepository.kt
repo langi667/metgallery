@@ -25,18 +25,17 @@ abstract class MultiEntryRepository<QUERY, RESULT>(@IntRange(1) val maxEntries: 
     // endregion
 
     // region Private API
+    protected fun add(query: QUERY, result: Result<RESULT>) {
+        add(Entry(query, result))
+    }
 
-    protected fun add(entry: Entry<QUERY, RESULT>) {
+    private fun add(entry: Entry<QUERY, RESULT>) {
         if (entries.contains(entry)) { // already added
             return
         }
 
         reduceIfNeeded()
         entries.add(entry)
-    }
-
-    protected fun add(query: QUERY, result: Result<RESULT>) {
-        add(Entry<QUERY, RESULT>(query, result))
     }
 
     private fun reduceIfNeeded() {

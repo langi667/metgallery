@@ -6,9 +6,6 @@ import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
-
-// TODO: multi Value Repository
-
 class ImageRepository(maxEntries: Int = 15) : MultiEntryRepository<String, Bitmap>(maxEntries) {
 
     // region Properties

@@ -76,7 +76,7 @@ private fun ContentView(
 
             trailingIcon = {
                 Icon(Icons.Default.Clear,
-                    contentDescription = "clear text", // TODO: localise
+                    contentDescription = stringResource(id = R.string.clear_text),
                     modifier = Modifier
                         .clickable {
                             viewModel.onSearchClear()

@@ -11,7 +11,6 @@ import de.stefanlang.metgallerybrowser.data.models.METObject
  * Wrapper around the METObject to prepare and provide UI representations of METObject properties
  */
 
-// TODO: tests
 data class METObjectUIRepresentable(val metObject: METObject) {
 
     // region Types
