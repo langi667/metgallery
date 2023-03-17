@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.data.models.METObject
-import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
-import de.stefanlang.metgallerybrowser.data.repositories.ImageRepositoryEntry
-import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
+import de.stefanlang.metgallerybrowser.domain.repository.ImageRepository
+import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryEntry
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectsRepository
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -41,9 +41,7 @@ class ObjectDetailViewModel : ViewModel() {
                 return@map State.Loading
             }
 
-            repository.fetch(newID)
-            val latest = repository.latest.result
-
+            val latest = repository.fetchObjectForResult(newID)
             stateForResult(latest)
         }
         // TODO: add onEach and add clear ?? ?

@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.data.repositories
+package de.stefanlang.metgallerybrowser.data.repository
 
 import androidx.annotation.IntRange
 
@@ -14,7 +14,7 @@ abstract class MultiEntryRepository<QUERY, RESULT>(@IntRange(1) val maxEntries: 
 
     // region Public API
 
-    fun entryForQuery(query: String): Entry<QUERY, RESULT>? {
+    override fun entryForQuery(query: QUERY): Entry<QUERY, RESULT>? {
         val retVal = entries.firstOrNull { currEntry ->
             currEntry.query == query
         }

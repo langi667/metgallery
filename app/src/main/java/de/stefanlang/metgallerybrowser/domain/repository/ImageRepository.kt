@@ -1,13 +1,18 @@
-package de.stefanlang.metgallerybrowser.data.repositories
+package de.stefanlang.metgallerybrowser.domain.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import de.stefanlang.metgallerybrowser.data.repository.ImageRepositoryInterface
+import de.stefanlang.metgallerybrowser.data.repository.MultiEntryRepository
+import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
 
-class ImageRepository(maxEntries: Int = 15) : MultiEntryRepository<String, Bitmap>(maxEntries) {
+class ImageRepository(maxEntries: Int = 15) :
+    MultiEntryRepository<String, Bitmap>(maxEntries),
+    ImageRepositoryInterface {
 
     // region Properties
 
@@ -18,7 +23,7 @@ class ImageRepository(maxEntries: Int = 15) : MultiEntryRepository<String, Bitma
 
     // region Public API
 
-    suspend fun fetchImage(url: String): Result<Bitmap>? {
+    override suspend fun fetchImage(url: String): Result<Bitmap>? {
         fetch(url)
 
         val retVal = entryForQuery(url)?.result

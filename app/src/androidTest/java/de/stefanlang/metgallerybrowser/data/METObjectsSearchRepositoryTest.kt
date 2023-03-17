@@ -2,8 +2,7 @@ package de.stefanlang.metgallerybrowser.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.data.repositories.METObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -23,13 +22,12 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
         val repo = METObjectsSearchRepository()
 
         runBlocking {
-            val url = METAPIURLBuilder.objectsSearchURL("sunflower")
-            assertTrue(url.isNotBlank())
+            val search = "sunflower"
+            repo.fetch(search)
 
-            repo.fetch(url)
             val latest = repo.latest
             assertNotNull(latest.query)
-            assertEquals(latest.query, url)
+            assertEquals(latest.query, search)
 
             assertTrue(latest.result?.isSuccess ?: false)
             val searchResult = latest.result?.getOrNull()
@@ -45,13 +43,12 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
         val repo = METObjectsSearchRepository()
 
         runBlocking {
-            val url = METAPIURLBuilder.objectsSearchURL("343hdfberj")
-            assertTrue(url.isNotBlank())
+            val query = "343hdfberj"
+            repo.fetch(query)
 
-            repo.fetch(url)
             val latest = repo.latest
             assertNotNull(latest.query)
-            assertEquals(latest.query, url)
+            assertEquals(latest.query, query)
 
             assertTrue(latest.result?.isSuccess ?: false)
             val searchResult = latest.result?.getOrNull()
@@ -66,10 +63,9 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
         val repo = METObjectsSearchRepository()
 
         runBlocking {
-            val url = METAPIURLBuilder.objectsSearchURL("Karl H. Müller")
-            assertTrue(url.isNotBlank())
+            val query = "Karl H. Müller"
+            repo.fetch(query)
 
-            repo.fetch(url)
             val searchResult = repo.latest.result?.getOrNull()
             assertNotNull(searchResult)
 

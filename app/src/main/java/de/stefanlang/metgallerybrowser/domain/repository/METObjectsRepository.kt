@@ -1,6 +1,9 @@
-package de.stefanlang.metgallerybrowser.data.repositories
+package de.stefanlang.metgallerybrowser.domain.repository
 
 import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.metgallerybrowser.data.repository.METObjectRepositoryInterface
+import de.stefanlang.metgallerybrowser.data.repository.Repository
+import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
 import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
@@ -8,7 +11,20 @@ import de.stefanlang.network.NetworkResponse
 
 typealias METObjectsRepositoryEntry = Repository.Entry<Int, METObject>
 
-class METObjectsRepository : SingleEntryRepository<Int, METObject>() {
+class METObjectsRepository : SingleEntryRepository<Int, METObject>(),
+    METObjectRepositoryInterface {
+
+    // region Public API
+
+    // TODO: test case
+    override suspend fun fetchObjectForResult(id: Int): Result<METObject>? {
+        fetch(id)
+        val retVal = entryForQuery(id)?.result
+
+        return retVal
+    }
+
+    // endregion
 
     // region Private API
 

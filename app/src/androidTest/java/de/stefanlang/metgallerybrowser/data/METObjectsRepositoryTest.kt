@@ -2,8 +2,8 @@ package de.stefanlang.metgallerybrowser.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.data.repositories.METObjectsRepository
 import de.stefanlang.metgallerybrowser.domain.Defines
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectsRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test

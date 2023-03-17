@@ -2,7 +2,7 @@ package de.stefanlang.metgallerybrowser.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.data.repositories.ImageRepository
+import de.stefanlang.metgallerybrowser.domain.repository.ImageRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.Assert.*

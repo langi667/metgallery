@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.data.repositories
+package de.stefanlang.metgallerybrowser.data.repository
 
 import de.stefanlang.metgallerybrowser.data.utils.JSONParser
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +33,8 @@ abstract class Repository<QUERY, RESULT> {
 
     // endregion
 
+    abstract fun entryForQuery(query: QUERY): Entry<QUERY, RESULT>?
+
     suspend fun fetch(query: QUERY) = withContext(Dispatchers.IO) {
         performFetch(query)
     }
@@ -41,5 +43,10 @@ abstract class Repository<QUERY, RESULT> {
 
     protected inline fun <reified RESULT> mapObjectFrom(byteArray: ByteArray): RESULT {
         return JSONParser.mapObjectFrom(byteArray)
+    }
+
+    protected fun matchesQuery(entry: Entry<QUERY, RESULT>, query: QUERY): Boolean {
+        val retVal = entry.query == query
+        return retVal
     }
 }

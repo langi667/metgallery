@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
-import de.stefanlang.metgallerybrowser.data.repositories.METObjectsSearchRepository
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepository
 import de.stefanlang.metgallerybrowser.ui.navigation.navigateToObjectDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +29,7 @@ class ObjectsSearchViewModel : ViewModel() {
                 }
         }
 
-        class FinishedWithError(val error: Throwable) : State()
+        class FinishedWithError() : State()
     }
 
     // endregion
@@ -82,19 +82,30 @@ class ObjectsSearchViewModel : ViewModel() {
     private suspend fun performSearch() {
         _isSearching.update { true }
 
-        repository.fetch(_searchQuery.value)
-        var newState: State = State.Idle
-
-        repository.latest.result?.getOrNull()?.let { objectSearch ->
-            newState = State.FinishedWithSuccess(objectSearch)
-        }
-
-        repository.latest.error?.let { error ->
-            newState = State.FinishedWithError(error)
-        }
+        val search = repository.searchForObjectsWithQuery(_searchQuery.value)
+        val newState: State = stateForResult(search)
 
         _state.value = newState
         _isSearching.update { false }
+    }
+
+    private fun stateForResult(result: Result<METObjectsSearchResult>?): State {
+        val retVal = if (result != null) {
+            val searchResult = result.getOrNull()
+            val error = result.exceptionOrNull()
+
+            if (searchResult != null) {
+                State.FinishedWithSuccess(searchResult)
+            } else if (error != null) {
+                State.FinishedWithError()
+            } else {
+                State.Idle
+            }
+        } else {
+            State.Idle
+        }
+
+        return retVal
     }
 
     // endregion

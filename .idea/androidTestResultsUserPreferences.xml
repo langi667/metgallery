@@ -58,6 +58,19 @@
             </AndroidTestResultsTableState>
           </value>
         </entry>
+        <entry key="-1620817241">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_6_Pro_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
         <entry key="-1601759327">
           <value>
             <AndroidTestResultsTableState>
@@ -209,6 +222,19 @@
           </value>
         </entry>
         <entry key="-600961987">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_6_Pro_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="-412320295">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
@@ -410,6 +436,19 @@
           </value>
         </entry>
         <entry key="701819920">
+          <value>
+            <AndroidTestResultsTableState>
+              <option name="preferredColumnWidths">
+                <map>
+                  <entry key="Duration" value="90" />
+                  <entry key="Pixel_6_Pro_API_33" value="120" />
+                  <entry key="Tests" value="360" />
+                </map>
+              </option>
+            </AndroidTestResultsTableState>
+          </value>
+        </entry>
+        <entry key="730487553">
           <value>
             <AndroidTestResultsTableState>
               <option name="preferredColumnWidths">
