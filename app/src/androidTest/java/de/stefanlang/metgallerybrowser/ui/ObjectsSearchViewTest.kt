@@ -1,13 +1,18 @@
 package de.stefanlang.metgallerybrowser.ui
 
 import androidx.compose.ui.test.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithTag
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithText
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import org.junit.runner.RunWith
 
+@RunWith(AndroidJUnit4::class)
+@HiltAndroidTest
 class ObjectsSearchViewTest : MainActivityTest() {
 
     @Test

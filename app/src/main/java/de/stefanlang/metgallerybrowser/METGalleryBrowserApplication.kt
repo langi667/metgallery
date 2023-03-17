@@ -10,7 +10,6 @@ class METGalleryBrowserApplication : Application() {
 
     companion object {
         lateinit var appContext: Context
-            private set
     }
 
     override fun onCreate() {

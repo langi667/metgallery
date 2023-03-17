@@ -6,18 +6,25 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
+import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.*
+import de.stefanlang.metgallerybrowser.domain.repository.ImageRepository
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepository
 import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
+import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailViewModel
 import org.junit.Rule
 import org.junit.Test
 
-class ObjectDetailViewTest : NetworkInstrumentedTest() {
+
+@HiltAndroidTest
+class ObjectDetailViewTest : HiltInstrumentedTest() {
 
     private val objectID: Int = 253343
 
     @get:Rule
     val rule = createComposeRule()
+
 
     @Test
     fun testLoadingState() {
@@ -67,7 +74,11 @@ class ObjectDetailViewTest : NetworkInstrumentedTest() {
         rule.setContent {
             ObjectDetailView(
                 navController = rememberNavController(),
-                objectID = objectID
+                objectID = objectID,
+                viewModel = ObjectDetailViewModel(
+                    ImageRepository(15),
+                    METObjectRepository()
+                )
             )
         }
     }

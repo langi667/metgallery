@@ -23,17 +23,22 @@ import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ObjectDetailView(navController: NavController, objectID: Int) {
-    val viewModel: ObjectDetailViewModel = hiltViewModel()
+fun ObjectDetailView(
+    navController: NavController,
+    objectID: Int,
+    viewModel: ObjectDetailViewModel = hiltViewModel()
+) {
     val state = viewModel.state.collectAsState()
 
     viewModel.loadObjectForID(objectID)
     val images = viewModel.images.toList()
 
     Scaffold(topBar = {
-        TopBar(navController)
+        TopBar(navController, viewModel)
     }) {
-        ContentView(state.value, images)
+        ContentView(state.value, images) { selectedImage ->
+            viewModel.onImageSelected(selectedImage)
+        }
         val selectedImage = (viewModel.selectedImage.value as? ImageLoadResult.Success)
 
         if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
@@ -45,8 +50,7 @@ fun ObjectDetailView(navController: NavController, objectID: Int) {
 }
 
 @Composable
-private fun TopBar(navController: NavController) {
-    val viewModel: ObjectDetailViewModel = hiltViewModel()
+private fun TopBar(navController: NavController, viewModel: ObjectDetailViewModel) {
 
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.app_name)) },
@@ -66,7 +70,8 @@ private fun TopBar(navController: NavController) {
 @Composable
 private fun ContentView(
     state: ObjectDetailViewModel.State,
-    images: List<ImageLoadResult>
+    images: List<ImageLoadResult>,
+    onPreviewImageSelected: (ImageLoadResult?) -> Unit
 ) {
     Box(modifier = Modifier.padding(Dimen.S)) {
         when (state) {
@@ -89,7 +94,7 @@ private fun ContentView(
             }
 
             is ObjectDetailViewModel.State.LoadedWithSuccess -> {
-                METObjectDetailView(state.metObjectUIRepresentable, images)
+                METObjectDetailView(state.metObjectUIRepresentable, images, onPreviewImageSelected)
             }
         }
     }
@@ -98,7 +103,8 @@ private fun ContentView(
 @Composable
 private fun METObjectDetailView(
     metObjectUIRepresentable: METObjectUIRepresentable,
-    loadedImages: List<ImageLoadResult>
+    loadedImages: List<ImageLoadResult>,
+    onPreviewImageSelected: (ImageLoadResult?) -> Unit
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
@@ -108,7 +114,6 @@ private fun METObjectDetailView(
         )
 
         Spacer(modifier = Modifier.height(Dimen.S))
-        val viewModel: ObjectDetailViewModel = hiltViewModel()
 
         LazyColumn {
             items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
@@ -117,7 +122,7 @@ private fun METObjectDetailView(
                         metObjectUIRepresentable.metObject.imageData,
                         loadedImages
                     ) { imageLoadResult ->
-                        viewModel.onImageSelected(imageLoadResult)
+                        onPreviewImageSelected(imageLoadResult)
                     }
                 } else {
                     val spacerHeight = if (currIndex == 1) {

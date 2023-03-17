@@ -150,6 +150,7 @@ class ObjectDetailViewModel @Inject constructor(
         val error = result.exceptionOrNull()
 
         val retVal = if (metObject != null) {
+
             State.LoadedWithSuccess(
                 METObjectUIRepresentable(
                     metObject = metObject,
