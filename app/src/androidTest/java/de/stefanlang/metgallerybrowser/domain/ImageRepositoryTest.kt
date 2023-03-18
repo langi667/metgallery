@@ -134,7 +134,6 @@ class ImageRepositoryTest : HiltInstrumentedTest() {
         val urlSecond = "https://images.metmuseum.org/CRDImages/gr/web-large/DP337524.jpg"
 
         val repo = ImageRepositoryImpl(1, api)
-
         assertNull(repo.entryForQuery(query = url))
 
         runBlocking {

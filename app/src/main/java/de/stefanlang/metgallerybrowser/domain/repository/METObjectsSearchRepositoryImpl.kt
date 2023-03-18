@@ -15,7 +15,6 @@ class METObjectsSearchRepositoryImpl @Inject constructor(val api: METAPI) :
 
     // region Private API
 
-    // TODO: test case
     override suspend fun searchForObjectsWithQuery(query: String): Result<METObjectsSearchResult>? {
         val retVal = fetch(query).result
         return retVal

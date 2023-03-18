@@ -31,10 +31,9 @@ class ObjectDetailViewModel @Inject constructor(
 
     sealed class State {
         object Loading : State()
-
         object NotFound : State()
         class LoadedWithSuccess(val metObject: METObject) : State()
-        class LoadedWithError() : State()
+        object LoadedWithError : State()
     }
 
     val images = mutableStateListOf<ImageLoadResult>()
@@ -175,7 +174,7 @@ class ObjectDetailViewModel @Inject constructor(
         val retVal = if (metObject != null) {
             State.LoadedWithSuccess(metObject)
         } else if (error != null && error != NetworkError.NotFound) {
-            State.LoadedWithError()
+            State.LoadedWithError
         } else {
             State.NotFound
         }

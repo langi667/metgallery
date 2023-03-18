@@ -73,7 +73,6 @@ private fun ContentView(
                     viewModel.startSearch()
                 }
             ),
-
             trailingIcon = {
                 Icon(Icons.Default.Clear,
                     contentDescription = stringResource(id = R.string.clear_text),
