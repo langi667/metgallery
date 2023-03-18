@@ -41,6 +41,7 @@ abstract class Repository<QUERY, RESULT> {
 
     protected abstract suspend fun performFetch(query: QUERY)
 
+    // TODO: remove
     protected inline fun <reified RESULT> mapObjectFrom(byteArray: ByteArray): RESULT {
         return JSONParser.mapObjectFrom(byteArray)
     }

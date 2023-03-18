@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.*
 import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
+import de.stefanlang.metgallerybrowser.domain.remote.METAPIImpl
 import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
 import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.ui.common.Tags
@@ -78,7 +79,7 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
                 objectID = objectID,
                 viewModel = ObjectDetailViewModel(
                     ImageRepositoryImpl(15),
-                    METObjectRepositoryImpl(),
+                    METObjectRepositoryImpl(METAPIImpl()),
                     METObjectEntryBuilder(appContext)
                 )
             )

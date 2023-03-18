@@ -1,18 +1,16 @@
 package de.stefanlang.metgallerybrowser.domain.repository
 
 import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
-import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
-import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
-import de.stefanlang.network.NetworkResponse
 import javax.inject.Inject
 
 typealias METObjectsRepositoryEntry = Repository.Entry<Int, METObject>
 
-class METObjectRepositoryImpl @Inject constructor() :
+class METObjectRepositoryImpl @Inject constructor(val api: METAPI) :
     SingleEntryRepository<Int, METObject>(),
     METObjectRepository {
 
@@ -31,8 +29,7 @@ class METObjectRepositoryImpl @Inject constructor() :
     // region Private API
 
     override suspend fun performFetch(query: Int) {
-        val url = METAPIURLBuilder.objectURL(query)
-        val result = NetworkAPI.get(url)
+        val result = api.objectForID(query)
 
         val entry = entryForResponse(query, result)
         latest = entry
@@ -40,22 +37,18 @@ class METObjectRepositoryImpl @Inject constructor() :
 
     private fun entryForResponse(
         objectID: Int,
-        networkResult: Result<NetworkResponse>
+        networkResult: Result<METObject>
     ): METObjectsRepositoryEntry {
         val retVal: METObjectsRepositoryEntry
-        val response = networkResult.getOrNull()
+        val metObject = networkResult.getOrNull()
+        val error = networkResult.exceptionOrNull()
 
-        retVal = if (response != null) {
-            val metObject = mapObjectFrom<METObject>(response.data)
-            if (metObject.isValid) {
-                Entry(objectID, Result.success(metObject))
-            } else {
-                Entry(objectID, Result.failure(NetworkError.NotFound))
-            }
-
-        } else {
-            val error = networkResult.exceptionOrNull() ?: NetworkError.InvalidState
+        retVal = if (metObject != null && metObject.isValid) {
+            Entry(objectID, Result.success(metObject))
+        } else if (error != null) {
             Entry(objectID, Result.failure(error))
+        } else {
+            Entry(objectID, Result.failure(NetworkError.InvalidState))
         }
 
         return retVal

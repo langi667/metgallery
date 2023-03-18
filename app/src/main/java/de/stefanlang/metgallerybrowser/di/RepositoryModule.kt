@@ -5,6 +5,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
+import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.data.repository.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
 import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
@@ -32,8 +33,8 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
-    fun provideObjectsRepository(): METObjectRepository {
-        return METObjectRepositoryImpl()
+    fun provideObjectsRepository(api: METAPI): METObjectRepository {
+        return METObjectRepositoryImpl(api)
     }
 
     @Provides
