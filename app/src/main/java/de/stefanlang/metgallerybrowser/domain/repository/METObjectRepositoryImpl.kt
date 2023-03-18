@@ -1,7 +1,7 @@
 package de.stefanlang.metgallerybrowser.domain.repository
 
 import de.stefanlang.metgallerybrowser.data.models.METObject
-import de.stefanlang.metgallerybrowser.data.repository.METObjectRepositoryInterface
+import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
 import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
@@ -12,9 +12,9 @@ import javax.inject.Inject
 
 typealias METObjectsRepositoryEntry = Repository.Entry<Int, METObject>
 
-class METObjectRepository @Inject constructor() :
+class METObjectRepositoryImpl @Inject constructor() :
     SingleEntryRepository<Int, METObject>(),
-    METObjectRepositoryInterface {
+    METObjectRepository {
 
     // region Public API
 

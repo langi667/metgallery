@@ -2,6 +2,6 @@ package de.stefanlang.metgallerybrowser.data.repository
 
 import android.graphics.Bitmap
 
-interface ImageRepositoryInterface {
+interface ImageRepository {
     suspend fun fetchImage(url: String): Result<Bitmap>?
 }

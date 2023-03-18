@@ -7,11 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.stefanlang.metgallerybrowser.data.models.ImageData
 import de.stefanlang.metgallerybrowser.data.models.METObject
-import de.stefanlang.metgallerybrowser.data.repository.ImageRepositoryInterface
+import de.stefanlang.metgallerybrowser.data.repository.ImageRepository
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
-import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepository
+import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepositoryImpl
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,20 +24,39 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ObjectDetailViewModel @Inject constructor(
-    private val imageRepository: ImageRepositoryInterface,
-    private val objectsRepository: METObjectRepository,
+    private val imageRepository: ImageRepository,
+    private val objectsRepository: METObjectRepositoryImpl,
+    private val metObjectEntryBuilder: METObjectEntryBuilder
 ) : ViewModel() {
 
     sealed class State {
         object Loading : State()
 
         object NotFound : State()
-        class LoadedWithSuccess(val metObjectUIRepresentable: METObjectUIRepresentable) : State()
+        class LoadedWithSuccess(val metObject: METObject) : State()
         class LoadedWithError() : State()
     }
 
     val images = mutableStateListOf<ImageLoadResult>()
     val selectedImage = mutableStateOf<ImageLoadResult?>(null)
+    val title: String?
+        get() = metObject?.title
+
+    val entries: List<METObjectEntryBuilder.Entry>
+        get() {
+            val metObject = this.metObject ?: return emptyList()
+            val retVal = metObjectEntryBuilder.buildFor(metObject)
+
+            return retVal
+        }
+
+    val imageData: List<ImageData>
+        get() {
+            val metObject = this.metObject ?: return emptyList()
+            val retVal = metObject.imageData
+
+            return retVal
+        }
 
     private val _state = MutableStateFlow<State>(State.Loading)
     private val objectID = MutableStateFlow<Int?>(null)
@@ -57,13 +77,16 @@ class ObjectDetailViewModel @Inject constructor(
             _state.value
         )
 
-    private val metObjectUIRepresentable: METObjectUIRepresentable?
+    private val metObject: METObject?
         get() {
-            (state.value as? State.LoadedWithSuccess)?.let { state ->
-                return state.metObjectUIRepresentable
+            val currState: State = state.value
+            val retVal = if (currState is State.LoadedWithSuccess) {
+                currState.metObject
+            } else {
+                null
             }
 
-            return null
+            return retVal
         }
 
     init {
@@ -114,7 +137,7 @@ class ObjectDetailViewModel @Inject constructor(
     }
 
     private suspend fun loadImages() {
-        val imageData = metObjectUIRepresentable?.metObject?.imageData ?: return
+        val imageData = metObject?.imageData ?: return
 
         imageData.forEach { currImageData ->
             viewModelScope.launch {
@@ -150,13 +173,7 @@ class ObjectDetailViewModel @Inject constructor(
         val error = result.exceptionOrNull()
 
         val retVal = if (metObject != null) {
-
-            State.LoadedWithSuccess(
-                METObjectUIRepresentable(
-                    metObject = metObject,
-                    createEntriesImmediately = true
-                )
-            )
+            State.LoadedWithSuccess(metObject)
         } else if (error != null && error != NetworkError.NotFound) {
             State.LoadedWithError()
         } else {

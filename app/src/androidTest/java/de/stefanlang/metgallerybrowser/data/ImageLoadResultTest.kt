@@ -6,6 +6,7 @@ import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.imageLoadResultForImage
 import de.stefanlang.metgallerybrowser.domain.indexOfResultForImage
+import de.stefanlang.network.NetworkError
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +21,7 @@ class ImageLoadResultTest : NetworkInstrumentedTest() {
         val list = mutableListOf<ImageLoadResult>()
         assertTrue(list.imageLoadResultForImage(testImage) == null)
 
-        list.add(ImageLoadResult.Failure(""))
+        list.add(ImageLoadResult.Failure("", NetworkError.InvalidState))
         list.add(ImageLoadResult.Success("http.//www.url-one.com", testImage2))
         assertTrue(list.imageLoadResultForImage(testImage) == null)
 
@@ -33,7 +34,7 @@ class ImageLoadResultTest : NetworkInstrumentedTest() {
         val list = mutableListOf<ImageLoadResult>()
         assertTrue(list.indexOfResultForImage(testImage) == -1)
 
-        list.add(ImageLoadResult.Failure(""))
+        list.add(ImageLoadResult.Failure("", NetworkError.InvalidState))
         list.add(ImageLoadResult.Success("http.//www.url-one.com", testImage2))
         assertTrue(list.indexOfResultForImage(testImage) == -1)
 

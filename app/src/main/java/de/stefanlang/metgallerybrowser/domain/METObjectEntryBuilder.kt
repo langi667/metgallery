@@ -1,17 +1,18 @@
 package de.stefanlang.metgallerybrowser.domain
 
+import android.content.Context
 import android.content.res.Resources
 import de.stefanlang.core.models.HyperLink
 import de.stefanlang.core.utils.Empty.allNullOrBlank
-import de.stefanlang.metgallerybrowser.METGalleryBrowserApplication
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.data.models.METObject
+import javax.inject.Inject
 
 /**
  * Wrapper around the METObject to prepare and provide UI representations of METObject properties
  */
 
-data class METObjectUIRepresentable(val metObject: METObject) {
+data class METObjectEntryBuilder @Inject constructor(val appContext: Context) {
 
     // region Types
 
@@ -25,46 +26,43 @@ data class METObjectUIRepresentable(val metObject: METObject) {
 
     // region Properties
 
-    val entries: List<Entry> by lazy { createEntries() }
-
     private val noEntryString: String by lazy {
         resources.getString(R.string.no_value)
     }
 
     private val resources: Resources
-        get() = METGalleryBrowserApplication.appContext.resources
+        get() = appContext.resources
 
     // endregion
 
     // region Public API
 
-    constructor(metObject: METObject, createEntriesImmediately: Boolean) : this(metObject) {
-        if (createEntriesImmediately) {
-            entries
-        }
+    fun buildFor(metObject: METObject): List<Entry> {
+        val retVal = createEntries(metObject)
+        return retVal
     }
 
     // endregion
 
     // region Private API
 
-    private fun createEntries(): List<Entry> {
+    private fun createEntries(metObject: METObject): List<Entry> {
         val retVal = mutableListOf<Entry>()
 
-        createAccessionEntry()?.let { entry -> retVal.add(entry) }
-        createDepartmentEntry()?.let { entry -> retVal.add(entry) }
-        createCultureEntry()?.let { entry -> retVal.add(entry) }
+        createAccessionEntry(metObject)?.let { entry -> retVal.add(entry) }
+        createDepartmentEntry(metObject)?.let { entry -> retVal.add(entry) }
+        createCultureEntry(metObject)?.let { entry -> retVal.add(entry) }
 
-        createObjectDetailsEntry()?.let { entry -> retVal.add(entry) }
-        createArtistEntry()?.let { entry -> retVal.add(entry) }
-        createLocationEntry()?.let { entry -> retVal.add(entry) }
+        createObjectDetailsEntry(metObject)?.let { entry -> retVal.add(entry) }
+        createArtistEntry(metObject)?.let { entry -> retVal.add(entry) }
+        createLocationEntry(metObject)?.let { entry -> retVal.add(entry) }
 
-        createMiscEntry()?.let { entry -> retVal.add(entry) }
+        createMiscEntry(metObject)?.let { entry -> retVal.add(entry) }
 
         return retVal
     }
 
-    private fun createDepartmentEntry(): Entry? {
+    private fun createDepartmentEntry(metObject: METObject): Entry? {
         val entryValue = metObject.department
         val entryTitle = resources.getString(R.string.department_title)
 
@@ -77,7 +75,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    private fun createAccessionEntry(): Entry? {
+    private fun createAccessionEntry(metObject: METObject): Entry? {
         val accessionNumber = metObject.accessionNumber
         val accessionYear = metObject.accessionYear
         val isPublicDomain = metObject.isPublicDomain
@@ -98,7 +96,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    private fun createCultureEntry(): Entry? {
+    private fun createCultureEntry(metObject: METObject): Entry? {
         val culture: String? = metObject.culture
         val period: String? = metObject.period
         val dynasty: String? = metObject.dynasty
@@ -121,7 +119,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    private fun createObjectDetailsEntry(): Entry? {
+    private fun createObjectDetailsEntry(metObject: METObject): Entry? {
         val objectName: String? = metObject.objectName
         val objectEndDate: Int? = metObject.objectEndDate
         val objectDate: String? = metObject.objectDate
@@ -181,7 +179,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    private fun createArtistEntry(): Entry? {
+    private fun createArtistEntry(metObject: METObject): Entry? {
         val artistRole: String? = metObject.artistRole
         val artistDisplayName: String? = metObject.artistDisplayName
         val artistDisplayBio: String? = metObject.artistDisplayBio
@@ -229,7 +227,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    private fun createLocationEntry(): Entry? {
+    private fun createLocationEntry(metObject: METObject): Entry? {
         val geographyType: String? = metObject.geographyType
         val city: String? = metObject.city
         val state: String? = metObject.state
@@ -279,7 +277,7 @@ data class METObjectUIRepresentable(val metObject: METObject) {
         return retVal
     }
 
-    private fun createMiscEntry(): Entry? {
+    private fun createMiscEntry(metObject: METObject): Entry? {
         val creditLine: String? = metObject.creditLine
         val rightsAndReproduction: String? = metObject.rightsAndReproduction
         val linkResource: String? = metObject.linkResource
@@ -330,13 +328,13 @@ data class METObjectUIRepresentable(val metObject: METObject) {
     private fun boolOrEmpty(boolean: Boolean?): String {
         val retVal = when (boolean) {
             true -> {
-                return resources.getString(R.string.common_yes)
+                resources.getString(R.string.common_yes)
             }
             false -> {
-                return resources.getString(R.string.common_no)
+                resources.getString(R.string.common_no)
             }
             else -> {
-                return noEntryString
+                noEntryString
             }
         }
 

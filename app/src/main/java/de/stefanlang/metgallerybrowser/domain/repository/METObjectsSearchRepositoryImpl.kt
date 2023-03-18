@@ -1,7 +1,7 @@
 package de.stefanlang.metgallerybrowser.domain.repository
 
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
-import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepositoryInterface
+import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
 import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
@@ -13,9 +13,9 @@ import javax.inject.Inject
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>
 
 
-class METObjectsSearchRepository @Inject constructor() :
+class METObjectsSearchRepositoryImpl @Inject constructor() :
     SingleEntryRepository<String, METObjectsSearchResult>(),
-    METObjectsSearchRepositoryInterface {
+    METObjectsSearchRepository {
 
     // region Private API
 

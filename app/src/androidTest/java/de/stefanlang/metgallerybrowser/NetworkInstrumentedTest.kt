@@ -14,7 +14,7 @@ open class NetworkInstrumentedTest {
         const val VERY_LONG = 10000L
     }
 
-    private val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
+    protected val appContext: Context = InstrumentationRegistry.getInstrumentation().targetContext
 
     init {
         Assert.assertNotNull(appContext)

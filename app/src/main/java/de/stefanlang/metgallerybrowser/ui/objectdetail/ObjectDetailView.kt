@@ -15,7 +15,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
-import de.stefanlang.metgallerybrowser.domain.METObjectUIRepresentable
+import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
 import de.stefanlang.metgallerybrowser.ui.common.*
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
@@ -36,9 +36,7 @@ fun ObjectDetailView(
     Scaffold(topBar = {
         TopBar(navController, viewModel)
     }) {
-        ContentView(state.value, images) { selectedImage ->
-            viewModel.onImageSelected(selectedImage)
-        }
+        ContentView(viewModel, state.value, images)
         val selectedImage = (viewModel.selectedImage.value as? ImageLoadResult.Success)
 
         if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
@@ -69,9 +67,9 @@ private fun TopBar(navController: NavController, viewModel: ObjectDetailViewMode
 
 @Composable
 private fun ContentView(
+    viewModel: ObjectDetailViewModel,
     state: ObjectDetailViewModel.State,
-    images: List<ImageLoadResult>,
-    onPreviewImageSelected: (ImageLoadResult?) -> Unit
+    images: List<ImageLoadResult>
 ) {
     Box(modifier = Modifier.padding(Dimen.S)) {
         when (state) {
@@ -94,7 +92,7 @@ private fun ContentView(
             }
 
             is ObjectDetailViewModel.State.LoadedWithSuccess -> {
-                METObjectDetailView(state.metObjectUIRepresentable, images, onPreviewImageSelected)
+                METObjectDetailView(viewModel, images)
             }
         }
     }
@@ -102,28 +100,30 @@ private fun ContentView(
 
 @Composable
 private fun METObjectDetailView(
-    metObjectUIRepresentable: METObjectUIRepresentable,
-    loadedImages: List<ImageLoadResult>,
-    onPreviewImageSelected: (ImageLoadResult?) -> Unit
+    viewModel: ObjectDetailViewModel,
+    loadedImages: List<ImageLoadResult>
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Text(
-            text = metObjectUIRepresentable.metObject.title
+            text = viewModel.title
                 ?: stringResource(id = R.string.object_default_title),
             style = MaterialTheme.typography.h5
         )
 
         Spacer(modifier = Modifier.height(Dimen.S))
+        val entries = viewModel.entries
+        val imageData = viewModel.imageData
 
         LazyColumn {
-            items(metObjectUIRepresentable.entries.size + 1) { currIndex ->
+            items(entries.size + 1) { currIndex ->
                 if (currIndex == 0) {
                     GalleryPreviewView(
-                        metObjectUIRepresentable.metObject.imageData,
+                        imageData,
                         loadedImages
-                    ) { imageLoadResult ->
-                        onPreviewImageSelected(imageLoadResult)
+                    ) { selectedImage ->
+                        viewModel.onImageSelected(selectedImage)
                     }
+
                 } else {
                     val spacerHeight = if (currIndex == 1) {
                         Dimen.S
@@ -131,7 +131,7 @@ private fun METObjectDetailView(
                         Dimen.XS
                     }
                     Spacer(modifier = Modifier.height(spacerHeight))
-                    METObjectEntryView(metObjectUIRepresentable.entries[currIndex - 1])
+                    METObjectEntryView(entries[currIndex - 1])
                 }
             }
         }
@@ -139,7 +139,7 @@ private fun METObjectDetailView(
 }
 
 @Composable
-private fun METObjectEntryView(entry: METObjectUIRepresentable.Entry) {
+private fun METObjectEntryView(entry: METObjectEntryBuilder.Entry) {
     Column {
         Text(text = entry.name, style = MaterialTheme.typography.h6)
         Spacer(modifier = Modifier.height(Dimen.XXS))

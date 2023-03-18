@@ -2,7 +2,7 @@ package de.stefanlang.metgallerybrowser.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepository
+import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.Assert.*
@@ -13,7 +13,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageSuccess() {
-        val repo = ImageRepository(15)
+        val repo = ImageRepositoryImpl(15)
         runBlocking {
             val result =
                 repo.fetchImage("https://images.metmuseum.org/CRDImages/gr/web-large/DP337517.jpg")
@@ -25,7 +25,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageFailInvalidURL() {
-        val repo = ImageRepository(15)
+        val repo = ImageRepositoryImpl(15)
         runBlocking {
             val result = repo.fetchImage("https://no/address")
             assertNotNull(result)
@@ -36,7 +36,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageFailNoImage() {
-        val repo = ImageRepository(15)
+        val repo = ImageRepositoryImpl(15)
 
         runBlocking {
             val result = repo.fetchImage("https://google.com")
@@ -55,7 +55,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
             "https://images.metmuseum.org/CRDImages/gr/web-large/DP337525.jpg",
             "https://images.metmuseum.org/CRDImages/gr/web-large/DP337526.jpg",
         )
-        val repo = ImageRepository(images.size - 1)
+        val repo = ImageRepositoryImpl(images.size - 1)
 
         runBlocking {
             var result = repo.fetchImage(images.first())
@@ -101,7 +101,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
         val nonExisting = "https://images.metmuseum.org/CRDImages/gr/web-large/blablabla"
         val invalid = "https://google.com"
 
-        val repo = ImageRepository(3)
+        val repo = ImageRepositoryImpl(3)
 
         runBlocking {
             var result = repo.fetchImage(existing)
@@ -129,7 +129,7 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
         val url = "https://images.metmuseum.org/CRDImages/gr/web-large/DP337517.jpg"
         val urlSecond = "https://images.metmuseum.org/CRDImages/gr/web-large/DP337524.jpg"
 
-        val repo = ImageRepository(1)
+        val repo = ImageRepositoryImpl(1)
 
         assertNull(repo.entryForQuery(query = url))
 

@@ -2,7 +2,7 @@ package de.stefanlang.metgallerybrowser.domain.repository
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import de.stefanlang.metgallerybrowser.data.repository.ImageRepositoryInterface
+import de.stefanlang.metgallerybrowser.data.repository.ImageRepository
 import de.stefanlang.metgallerybrowser.data.repository.MultiEntryRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.network.NetworkAPI
@@ -11,9 +11,9 @@ import javax.inject.Inject
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
 
-class ImageRepository @Inject constructor(maxImages: Int) :
+class ImageRepositoryImpl @Inject constructor(maxImages: Int) :
     MultiEntryRepository<String, Bitmap>(maxImages),
-    ImageRepositoryInterface {
+    ImageRepository {
 
     // region Properties
 

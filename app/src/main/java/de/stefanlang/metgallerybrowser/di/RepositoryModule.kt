@@ -5,12 +5,12 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import de.stefanlang.metgallerybrowser.data.repository.ImageRepositoryInterface
-import de.stefanlang.metgallerybrowser.data.repository.METObjectRepositoryInterface
-import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepositoryInterface
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepository
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepository
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepository
+import de.stefanlang.metgallerybrowser.data.repository.ImageRepository
+import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
+import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
+import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepositoryImpl
+import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepositoryImpl
 import javax.inject.Named
 
 
@@ -20,20 +20,20 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
-    fun provideImageRepository(@Named("MaxImagesDefault") maxImages: Int): ImageRepositoryInterface {
-        return ImageRepository(maxImages)
+    fun provideImageRepository(@Named("MaxImagesDefault") maxImages: Int): ImageRepository {
+        return ImageRepositoryImpl(maxImages)
     }
 
     @Provides
     @ViewModelScoped
-    fun provideObjectsSearchRepository(): METObjectsSearchRepositoryInterface {
-        return METObjectsSearchRepository()
+    fun provideObjectsSearchRepository(): METObjectsSearchRepository {
+        return METObjectsSearchRepositoryImpl()
     }
 
     @Provides
     @ViewModelScoped
-    fun provideObjectsRepository(): METObjectRepositoryInterface {
-        return METObjectRepository()
+    fun provideObjectsRepository(): METObjectRepository {
+        return METObjectRepositoryImpl()
     }
 
     @Provides
