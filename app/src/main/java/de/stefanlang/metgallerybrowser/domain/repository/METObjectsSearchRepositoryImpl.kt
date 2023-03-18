@@ -1,19 +1,16 @@
 package de.stefanlang.metgallerybrowser.domain.repository
 
 import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
-import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
-import de.stefanlang.network.NetworkAPI
-import de.stefanlang.network.NetworkError
-import de.stefanlang.network.NetworkResponse
 import javax.inject.Inject
 
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>
 
 
-class METObjectsSearchRepositoryImpl @Inject constructor() :
+class METObjectsSearchRepositoryImpl @Inject constructor(val api: METAPI) :
     SingleEntryRepository<String, METObjectsSearchResult>(),
     METObjectsSearchRepository {
 
@@ -32,28 +29,10 @@ class METObjectsSearchRepositoryImpl @Inject constructor() :
     // region Private API
 
     override suspend fun performFetch(query: String) {
-        val url = METAPIURLBuilder.objectsSearchURL(query)
-        val result = NetworkAPI.get(url)
-        val newResult = resultForResponse(result)
+        val newResult = api.objectIDsForSearchQuery(query)
 
         val search = METObjectsSearchRepositoryEntry(query, newResult)
         latest = search
-    }
-
-    private fun resultForResponse(
-        responseResult: Result<NetworkResponse>
-    ): Result<METObjectsSearchResult> {
-        val response = responseResult.getOrNull()
-        val retVal = if (response != null) {
-            val searchResult = mapObjectFrom<METObjectsSearchResult>(response.data)
-            Result.success(searchResult)
-        } else {
-            responseResult.exceptionOrNull()?.let { error ->
-                Result.failure(error)
-            } ?: Result.failure(NetworkError.InvalidState)
-        }
-
-        return retVal
     }
 
     // endregion

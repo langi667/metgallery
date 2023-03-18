@@ -21,14 +21,17 @@ object RepositoryModule {
 
     @Provides
     @ViewModelScoped
-    fun provideImageRepository(@Named("MaxImagesDefault") maxImages: Int): ImageRepository {
-        return ImageRepositoryImpl(maxImages)
+    fun provideImageRepository(
+        @Named("MaxImagesDefault") maxImages: Int,
+        api: METAPI
+    ): ImageRepository {
+        return ImageRepositoryImpl(maxImages, api)
     }
 
     @Provides
     @ViewModelScoped
-    fun provideObjectsSearchRepository(): METObjectsSearchRepository {
-        return METObjectsSearchRepositoryImpl()
+    fun provideObjectsSearchRepository(api: METAPI): METObjectsSearchRepository {
+        return METObjectsSearchRepositoryImpl(api)
     }
 
     @Provides

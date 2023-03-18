@@ -48,7 +48,7 @@ class METObjectRepositoryImpl @Inject constructor(val api: METAPI) :
         } else if (error != null) {
             Entry(objectID, Result.failure(error))
         } else {
-            Entry(objectID, Result.failure(NetworkError.InvalidState))
+            Entry(objectID, Result.failure(NetworkError.NotFound))
         }
 
         return retVal

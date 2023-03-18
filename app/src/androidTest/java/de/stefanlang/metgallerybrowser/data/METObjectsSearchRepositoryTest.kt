@@ -2,6 +2,7 @@ package de.stefanlang.metgallerybrowser.data
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
+import de.stefanlang.metgallerybrowser.domain.remote.METAPIImpl
 import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
@@ -12,14 +13,14 @@ import org.junit.runner.RunWith
 class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
     @Test
     fun testSearchEmpty() {
-        val repo = METObjectsSearchRepositoryImpl()
+        val repo = METObjectsSearchRepositoryImpl(METAPIImpl())
         assertNull(repo.latest.query)
         assertNull(repo.latest.result)
     }
 
     @Test
     fun testSearchSuccess() {
-        val repo = METObjectsSearchRepositoryImpl()
+        val repo = METObjectsSearchRepositoryImpl(METAPIImpl())
 
         runBlocking {
             val search = "sunflower"
@@ -40,7 +41,7 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testSearchNoResults() {
-        val repo = METObjectsSearchRepositoryImpl()
+        val repo = METObjectsSearchRepositoryImpl(METAPIImpl())
 
         runBlocking {
             val query = "343hdfberj"
@@ -60,7 +61,7 @@ class METObjectsSearchRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testSearchSuccessSpecialChars() {
-        val repo = METObjectsSearchRepositoryImpl()
+        val repo = METObjectsSearchRepositoryImpl(METAPIImpl())
 
         runBlocking {
             val query = "Karl H. Müller"
