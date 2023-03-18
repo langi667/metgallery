@@ -1,23 +1,26 @@
-package de.stefanlang.metgallerybrowser.data
+package de.stefanlang.metgallerybrowser.domain
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.domain.remote.METAPIImpl
+import dagger.hilt.android.testing.HiltAndroidTest
+import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
+import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.Assert.*
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class ImageRepositoryTest : NetworkInstrumentedTest() {
+class ImageRepositoryTest : HiltInstrumentedTest() {
 
-    private val api = METAPIImpl()
-    private val repo = ImageRepositoryImpl(15, api)
+    @Inject
+    lateinit var api: METAPI
+    private lateinit var repo: ImageRepositoryImpl
 
     @Test
     fun testFetchImageSuccess() {
-
         runBlocking {
             val result =
                 repo.fetchImage("https://images.metmuseum.org/CRDImages/gr/web-large/DP337517.jpg")
@@ -29,7 +32,6 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageFailInvalidURL() {
-
         runBlocking {
             val result = repo.fetchImage("https://no/address")
             assertNotNull(result)
@@ -40,8 +42,6 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
 
     @Test
     fun testFetchImageFailNoImage() {
-
-
         runBlocking {
             val result = repo.fetchImage("https://google.com")
             assertNotNull(result)
@@ -147,5 +147,9 @@ class ImageRepositoryTest : NetworkInstrumentedTest() {
             // should be removed due to max cache size = 1
             assertNull(repo.entryForQuery(query = url))
         }
+    }
+
+    override fun handleInjectionsDone() {
+        repo = ImageRepositoryImpl(15, api)
     }
 }

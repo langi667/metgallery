@@ -13,8 +13,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 class ImageLoadResultTest : NetworkInstrumentedTest() {
-    val testImage: Bitmap = Bitmap.createBitmap(20, 20, Bitmap.Config.ALPHA_8)
-    val testImage2: Bitmap = Bitmap.createBitmap(20, 40, Bitmap.Config.ALPHA_8)
+    private val testImage: Bitmap = Bitmap.createBitmap(20, 20, Bitmap.Config.ALPHA_8)
+    private val testImage2: Bitmap = Bitmap.createBitmap(20, 40, Bitmap.Config.ALPHA_8)
 
     @Test
     fun testImageLoadResultForImage() {

@@ -9,6 +9,10 @@ abstract class SingleEntryRepository<QUERY, RESULT> : Repository<QUERY, RESULT>(
 
     // endregion
 
+    override fun storeEntry(entry: Entry<QUERY, RESULT>) {
+        latest = entry
+    }
+
     final override fun entryForQuery(query: QUERY): Entry<QUERY, RESULT>? {
         val retVal = if (matchesQuery(latest, query)) {
             latest

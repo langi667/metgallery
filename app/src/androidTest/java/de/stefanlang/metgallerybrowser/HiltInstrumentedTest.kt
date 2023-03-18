@@ -12,5 +12,14 @@ open class HiltInstrumentedTest : NetworkInstrumentedTest() {
     @Before
     fun setUp() {
         hiltRule.inject()
+        handleInjectionsDone()
+    }
+
+
+    /**
+     * Override to spawn objects that may depend on injected properties.
+     * Those are injected at this time
+     */
+    protected open fun handleInjectionsDone() {
     }
 }

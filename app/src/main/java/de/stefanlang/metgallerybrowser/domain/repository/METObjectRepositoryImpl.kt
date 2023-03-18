@@ -16,11 +16,8 @@ class METObjectRepositoryImpl @Inject constructor(val api: METAPI) :
 
     // region Public API
 
-    // TODO: test case
     override suspend fun fetchObjectForResult(id: Int): Result<METObject>? {
-        fetch(id)
-
-        val retVal = entryForQuery(id)?.result
+        val retVal = fetch(id).result
         return retVal
     }
 
@@ -28,11 +25,11 @@ class METObjectRepositoryImpl @Inject constructor(val api: METAPI) :
 
     // region Private API
 
-    override suspend fun performFetch(query: Int) {
+    override suspend fun performFetch(query: Int): METObjectsRepositoryEntry {
         val result = api.objectForID(query)
+        val retVal = entryForResponse(query, result)
 
-        val entry = entryForResponse(query, result)
-        latest = entry
+        return retVal
     }
 
     private fun entryForResponse(

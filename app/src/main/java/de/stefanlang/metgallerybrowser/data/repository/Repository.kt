@@ -33,12 +33,20 @@ abstract class Repository<QUERY, RESULT> {
     // endregion
 
     abstract fun entryForQuery(query: QUERY): Entry<QUERY, RESULT>?
+    protected abstract fun storeEntry(entry: Entry<QUERY, RESULT>)
 
-    suspend fun fetch(query: QUERY) = withContext(Dispatchers.IO) {
-        performFetch(query)
+    suspend fun fetch(query: QUERY): Entry<QUERY, RESULT> {
+        val retVal = withContext(Dispatchers.IO) {
+            val entry = performFetch(query)
+            storeEntry(entry)
+
+            return@withContext entry
+        }
+
+        return retVal
     }
 
-    protected abstract suspend fun performFetch(query: QUERY)
+    protected abstract suspend fun performFetch(query: QUERY): Entry<QUERY, RESULT>
 
     protected fun matchesQuery(entry: Entry<QUERY, RESULT>, query: QUERY): Boolean {
         val retVal = entry.query == query

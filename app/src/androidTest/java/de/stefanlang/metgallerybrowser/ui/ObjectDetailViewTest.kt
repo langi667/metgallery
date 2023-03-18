@@ -31,7 +31,6 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
     @get:Rule
     val rule = createComposeRule()
 
-
     @Test
     fun testLoadingState() {
         setupRule()

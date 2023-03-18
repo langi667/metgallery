@@ -33,9 +33,11 @@ class ImageRepositoryImpl @Inject constructor(maxImages: Int, val api: METAPI) :
 
     // region Private API
 
-    override suspend fun performFetch(query: String) {
+    override suspend fun performFetch(query: String): ImageRepositoryEntry {
         val result = loadImage(query)
-        add(query, result)
+        val retVal = ImageRepositoryEntry(query, result)
+
+        return retVal
     }
 
     private suspend fun loadImage(url: String): Result<Bitmap> {

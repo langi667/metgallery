@@ -9,7 +9,6 @@ import javax.inject.Inject
 
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>
 
-
 class METObjectsSearchRepositoryImpl @Inject constructor(val api: METAPI) :
     SingleEntryRepository<String, METObjectsSearchResult>(),
     METObjectsSearchRepository {
@@ -18,9 +17,7 @@ class METObjectsSearchRepositoryImpl @Inject constructor(val api: METAPI) :
 
     // TODO: test case
     override suspend fun searchForObjectsWithQuery(query: String): Result<METObjectsSearchResult>? {
-        fetch(query)
-        val retVal = entryForQuery(query)?.result
-
+        val retVal = fetch(query).result
         return retVal
     }
 
@@ -28,11 +25,11 @@ class METObjectsSearchRepositoryImpl @Inject constructor(val api: METAPI) :
 
     // region Private API
 
-    override suspend fun performFetch(query: String) {
+    override suspend fun performFetch(query: String): METObjectsSearchRepositoryEntry {
         val newResult = api.objectIDsForSearchQuery(query)
+        val retVal = METObjectsSearchRepositoryEntry(query, newResult)
 
-        val search = METObjectsSearchRepositoryEntry(query, newResult)
-        latest = search
+        return retVal
     }
 
     // endregion
