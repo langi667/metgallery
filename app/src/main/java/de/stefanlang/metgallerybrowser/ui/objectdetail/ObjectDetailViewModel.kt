@@ -168,10 +168,11 @@ class ObjectDetailViewModel @Inject constructor(
 
     private fun imageLoadResultForResult(url: String, result: Result<Bitmap>): ImageLoadResult {
         val image = result.getOrNull()
+        val error = result.exceptionOrNull()
         val retVal: ImageLoadResult = if (image != null) {
             ImageLoadResult.Success(url, image)
         } else {
-            ImageLoadResult.Failure(url)
+            ImageLoadResult.Failure(url, error ?: NetworkError.Unknown)
         }
 
         return retVal

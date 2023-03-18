@@ -33,8 +33,8 @@ sealed class ImageLoadResult(val url: String) {
         }
     }
 
-    // commended out code is left purposely, in case error is needed
-    class Failure(url: String/*, val error: Throwable*/) : ImageLoadResult(url) {
+    @Suppress("unused")
+    class Failure(url: String, val error: Throwable) : ImageLoadResult(url) {
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
