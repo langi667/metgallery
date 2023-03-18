@@ -7,11 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.stefanlang.metgallerybrowser.data.models.ImageData
-import de.stefanlang.metgallerybrowser.data.models.METObject
 import de.stefanlang.metgallerybrowser.data.repository.ImageRepository
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
 import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
+import de.stefanlang.metgallerybrowser.domain.models.ImageData
+import de.stefanlang.metgallerybrowser.domain.models.METObject
 import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepositoryImpl
 import de.stefanlang.network.NetworkError
 import kotlinx.coroutines.MainScope

@@ -1,10 +1,10 @@
 package de.stefanlang.metgallerybrowser.domain.repository
 
-import de.stefanlang.metgallerybrowser.data.models.METObject
 import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
 import de.stefanlang.metgallerybrowser.data.repository.Repository
 import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
+import de.stefanlang.metgallerybrowser.domain.models.METObject
 import de.stefanlang.network.NetworkError
 import javax.inject.Inject
 

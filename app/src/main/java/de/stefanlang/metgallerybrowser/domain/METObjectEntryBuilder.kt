@@ -5,7 +5,7 @@ import android.content.res.Resources
 import de.stefanlang.core.models.HyperLink
 import de.stefanlang.core.utils.Empty.allNullOrBlank
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.metgallerybrowser.domain.models.METObject
 import javax.inject.Inject
 
 /**

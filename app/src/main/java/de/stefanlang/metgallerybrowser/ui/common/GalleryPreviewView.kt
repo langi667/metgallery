@@ -14,8 +14,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.data.models.ImageData
 import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
+import de.stefanlang.metgallerybrowser.domain.models.ImageData
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 import de.stefanlang.uicore.RoundedImageView
 

@@ -1,7 +1,7 @@
 package de.stefanlang
 
-import de.stefanlang.metgallerybrowser.data.models.METObject
 import de.stefanlang.metgallerybrowser.domain.Defines
+import de.stefanlang.metgallerybrowser.domain.models.METObject
 import org.junit.Assert.*
 import org.junit.Test
 

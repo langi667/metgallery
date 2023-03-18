@@ -2,11 +2,11 @@ package de.stefanlang.metgallerybrowser.domain.remote
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import de.stefanlang.metgallerybrowser.data.models.METObject
-import de.stefanlang.metgallerybrowser.data.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.data.utils.JSONParser
 import de.stefanlang.metgallerybrowser.domain.METAPIURLBuilder
+import de.stefanlang.metgallerybrowser.domain.models.METObject
+import de.stefanlang.metgallerybrowser.domain.models.METObjectsSearchResult
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 import de.stefanlang.network.NetworkResponse

@@ -1,6 +1,6 @@
 package de.stefanlang.metgallerybrowser.data.repository
 
-import de.stefanlang.metgallerybrowser.data.models.METObject
+import de.stefanlang.metgallerybrowser.domain.models.METObject
 
 // TODO: maybe remove MET
 interface METObjectRepository {
