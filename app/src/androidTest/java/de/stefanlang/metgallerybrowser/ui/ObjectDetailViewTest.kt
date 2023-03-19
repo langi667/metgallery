@@ -9,8 +9,9 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.*
 import de.stefanlang.metgallerybrowser.api.METAPI
+import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
+import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
-import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailViewModel
@@ -26,7 +27,10 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
     private val objectID: Int = 253343
 
     @Inject
-    lateinit var api: METAPI
+    lateinit var api: ObjectDetailAPI
+
+    @Inject
+    lateinit var imageApi: METAPI
 
     @get:Rule
     val rule = createComposeRule()
@@ -81,7 +85,7 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
                 navController = rememberNavController(),
                 objectID = objectID,
                 viewModel = ObjectDetailViewModel(
-                    ImageRepositoryImpl(15, api),
+                    ImageRepositoryImpl(15, imageApi),
                     METObjectRepositoryImpl(api),
                     METObjectEntryBuilder(appContext)
                 )

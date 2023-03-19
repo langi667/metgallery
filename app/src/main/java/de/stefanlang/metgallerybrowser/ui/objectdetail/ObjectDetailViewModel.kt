@@ -10,9 +10,9 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import de.stefanlang.core.network.model.NetworkError
 import de.stefanlang.metgallerybrowser.models.ImageData
 import de.stefanlang.metgallerybrowser.models.ImageLoadResult
-import de.stefanlang.metgallerybrowser.models.METObject
+import de.stefanlang.metgallerybrowser.objectdetail.model.METObject
+import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.repository.image.ImageRepository
-import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow

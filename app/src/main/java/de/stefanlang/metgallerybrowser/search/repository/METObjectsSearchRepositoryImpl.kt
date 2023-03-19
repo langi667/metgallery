@@ -1,14 +1,14 @@
-package de.stefanlang.metgallerybrowser.repository.metobject
+package de.stefanlang.metgallerybrowser.search.repository
 
-import de.stefanlang.metgallerybrowser.api.METAPI
-import de.stefanlang.metgallerybrowser.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.search.api.ObjectsSearchAPI
+import de.stefanlang.metgallerybrowser.search.model.METObjectsSearchResult
 import de.stefanlang.repository.Repository
 import de.stefanlang.repository.SingleEntryRepository
 import javax.inject.Inject
 
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>
 
-class METObjectsSearchRepositoryImpl @Inject constructor(val api: METAPI) :
+class METObjectsSearchRepositoryImpl @Inject constructor(val api: ObjectsSearchAPI) :
     SingleEntryRepository<String, METObjectsSearchResult>(),
     METObjectsSearchRepository {
 

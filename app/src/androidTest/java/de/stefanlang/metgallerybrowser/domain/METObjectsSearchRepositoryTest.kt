@@ -3,8 +3,8 @@ package de.stefanlang.metgallerybrowser.domain
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.metgallerybrowser.api.METAPI
-import de.stefanlang.metgallerybrowser.repository.metobject.METObjectsSearchRepositoryImpl
+import de.stefanlang.metgallerybrowser.search.api.ObjectsSearchAPI
+import de.stefanlang.metgallerybrowser.search.repository.METObjectsSearchRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -15,7 +15,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 class METObjectsSearchRepositoryTest : HiltInstrumentedTest() {
     @Inject
-    lateinit var api: METAPI
+    lateinit var api: ObjectsSearchAPI
     private val failQuery = "343hdfberj"
     private val successQuery = "sunflower"
 

@@ -4,8 +4,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.Defines
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.metgallerybrowser.api.METAPI
-import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepositoryImpl
+import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
+import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -17,7 +17,7 @@ import javax.inject.Inject
 class METObjectRepositoryTest : HiltInstrumentedTest() {
 
     @Inject
-    lateinit var api: METAPI
+    lateinit var api: ObjectDetailAPI
     private val existingObjectID = 253343
 
     @Test

@@ -21,3 +21,5 @@ include ':core:ui'
 include ':core:network'
 
 include ':core:repository'
+include ':features'
+include ':core:api'

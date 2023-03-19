@@ -1,8 +1,9 @@
-package de.stefanlang.metgallerybrowser.models
+package de.stefanlang.metgallerybrowser.objectdetail.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import de.stefanlang.metgallerybrowser.Defines
+import de.stefanlang.metgallerybrowser.models.ImageData
 import de.stefanlang.metgallerybrowser.utils.METAPIURLBuilder
 import java.util.*
 
