@@ -123,7 +123,6 @@ class ObjectDetailViewModel @Inject constructor(
         if (selectedImage.value != null) {
             selectedImage.value = null
         } else {
-            // TODO: cancel, clear
             navController.popBackStack()
         }
     }
