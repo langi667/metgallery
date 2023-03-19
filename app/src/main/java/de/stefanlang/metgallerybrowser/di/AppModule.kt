@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
+import de.stefanlang.metgallerybrowser.objectdetail.model.METObjectEntryBuilder
 import javax.inject.Singleton
 
 @Module

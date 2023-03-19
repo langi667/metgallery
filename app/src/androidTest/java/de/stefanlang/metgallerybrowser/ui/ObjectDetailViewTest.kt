@@ -11,11 +11,11 @@ import de.stefanlang.core.domain.image.ImageAPI
 import de.stefanlang.core.domain.image.ImageRepositoryImpl
 import de.stefanlang.metgallerybrowser.*
 import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
+import de.stefanlang.metgallerybrowser.objectdetail.model.METObjectEntryBuilder
 import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailView
 import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailViewModel
 import de.stefanlang.metgallerybrowser.ui.common.Tags
-import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject

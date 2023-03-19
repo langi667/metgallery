@@ -20,8 +20,8 @@ import de.stefanlang.core.domain.hintview.NoResultsHint
 import de.stefanlang.core.ui.HyperlinkText
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
+import de.stefanlang.metgallerybrowser.objectdetail.model.METObjectEntryBuilder
 import de.stefanlang.metgallerybrowser.ui.common.*
-import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 
 // region Public API
 

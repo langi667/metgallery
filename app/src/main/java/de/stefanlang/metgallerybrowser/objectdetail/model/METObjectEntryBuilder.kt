@@ -1,11 +1,10 @@
-package de.stefanlang.metgallerybrowser.utils
+package de.stefanlang.metgallerybrowser.objectdetail.model
 
 import android.content.Context
 import android.content.res.Resources
 import de.stefanlang.core.common.Empty.allNullOrBlank
 import de.stefanlang.core.common.HyperLink
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObject
 import javax.inject.Inject
 
 /**
