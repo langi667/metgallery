@@ -37,7 +37,6 @@ fun GalleryView(
             .background(MaterialTheme.colors.onPrimary.copy(alpha = 0.7f))
             .testTag(Tags.GALLERY_BACKGROUND.name)
     ) {
-
         val selectedIndex = if (selectedImage != null) {
             var retVal = images.indexOf(selectedImage)
             if (retVal == -1) {

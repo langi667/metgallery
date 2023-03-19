@@ -9,10 +9,7 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.stefanlang.core.domain.image.ImageRepository
 import de.stefanlang.core.network.model.NetworkError
-import de.stefanlang.feature.objectdetail.model.ImageData
-import de.stefanlang.feature.objectdetail.model.ImageLoadResult
-import de.stefanlang.feature.objectdetail.model.METObject
-import de.stefanlang.feature.objectdetail.model.METObjectEntryBuilder
+import de.stefanlang.feature.objectdetail.model.*
 import de.stefanlang.feature.objectdetail.repository.METObjectRepositoryImpl
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -69,7 +66,7 @@ class ObjectDetailViewModel @Inject constructor(
             val latest = objectsRepository.fetchObjectForResult(newID)
             stateForResult(latest)
         }
-        // TODO: add onEach and add clear ?? ?
+
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
@@ -103,11 +100,11 @@ class ObjectDetailViewModel @Inject constructor(
     }
 
     fun allLoadedImages(): List<ImageLoadResult.Success> {
-        val retVal = this.images.mapNotNull { currImageLoadResult ->
-            if (currImageLoadResult is ImageLoadResult.Success) {
-                currImageLoadResult
-            } else {
-                null
+        val retVal = mutableListOf<ImageLoadResult.Success>()
+
+        this.imageData.forEach { currData ->
+            this.images.loadedImagesForImageData(currData)?.let { loadedImage ->
+                retVal.add(loadedImage)
             }
         }
 

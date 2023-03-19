@@ -91,6 +91,19 @@ fun List<ImageLoadResult>.imageLoadResultForImage(image: Bitmap): ImageLoadResul
     return retVal
 }
 
+fun List<ImageLoadResult>.loadedImagesForImageData(imageData: ImageData): ImageLoadResult.Success? {
+
+    val retVal = this.firstOrNull { currLoadResult ->
+        if (currLoadResult is ImageLoadResult.Success) {
+            imageData.containsURL(currLoadResult.url)
+        } else {
+            false
+        }
+    } as? ImageLoadResult.Success
+
+    return retVal
+}
+
 fun List<ImageLoadResult>.indexOfResultForImage(image: Bitmap): Int {
     val imageLoadResult = imageLoadResultForImage(image) ?: return -1
     val retVal = indexOf(imageLoadResult)
