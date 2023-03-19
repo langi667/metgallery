@@ -26,11 +26,11 @@ class ObjectDetailViewModel @Inject constructor(
     private val metObjectEntryBuilder: METObjectEntryBuilder
 ) : ViewModel() {
 
-    sealed class State {
-        object Loading : State()
-        object NotFound : State()
-        class LoadedWithSuccess(val metObject: METObject) : State()
-        object LoadedWithError : State()
+    sealed class UIState {
+        object Loading : UIState()
+        object NotFound : UIState()
+        class LoadedWithSuccess(val metObject: METObject) : UIState()
+        object LoadedWithError : UIState()
     }
 
     val images = mutableStateListOf<ImageLoadResult>()
@@ -54,13 +54,13 @@ class ObjectDetailViewModel @Inject constructor(
             return retVal
         }
 
-    private val _state = MutableStateFlow<State>(State.Loading)
+    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
     private val objectID = MutableStateFlow<Int?>(null)
 
-    val state = objectID
+    val uiState = objectID
         .map { newID ->
             if (newID == null) {
-                return@map State.Loading
+                return@map UIState.Loading
             }
 
             val latest = objectsRepository.fetchObjectForResult(newID)
@@ -70,13 +70,13 @@ class ObjectDetailViewModel @Inject constructor(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            _state.value
+            _uiState.value
         )
 
     private val metObject: METObject?
         get() {
-            val currState: State = state.value
-            val retVal = if (currState is State.LoadedWithSuccess) {
+            val currState: UIState = uiState.value
+            val retVal = if (currState is UIState.LoadedWithSuccess) {
                 currState.metObject
             } else {
                 null
@@ -88,7 +88,7 @@ class ObjectDetailViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             launch {
-                state.collect { _ ->
+                uiState.collect { _ ->
                     handleStateChanged()
                 }
             }
@@ -154,25 +154,25 @@ class ObjectDetailViewModel @Inject constructor(
     }
 
     private fun handleStateChanged() {
-        if (state.value is State.LoadedWithSuccess) {
+        if (uiState.value is UIState.LoadedWithSuccess) {
             viewModelScope.launch {
                 loadImages()
             }
         }
     }
 
-    private fun stateForResult(result: Result<METObject>?): State {
-        result ?: return State.Loading
+    private fun stateForResult(result: Result<METObject>?): UIState {
+        result ?: return UIState.Loading
 
         val metObject = result.getOrNull()
         val error = result.exceptionOrNull()
 
         val retVal = if (metObject != null) {
-            State.LoadedWithSuccess(metObject)
+            UIState.LoadedWithSuccess(metObject)
         } else if (error != null && error != NetworkError.NotFound) {
-            State.LoadedWithError
+            UIState.LoadedWithError
         } else {
-            State.NotFound
+            UIState.NotFound
         }
 
         return retVal

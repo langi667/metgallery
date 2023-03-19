@@ -21,11 +21,11 @@ class ObjectsSearchViewModel @Inject constructor(
 
     // region Types
 
-    sealed class State {
+    sealed class UiState {
 
-        object Idle : State()
+        object Idle : UiState()
 
-        class FinishedWithSuccess(val objectsSearch: METObjectsSearchResult) : State() {
+        class FinishedWithSuccess(val objectsSearch: METObjectsSearchResult) : UiState() {
             val hasSearchResults: Boolean
                 get() {
                     val isEmpty = objectsSearch.objectIDs?.isEmpty() ?: true
@@ -34,7 +34,7 @@ class ObjectsSearchViewModel @Inject constructor(
                 }
         }
 
-        class FinishedWithError() : State()
+        class FinishedWithError() : UiState()
     }
 
     // endregion
@@ -47,8 +47,8 @@ class ObjectsSearchViewModel @Inject constructor(
     private val _isSearching = MutableStateFlow(false)
     val isSearching: StateFlow<Boolean> = _isSearching.asStateFlow()
 
-    private val _state = MutableStateFlow<State>(State.Idle)
-    val state = _state.asStateFlow()
+    private val _uiState = MutableStateFlow<UiState>(UiState.Idle)
+    val uiState = _uiState.asStateFlow()
 
     // endregion
 
@@ -60,12 +60,12 @@ class ObjectsSearchViewModel @Inject constructor(
 
     fun onSearchClear() {
         _searchQuery.value = ""
-        _state.update { State.Idle }
+        _uiState.update { UiState.Idle }
     }
 
     fun startSearch() {
         if (searchQuery.value.isEmpty()) {
-            _state.value = State.Idle
+            _uiState.value = UiState.Idle
             return
         }
 
@@ -86,26 +86,26 @@ class ObjectsSearchViewModel @Inject constructor(
         _isSearching.update { true }
 
         val search = repository.searchForObjectsWithQuery(_searchQuery.value)
-        val newState: State = stateForResult(search)
+        val newState: UiState = stateForResult(search)
 
-        _state.value = newState
+        _uiState.value = newState
         _isSearching.update { false }
     }
 
-    private fun stateForResult(result: Result<METObjectsSearchResult>?): State {
+    private fun stateForResult(result: Result<METObjectsSearchResult>?): UiState {
         val retVal = if (result != null) {
             val searchResult = result.getOrNull()
             val error = result.exceptionOrNull()
 
             if (searchResult != null) {
-                State.FinishedWithSuccess(searchResult)
+                UiState.FinishedWithSuccess(searchResult)
             } else if (error != null) {
-                State.FinishedWithError()
+                UiState.FinishedWithError()
             } else {
-                State.Idle
+                UiState.Idle
             }
         } else {
-            State.Idle
+            UiState.Idle
         }
 
         return retVal

@@ -32,7 +32,7 @@ fun ObjectDetailView(
     objectID: Int,
     viewModel: ObjectDetailViewModel = hiltViewModel()
 ) {
-    val state = viewModel.state.collectAsState()
+    val state = viewModel.uiState.collectAsState()
 
     viewModel.loadObjectForID(objectID)
     val images = viewModel.images.toList()
@@ -43,7 +43,7 @@ fun ObjectDetailView(
         ContentView(viewModel, state.value, images)
         val selectedImage = (viewModel.selectedImage.value as? ImageLoadResult.Success)
 
-        if (selectedImage != null && state.value is ObjectDetailViewModel.State.LoadedWithSuccess) {
+        if (selectedImage != null && state.value is ObjectDetailViewModel.UIState.LoadedWithSuccess) {
             GalleryView(viewModel.allLoadedImages(), selectedImage) {
                 viewModel.deselectImage()
             }
@@ -72,12 +72,12 @@ private fun TopBar(navController: NavController, viewModel: ObjectDetailViewMode
 @Composable
 private fun ContentView(
     viewModel: ObjectDetailViewModel,
-    state: ObjectDetailViewModel.State,
+    state: ObjectDetailViewModel.UIState,
     images: List<ImageLoadResult>
 ) {
     Box(modifier = Modifier.padding(Dimen.S)) {
         when (state) {
-            is ObjectDetailViewModel.State.Loading -> {
+            is ObjectDetailViewModel.UIState.Loading -> {
                 LinearProgressIndicator(
                     Modifier
                         .fillMaxWidth()
@@ -87,15 +87,15 @@ private fun ContentView(
                 LoadingStateHint()
             }
 
-            is ObjectDetailViewModel.State.LoadedWithError -> {
+            is ObjectDetailViewModel.UIState.LoadedWithError -> {
                 ErrorStateHint()
             }
 
-            is ObjectDetailViewModel.State.NotFound -> {
+            is ObjectDetailViewModel.UIState.NotFound -> {
                 NoResultsHint()
             }
 
-            is ObjectDetailViewModel.State.LoadedWithSuccess -> {
+            is ObjectDetailViewModel.UIState.LoadedWithSuccess -> {
                 METObjectDetailView(viewModel, images)
             }
         }

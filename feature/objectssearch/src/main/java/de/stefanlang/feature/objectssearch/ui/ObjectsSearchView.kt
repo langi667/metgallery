@@ -57,7 +57,7 @@ private fun ContentView(
     viewModel: ObjectsSearchViewModel
 ) {
     val searchText = viewModel.searchQuery.collectAsState()
-    val state = viewModel.state.collectAsState()
+    val state = viewModel.uiState.collectAsState()
     val isSearching = viewModel.isSearching.collectAsState()
 
     Column(Modifier.fillMaxSize()) {
@@ -116,16 +116,16 @@ private fun ContentView(
 
 @Composable
 private fun ViewForState(
-    state: ObjectsSearchViewModel.State,
+    state: ObjectsSearchViewModel.UiState,
     onItemClick: (objectID: Int) -> Unit
 ) {
 
     when (state) {
-        is ObjectsSearchViewModel.State.Idle -> {
+        is ObjectsSearchViewModel.UiState.Idle -> {
             IdleStateHint()
         }
 
-        is ObjectsSearchViewModel.State.FinishedWithSuccess -> {
+        is ObjectsSearchViewModel.UiState.FinishedWithSuccess -> {
             if (state.hasSearchResults) {
                 ObjectsSearchResultList(state.objectsSearch, onItemClick)
             } else {
@@ -133,7 +133,7 @@ private fun ViewForState(
             }
         }
 
-        is ObjectsSearchViewModel.State.FinishedWithError -> {
+        is ObjectsSearchViewModel.UiState.FinishedWithError -> {
             ErrorStateHint()
         }
     }
