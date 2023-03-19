@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.objectdetail.ui
+package de.stefanlang.feature.objectdetail.ui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.*
@@ -18,9 +18,9 @@ import de.stefanlang.core.domain.hintview.ErrorStateHint
 import de.stefanlang.core.domain.hintview.LoadingStateHint
 import de.stefanlang.core.domain.hintview.NoResultsHint
 import de.stefanlang.core.ui.HyperlinkText
-import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObjectEntryBuilder
+import de.stefanlang.feature.objectdetail.R
+import de.stefanlang.feature.objectdetail.model.ImageLoadResult
+import de.stefanlang.feature.objectdetail.model.METObjectEntryBuilder
 import de.stefanlang.metgallerybrowser.ui.common.*
 
 // region Public API
@@ -55,7 +55,7 @@ fun ObjectDetailView(
 private fun TopBar(navController: NavController, viewModel: ObjectDetailViewModel) {
 
     TopAppBar(
-        title = { Text(text = stringResource(id = R.string.app_name)) },
+        title = { Text(text = stringResource(id = de.stefanlang.core.api.R.string.title)) },
         navigationIcon = {
             IconButton(onClick = {
                 viewModel.onBackPressed(navController)

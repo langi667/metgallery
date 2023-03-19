@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.ui.common
+package de.stefanlang.feature.objectdetail.ui
 
 enum class Tags {
     BACK_BUTTON,

@@ -20,7 +20,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import de.stefanlang.core.domain.Dimen
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
+import de.stefanlang.feature.objectdetail.model.ImageLoadResult
+import de.stefanlang.feature.objectdetail.ui.Tags
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable

@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.objectdetail.ui
+package de.stefanlang.feature.objectdetail.ui
 
 import android.graphics.Bitmap
 import androidx.compose.runtime.mutableStateListOf
@@ -9,11 +9,11 @@ import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.stefanlang.core.domain.image.ImageRepository
 import de.stefanlang.core.network.model.NetworkError
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageData
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObject
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObjectEntryBuilder
-import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
+import de.stefanlang.feature.objectdetail.model.ImageData
+import de.stefanlang.feature.objectdetail.model.ImageLoadResult
+import de.stefanlang.feature.objectdetail.model.METObject
+import de.stefanlang.feature.objectdetail.model.METObjectEntryBuilder
+import de.stefanlang.feature.objectdetail.repository.METObjectRepositoryImpl
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

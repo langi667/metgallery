@@ -1,6 +1,5 @@
 package de.stefanlang
 
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageData
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -17,17 +16,19 @@ class ImageDataUnitTest {
         val testURL2 = "http://e.android.com/tools/testing"
         val testURL3 = "http://f.android.com/tools/testing"
 
-        val dataAll = ImageData(testURL1, true, testURL2)
+        val dataAll = de.stefanlang.feature.objectdetail.model.ImageData(testURL1, true, testURL2)
 
         assertTrue(dataAll.containsURL(testURL1))
         assertTrue(dataAll.containsURL(testURL2))
         assertFalse(dataAll.containsURL(testURL3))
 
-        val dataPrimaryOnly = ImageData(testURL1, true, null)
+        val dataPrimaryOnly =
+            de.stefanlang.feature.objectdetail.model.ImageData(testURL1, true, null)
         assertTrue(dataPrimaryOnly.containsURL(testURL1))
         assertFalse(dataPrimaryOnly.containsURL(testURL2))
 
-        val dataSecondaryOnly = ImageData("", true, testURL2)
+        val dataSecondaryOnly =
+            de.stefanlang.feature.objectdetail.model.ImageData("", true, testURL2)
         assertFalse(dataSecondaryOnly.containsURL(testURL1))
         assertTrue(dataSecondaryOnly.containsURL(testURL2))
     }

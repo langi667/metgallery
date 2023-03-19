@@ -3,10 +3,9 @@ package de.stefanlang.metgallerybrowser.data
 import android.graphics.Bitmap
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.core.network.model.NetworkError
+import de.stefanlang.feature.objectdetail.model.imageLoadResultForImage
+import de.stefanlang.feature.objectdetail.model.indexOfResultForImage
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
-import de.stefanlang.metgallerybrowser.objectdetail.model.imageLoadResultForImage
-import de.stefanlang.metgallerybrowser.objectdetail.model.indexOfResultForImage
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -18,27 +17,57 @@ class ImageLoadResultTest : NetworkInstrumentedTest() {
 
     @Test
     fun testImageLoadResultForImage() {
-        val list = mutableListOf<ImageLoadResult>()
+        val list = mutableListOf<de.stefanlang.feature.objectdetail.model.ImageLoadResult>()
         assertTrue(list.imageLoadResultForImage(testImage) == null)
 
-        list.add(ImageLoadResult.Failure("", NetworkError.InvalidState))
-        list.add(ImageLoadResult.Success("http.//www.url-one.com", testImage2))
+        list.add(
+            de.stefanlang.feature.objectdetail.model.ImageLoadResult.Failure(
+                "",
+                NetworkError.InvalidState
+            )
+        )
+        list.add(
+            de.stefanlang.feature.objectdetail.model.ImageLoadResult.Success(
+                "http.//www.url-one.com",
+                testImage2
+            )
+        )
         assertTrue(list.imageLoadResultForImage(testImage) == null)
 
-        list.add(ImageLoadResult.Success("http.//www.url-two.com", testImage))
+        list.add(
+            de.stefanlang.feature.objectdetail.model.ImageLoadResult.Success(
+                "http.//www.url-two.com",
+                testImage
+            )
+        )
         assertTrue(list.imageLoadResultForImage(testImage) != null)
     }
 
     @Test
     fun testIndexOfResultForImage() {
-        val list = mutableListOf<ImageLoadResult>()
+        val list = mutableListOf<de.stefanlang.feature.objectdetail.model.ImageLoadResult>()
         assertTrue(list.indexOfResultForImage(testImage) == -1)
 
-        list.add(ImageLoadResult.Failure("", NetworkError.InvalidState))
-        list.add(ImageLoadResult.Success("http.//www.url-one.com", testImage2))
+        list.add(
+            de.stefanlang.feature.objectdetail.model.ImageLoadResult.Failure(
+                "",
+                NetworkError.InvalidState
+            )
+        )
+        list.add(
+            de.stefanlang.feature.objectdetail.model.ImageLoadResult.Success(
+                "http.//www.url-one.com",
+                testImage2
+            )
+        )
         assertTrue(list.indexOfResultForImage(testImage) == -1)
 
-        list.add(ImageLoadResult.Success("http.//www.url-two.com", testImage))
+        list.add(
+            de.stefanlang.feature.objectdetail.model.ImageLoadResult.Success(
+                "http.//www.url-two.com",
+                testImage
+            )
+        )
         assertTrue(list.indexOfResultForImage(testImage) == 2)
     }
 

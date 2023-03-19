@@ -1,10 +1,10 @@
-package de.stefanlang.metgallerybrowser.objectdetail.model
+package de.stefanlang.feature.objectdetail.model
 
 import android.content.Context
 import android.content.res.Resources
 import de.stefanlang.core.common.Empty.allNullOrBlank
 import de.stefanlang.core.common.HyperLink
-import de.stefanlang.metgallerybrowser.R
+import de.stefanlang.feature.objectdetail.R
 import javax.inject.Inject
 
 /**

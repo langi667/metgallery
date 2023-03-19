@@ -14,9 +14,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import de.stefanlang.core.domain.Defines
 import de.stefanlang.core.domain.navigation.NavRoute
 import de.stefanlang.feature.objectssearch.ui.ObjectsSearchView
-import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailView
 import de.stefanlang.metgallerybrowser.ui.theme.METGalleryBrowserTheme
 
 @AndroidEntryPoint
@@ -43,7 +43,10 @@ class MainActivity : ComponentActivity() {
                             arguments = NavRoute.ObjectDetail.navArgs
                         ) {
                             val objectID = it.arguments?.getInt("objectID") ?: Defines.InvalidID
-                            ObjectDetailView(navController, objectID)
+                            de.stefanlang.feature.objectdetail.ui.ObjectDetailView(
+                                navController,
+                                objectID
+                            )
                         }
                     }
                 }

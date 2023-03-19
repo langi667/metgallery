@@ -1,8 +1,9 @@
-package de.stefanlang.metgallerybrowser.objectdetail.repository
+package de.stefanlang.feature.objectdetail.repository
 
 import de.stefanlang.core.network.model.NetworkError
-import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObject
+import de.stefanlang.feature.objectdetail.api.ObjectDetailAPI
+import de.stefanlang.feature.objectdetail.model.METObject
+
 import de.stefanlang.repository.Repository
 import de.stefanlang.repository.SingleEntryRepository
 import javax.inject.Inject

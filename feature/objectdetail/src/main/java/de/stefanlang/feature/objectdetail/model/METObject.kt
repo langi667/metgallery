@@ -1,9 +1,10 @@
-package de.stefanlang.metgallerybrowser.objectdetail.model
+package de.stefanlang.feature.objectdetail.model
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import de.stefanlang.core.domain.Defines
 import de.stefanlang.core.domain.METAPIURLBuilder
-import de.stefanlang.metgallerybrowser.Defines
+
 import java.util.*
 
 @JsonIgnoreProperties(ignoreUnknown = true)

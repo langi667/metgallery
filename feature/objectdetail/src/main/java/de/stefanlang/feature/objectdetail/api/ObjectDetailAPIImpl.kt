@@ -1,11 +1,12 @@
-package de.stefanlang.metgallerybrowser.objectdetail.api
+package de.stefanlang.feature.objectdetail.api
 
 import de.stefanlang.core.domain.JSONParser
 import de.stefanlang.core.domain.METAPIURLBuilder
 import de.stefanlang.core.network.NetworkAPI
 import de.stefanlang.core.network.model.NetworkError
 import de.stefanlang.core.network.model.NetworkResponse
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObject
+import de.stefanlang.feature.objectdetail.model.METObject
+
 import javax.inject.Inject
 
 class ObjectDetailAPIImpl @Inject constructor(private val networkAPI: NetworkAPI) :

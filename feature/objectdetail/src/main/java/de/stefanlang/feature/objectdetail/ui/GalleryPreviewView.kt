@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
 import de.stefanlang.core.domain.Dimen
 import de.stefanlang.core.ui.RoundedImageView
-import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageData
-import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
-
+import de.stefanlang.feature.objectdetail.R
+import de.stefanlang.feature.objectdetail.model.ImageData
+import de.stefanlang.feature.objectdetail.model.ImageLoadResult
+import de.stefanlang.feature.objectdetail.ui.Tags
 
 @Composable
 fun GalleryPreviewView(

@@ -9,13 +9,10 @@ import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.core.domain.image.ImageAPI
 import de.stefanlang.core.domain.image.ImageRepositoryImpl
+import de.stefanlang.feature.objectdetail.model.METObjectEntryBuilder
+import de.stefanlang.feature.objectdetail.repository.METObjectRepositoryImpl
+import de.stefanlang.feature.objectdetail.ui.Tags
 import de.stefanlang.metgallerybrowser.*
-import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
-import de.stefanlang.metgallerybrowser.objectdetail.model.METObjectEntryBuilder
-import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
-import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailView
-import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailViewModel
-import de.stefanlang.metgallerybrowser.ui.common.Tags
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject
@@ -27,7 +24,7 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
     private val objectID: Int = 253343
 
     @Inject
-    lateinit var api: ObjectDetailAPI
+    lateinit var api: de.stefanlang.feature.objectdetail.api.ObjectDetailAPI
 
     @Inject
     lateinit var imageApi: ImageAPI
@@ -85,10 +82,10 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
 
     private fun setupRule(objectID: Int = this.objectID) {
         rule.setContent {
-            ObjectDetailView(
+            de.stefanlang.feature.objectdetail.ui.ObjectDetailView(
                 navController = rememberNavController(),
                 objectID = objectID,
-                viewModel = ObjectDetailViewModel(
+                viewModel = de.stefanlang.feature.objectdetail.ui.ObjectDetailViewModel(
                     ImageRepositoryImpl(15, imageApi),
                     METObjectRepositoryImpl(api),
                     METObjectEntryBuilder(appContext)
