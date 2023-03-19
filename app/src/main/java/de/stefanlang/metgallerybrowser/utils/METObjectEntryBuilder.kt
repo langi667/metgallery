@@ -2,8 +2,8 @@ package de.stefanlang.metgallerybrowser.utils
 
 import android.content.Context
 import android.content.res.Resources
-import de.stefanlang.core.models.HyperLink
-import de.stefanlang.core.utils.Empty.allNullOrBlank
+import de.stefanlang.core.common.Empty.allNullOrBlank
+import de.stefanlang.core.common.HyperLink
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.models.METObject
 import javax.inject.Inject

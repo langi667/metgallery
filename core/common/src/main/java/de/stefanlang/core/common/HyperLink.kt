@@ -1,4 +1,4 @@
-package de.stefanlang.core.models
+package de.stefanlang.core.common
 
 data class HyperLink(val url: String, val title: String = url) {
     companion object {

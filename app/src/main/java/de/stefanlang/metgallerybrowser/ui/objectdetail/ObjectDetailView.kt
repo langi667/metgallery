@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import de.stefanlang.core.ui.HyperlinkText
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.models.ImageLoadResult
 import de.stefanlang.metgallerybrowser.ui.common.*

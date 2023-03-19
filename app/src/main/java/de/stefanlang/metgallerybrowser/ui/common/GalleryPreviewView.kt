@@ -13,11 +13,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowRow
+import de.stefanlang.core.ui.RoundedImageView
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.models.ImageData
 import de.stefanlang.metgallerybrowser.models.ImageLoadResult
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
-import de.stefanlang.uicore.RoundedImageView
 
 
 @Composable

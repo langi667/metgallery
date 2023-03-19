@@ -37,9 +37,7 @@ android {
 }
 
 dependencies {
-
-    implementation project(path: ':core')
-
+    implementation project(path: ':core:common')
     implementation "androidx.core:core-ktx:$android_kotlin_ext_version"
     implementation "androidx.appcompat:appcompat:$android_activity_compose_version"
     implementation 'com.google.android.material:material:1.8.0'

@@ -1,6 +1,7 @@
-package de.stefanlang.core.utils
+package de.stefanlang.core.common
 
 object Empty {
+    @Suppress("unused")
     fun allNull(vararg args: Any?): Boolean {
         val firstNotNull = args.find {currArg ->
             currArg != null
