@@ -15,6 +15,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
 import de.stefanlang.core.domain.navigation.NavRoute
+import de.stefanlang.feature.objectssearch.ui.ObjectsSearchView
 import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailView
 import de.stefanlang.metgallerybrowser.ui.theme.METGalleryBrowserTheme
 
@@ -35,7 +36,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = NavRoute.ObjectsSearch.route
                     ) {
                         composable(NavRoute.ObjectsSearch.route) {
-                            de.stefanlang.objectssearch.ui.ObjectsSearchView(navController)
+                            ObjectsSearchView(navController)
                         }
                         composable(
                             route = NavRoute.ObjectDetail.route,

@@ -3,10 +3,10 @@ package de.stefanlang.metgallerybrowser.ui
 import androidx.compose.ui.test.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
+import de.stefanlang.feature.objectssearch.ui.Tags
 import de.stefanlang.metgallerybrowser.R
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithTag
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithText
-import de.stefanlang.objectssearch.ui.Tags
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
