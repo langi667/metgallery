@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.api
+package de.stefanlang.core.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -7,7 +7,7 @@ import de.stefanlang.core.network.model.NetworkError
 import de.stefanlang.core.network.model.NetworkResponse
 import javax.inject.Inject
 
-class METAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : METAPI {
+class ImageAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : ImageAPI {
 
     override suspend fun imageForURL(url: String): Result<Bitmap> {
         val response = networkAPI.get(url)

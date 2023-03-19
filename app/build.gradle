@@ -49,6 +49,7 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':core:api')
     implementation project(path: ':core:network')
     implementation project(path: ':core:ui')
     implementation project(path: ':core:common')

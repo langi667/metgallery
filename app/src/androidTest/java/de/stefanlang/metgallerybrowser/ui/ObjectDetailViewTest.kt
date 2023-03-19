@@ -8,7 +8,6 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.*
-import de.stefanlang.metgallerybrowser.api.METAPI
 import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
 import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
@@ -30,7 +29,7 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
     lateinit var api: ObjectDetailAPI
 
     @Inject
-    lateinit var imageApi: METAPI
+    lateinit var imageApi: de.stefanlang.core.api.ImageAPI
 
     @get:Rule
     val rule = createComposeRule()

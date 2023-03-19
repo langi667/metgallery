@@ -19,7 +19,7 @@
             <option value="$PROJECT_DIR$/core/network" />
             <option value="$PROJECT_DIR$/core/repository" />
             <option value="$PROJECT_DIR$/core/ui" />
-            <option value="$PROJECT_DIR$/features" />
+            <option value="$PROJECT_DIR$/feature" />
           </set>
         </option>
       </GradleProjectSettings>

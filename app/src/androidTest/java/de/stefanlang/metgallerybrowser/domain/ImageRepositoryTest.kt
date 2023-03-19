@@ -3,7 +3,6 @@ package de.stefanlang.metgallerybrowser.domain
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.metgallerybrowser.api.METAPI
 import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.*
@@ -16,7 +15,7 @@ import javax.inject.Inject
 class ImageRepositoryTest : HiltInstrumentedTest() {
 
     @Inject
-    lateinit var api: METAPI
+    lateinit var api: de.stefanlang.core.api.ImageAPI
 
     private lateinit var repo: ImageRepositoryImpl
 

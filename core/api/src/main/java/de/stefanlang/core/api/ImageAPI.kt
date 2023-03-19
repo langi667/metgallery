@@ -1,8 +1,8 @@
-package de.stefanlang.metgallerybrowser.api
+package de.stefanlang.core.api
 
 import android.graphics.Bitmap
 
-interface METAPI {
+interface ImageAPI {
 
     suspend fun imageForURL(url: String): Result<Bitmap>
 }

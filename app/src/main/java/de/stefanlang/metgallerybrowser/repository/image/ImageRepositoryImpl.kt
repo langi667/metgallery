@@ -1,14 +1,16 @@
 package de.stefanlang.metgallerybrowser.repository.image
 
 import android.graphics.Bitmap
-import de.stefanlang.metgallerybrowser.api.METAPI
 import de.stefanlang.repository.MultiEntryRepository
 import de.stefanlang.repository.Repository
 import javax.inject.Inject
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>
 
-class ImageRepositoryImpl @Inject constructor(maxImages: Int, val api: METAPI) :
+class ImageRepositoryImpl @Inject constructor(
+    maxImages: Int,
+    val api: de.stefanlang.core.api.ImageAPI
+) :
     MultiEntryRepository<String, Bitmap>(maxImages),
     ImageRepository {
 
