@@ -15,8 +15,8 @@
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/core" />
             <option value="$PROJECT_DIR$/core/common" />
+            <option value="$PROJECT_DIR$/core/network" />
             <option value="$PROJECT_DIR$/core/ui" />
-            <option value="$PROJECT_DIR$/network" />
           </set>
         </option>
       </GradleProjectSettings>

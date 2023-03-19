@@ -7,13 +7,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
+import de.stefanlang.core.network.model.NetworkError
 import de.stefanlang.metgallerybrowser.models.ImageData
 import de.stefanlang.metgallerybrowser.models.ImageLoadResult
 import de.stefanlang.metgallerybrowser.models.METObject
 import de.stefanlang.metgallerybrowser.repository.image.ImageRepository
 import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
-import de.stefanlang.network.model.NetworkError
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

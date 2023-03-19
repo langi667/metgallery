@@ -2,13 +2,13 @@ package de.stefanlang.metgallerybrowser.api
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import de.stefanlang.core.network.NetworkAPI
+import de.stefanlang.core.network.model.NetworkError
+import de.stefanlang.core.network.model.NetworkResponse
 import de.stefanlang.metgallerybrowser.models.METObject
 import de.stefanlang.metgallerybrowser.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.utils.JSONParser
 import de.stefanlang.metgallerybrowser.utils.METAPIURLBuilder
-import de.stefanlang.network.NetworkAPI
-import de.stefanlang.network.model.NetworkError
-import de.stefanlang.network.model.NetworkResponse
 import javax.inject.Inject
 
 class METAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : METAPI {

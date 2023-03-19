@@ -2,8 +2,8 @@ package de.stefanlang.metgallerybrowser.modules.network
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
+import de.stefanlang.core.network.NetworkAPI
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.network.NetworkAPI
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
