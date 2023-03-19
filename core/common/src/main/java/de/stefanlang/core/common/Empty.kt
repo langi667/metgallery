@@ -1,9 +1,12 @@
 package de.stefanlang.core.common
 
 object Empty {
+
+    // region Public API
+
     @Suppress("unused")
     fun allNull(vararg args: Any?): Boolean {
-        val firstNotNull = args.find {currArg ->
+        val firstNotNull = args.find { currArg ->
             currArg != null
         }
 
@@ -15,7 +18,7 @@ object Empty {
         val firstNotNull = args.find {currArg ->
             var retVal = currArg != null
 
-            if (currArg is String){
+            if (currArg is String) {
                 retVal = currArg.isNotBlank()
             }
 
@@ -25,4 +28,6 @@ object Empty {
         val retVal = firstNotNull == null
         return retVal
     }
+
+    // endregion
 }

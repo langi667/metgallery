@@ -1,5 +1,5 @@
 package de.stefanlang.core.domain
 
 object Defines {
-    val InvalidID = 0
+    const val InvalidID = 0
 }

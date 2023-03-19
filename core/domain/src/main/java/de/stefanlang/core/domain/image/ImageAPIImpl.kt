@@ -9,6 +9,8 @@ import javax.inject.Inject
 
 class ImageAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : ImageAPI {
 
+    // region Public API
+
     override suspend fun imageForURL(url: String): Result<Bitmap> {
         val response = networkAPI.get(url)
         val retVal = imageForResponse(response)
@@ -36,4 +38,5 @@ class ImageAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : ImageAPI {
         return retVal
     }
 
+    // endregion
 }

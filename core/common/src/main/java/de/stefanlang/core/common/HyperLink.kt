@@ -1,7 +1,11 @@
 package de.stefanlang.core.common
 
 data class HyperLink(val url: String, val title: String = url) {
+
     companion object {
+
+        // region Public API
+        
         fun createList(vararg args: String?): List<HyperLink> {
             val retVal = mutableListOf<HyperLink>()
 
@@ -13,5 +17,10 @@ data class HyperLink(val url: String, val title: String = url) {
 
             return retVal
         }
+
+        // endregion
     }
+
+
+
 }
