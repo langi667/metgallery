@@ -20,7 +20,4 @@ data class HyperLink(val url: String, val title: String = url) {
 
         // endregion
     }
-
-
-
 }

@@ -18,6 +18,10 @@ class ImageAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : ImageAPI {
         return retVal
     }
 
+    // endregion
+
+    // region Private API
+
     private fun imageForResponse(networkResponse: Result<NetworkResponse>): Result<Bitmap> {
         val imageData = networkResponse.getOrNull()?.data
         val error = networkResponse.exceptionOrNull()

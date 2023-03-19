@@ -49,7 +49,6 @@ fun HintView(@DrawableRes imgRes: Int, @StringRes textRes: Int) {
 
 @Composable
 fun IdleStateHint() {
-
     HintView(imgRes = R.drawable.idle_state_img, textRes = R.string.idle_state_hint)
 }
 

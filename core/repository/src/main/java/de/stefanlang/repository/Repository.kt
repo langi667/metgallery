@@ -32,6 +32,8 @@ abstract class Repository<QUERY, RESULT> {
 
     // endregion
 
+    // region Private API
+
     abstract fun entryForQuery(query: QUERY): Entry<QUERY, RESULT>?
     protected abstract fun storeEntry(entry: Entry<QUERY, RESULT>)
 
@@ -52,4 +54,6 @@ abstract class Repository<QUERY, RESULT> {
         val retVal = entry.query == query
         return retVal
     }
+
+    // endregion
 }

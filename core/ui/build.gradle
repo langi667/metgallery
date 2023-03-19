@@ -38,20 +38,20 @@ android {
 
 dependencies {
     implementation project(path: ':core:common')
-    implementation "androidx.core:core-ktx:1.9.0"
-    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation Deps.core
+    implementation Deps.androidxAppcompat
     implementation 'com.google.android.material:material:1.8.0'
-    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.6.0"
-    implementation "androidx.activity:activity-compose:1.6.1"
-    implementation "androidx.compose.ui:ui:1.3.3"
-    implementation "androidx.compose.ui:ui-tooling-preview:1.3.3"
-    implementation "androidx.compose.material:material:1.3.1"
+    implementation Deps.androidxLifecycleRuntime
+    implementation Deps.androidxActivityCompose
+    implementation Deps.androidxComposeUi
+    implementation Deps.androidxComposeUiTooling
+    implementation Deps.androidxComposeMaterial
 
-    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0"
-    implementation "androidx.activity:activity-compose:1.6.1"
-    implementation "androidx.navigation:navigation-compose:$android_navigation_compose"
+    implementation Deps.androidxLifecycleViewModelCompose
+    implementation Deps.androidxActivityCompose
+    implementation Deps.androidxNavigationCompose
 
-    testImplementation "junit:junit:4.13.2"
-    androidTestImplementation "androidx.test.ext:junit:$androidx_test_ext"
-    androidTestImplementation "androidx.test.espresso:espresso-core:3.5.1"
+    testImplementation TestDeps.junit
+    androidTestImplementation TestDeps.androidxTest
+    androidTestImplementation TestDeps.androidxEspresso
 }

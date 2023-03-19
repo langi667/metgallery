@@ -9,6 +9,8 @@ abstract class SingleEntryRepository<QUERY, RESULT> : Repository<QUERY, RESULT>(
 
     // endregion
 
+    // region Private API
+
     override fun storeEntry(entry: Entry<QUERY, RESULT>) {
         latest = entry
     }
@@ -21,4 +23,6 @@ abstract class SingleEntryRepository<QUERY, RESULT> : Repository<QUERY, RESULT>(
         }
         return retVal
     }
+
+    // endregion
 }
