@@ -16,4 +16,11 @@ class AppModule {
     fun provideMETObjectEntryBuilder(appContext: Application): METObjectEntryBuilder {
         return METObjectEntryBuilder(appContext)
     }
+
+    /*
+    @Provides
+    @Singleton
+    fun provideNetworkAPI(appContext: Application): NetworkAPI {
+        return NetworkAPI()
+    }*/
 }

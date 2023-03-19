@@ -3,7 +3,6 @@ package de.stefanlang.metgallerybrowser
 import android.content.Context
 import androidx.annotation.StringRes
 import androidx.test.platform.app.InstrumentationRegistry
-import de.stefanlang.network.NetworkAPI
 import org.junit.Assert
 
 open class NetworkInstrumentedTest {
@@ -18,7 +17,6 @@ open class NetworkInstrumentedTest {
 
     init {
         Assert.assertNotNull(appContext)
-        NetworkAPI.setup(appContext)
     }
 
     fun getString(@StringRes id: Int): String {

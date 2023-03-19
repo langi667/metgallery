@@ -10,11 +10,12 @@ import de.stefanlang.metgallerybrowser.domain.models.METObjectsSearchResult
 import de.stefanlang.network.NetworkAPI
 import de.stefanlang.network.NetworkError
 import de.stefanlang.network.NetworkResponse
+import javax.inject.Inject
 
-class METAPIImpl : METAPI {
+class METAPIImpl @Inject constructor(val networkAPI: NetworkAPI) : METAPI {
     override suspend fun objectForID(objectID: Int): Result<METObject> {
         val url = METAPIURLBuilder.objectURL(objectID)
-        val response = NetworkAPI.get(url)
+        val response = networkAPI.get(url)
 
         val retVal = createResultForResponse<METObject>(response, NetworkError.NotFound)
         return retVal
@@ -22,7 +23,7 @@ class METAPIImpl : METAPI {
 
     override suspend fun objectIDsForSearchQuery(query: String): Result<METObjectsSearchResult> {
         val url = METAPIURLBuilder.objectsSearchURL(query)
-        val response = NetworkAPI.get(url)
+        val response = networkAPI.get(url)
 
         val retVal = createResultForResponse<METObjectsSearchResult>(response)
         return retVal
@@ -30,7 +31,7 @@ class METAPIImpl : METAPI {
     }
 
     override suspend fun imageForURL(url: String): Result<Bitmap> {
-        val response = NetworkAPI.get(url)
+        val response = networkAPI.get(url)
         val retVal = imageForResponse(response)
 
         return retVal

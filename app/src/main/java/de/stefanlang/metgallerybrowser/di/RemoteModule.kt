@@ -6,6 +6,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import de.stefanlang.metgallerybrowser.data.remote.METAPI
 import de.stefanlang.metgallerybrowser.domain.remote.METAPIImpl
+import de.stefanlang.network.NetworkAPI
 import javax.inject.Singleton
 
 @Module
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 object RemoteModule {
     @Provides
     @Singleton
-    fun provideMETAPI(): METAPI {
-        return METAPIImpl()
+    fun provideMETAPI(networkAPI: NetworkAPI): METAPI {
+        return METAPIImpl(networkAPI)
     }
 }

@@ -1,20 +1,27 @@
 package de.stefanlang.metgallerybrowser.modules.network
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
+import dagger.hilt.android.testing.HiltAndroidTest
+import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
 import de.stefanlang.network.NetworkAPI
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 
+@HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class NetworkAPITest : NetworkInstrumentedTest() {
+class NetworkAPITest : HiltInstrumentedTest() {
+
+    @Inject
+    lateinit var networkAPI: NetworkAPI
+
     @Test
     fun testNetworkAPISuccess() {
         runBlocking {
-            val response = NetworkAPI.get("https://www.google.com")
+            val response = networkAPI.get("https://www.google.com")
             assertTrue(response.isSuccess)
         }
     }
@@ -22,7 +29,7 @@ class NetworkAPITest : NetworkInstrumentedTest() {
     @Test
     fun testNetworkAPIFail() {
         runBlocking {
-            val response = NetworkAPI.get("https://doesnotexists")
+            val response = networkAPI.get("https://doesnotexists")
             assertTrue(response.isFailure)
         }
     }
