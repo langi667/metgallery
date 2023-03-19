@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.data.utils
+package de.stefanlang.metgallerybrowser.utils
 
 import com.fasterxml.jackson.databind.ObjectMapper
 

@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.domain.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.models.METObjectsSearchResult
 import de.stefanlang.metgallerybrowser.ui.common.ErrorStateHint
 import de.stefanlang.metgallerybrowser.ui.common.IdleStateHint
 import de.stefanlang.metgallerybrowser.ui.common.NoResultsHint

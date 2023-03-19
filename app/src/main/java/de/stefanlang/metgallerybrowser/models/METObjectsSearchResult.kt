@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.domain.models
+package de.stefanlang.metgallerybrowser.models
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 

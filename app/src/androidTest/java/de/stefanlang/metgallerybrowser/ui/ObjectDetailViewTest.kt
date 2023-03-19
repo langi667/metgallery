@@ -8,13 +8,13 @@ import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.*
-import de.stefanlang.metgallerybrowser.data.remote.METAPI
-import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepositoryImpl
+import de.stefanlang.metgallerybrowser.api.METAPI
+import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
+import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepositoryImpl
 import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
 import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailViewModel
+import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 import org.junit.Rule
 import org.junit.Test
 import javax.inject.Inject

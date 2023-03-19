@@ -14,10 +14,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
-import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
+import de.stefanlang.metgallerybrowser.models.ImageLoadResult
 import de.stefanlang.metgallerybrowser.ui.common.*
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
+import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 
 // region Public API
 

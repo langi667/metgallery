@@ -1,8 +1,8 @@
-package de.stefanlang.metgallerybrowser.data.remote
+package de.stefanlang.metgallerybrowser.api
 
 import android.graphics.Bitmap
-import de.stefanlang.metgallerybrowser.domain.models.METObject
-import de.stefanlang.metgallerybrowser.domain.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.models.METObject
+import de.stefanlang.metgallerybrowser.models.METObjectsSearchResult
 
 interface METAPI {
     suspend fun objectForID(objectID: Int): Result<METObject>

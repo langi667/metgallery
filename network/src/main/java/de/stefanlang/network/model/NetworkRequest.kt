@@ -1,7 +1,5 @@
-package de.stefanlang.network
+package de.stefanlang.network.model
 
-import de.stefanlang.network.NetworkRequestHeader
-import de.stefanlang.network.NetworkResponse
 import org.chromium.net.CronetEngine
 import org.chromium.net.CronetException
 import org.chromium.net.UrlRequest
@@ -12,7 +10,7 @@ import java.nio.ByteBuffer
 import java.nio.channels.Channels
 import java.util.concurrent.Executor
 
-typealias NetworkRequestProgressUpdate = (NetworkRequest.State) -> Unit;
+typealias NetworkRequestProgressUpdate = (NetworkRequest.State) -> Unit
 
 class NetworkRequest(val id: Int) : UrlRequest.Callback() {
 
@@ -24,7 +22,7 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
         private val cronetEngine: CronetEngine,
         private val executor: Executor
     ) {
-        private var method: HTTPMethod = HTTPMethod.GET;
+        private var method: HTTPMethod = HTTPMethod.GET
         private val headers: NetworkRequestHeader by lazy {
             NetworkRequestHeader()
         }
@@ -44,7 +42,7 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
             }
 
             val request: UrlRequest = requestBuilder.build()
-            retVal.request = request;
+            retVal.request = request
 
             return retVal
         }
@@ -54,6 +52,7 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
             return this
         }
 
+        @Suppress("unused")
         fun addHeader(key: String, value: String): Builder {
             headers[key] = value
             return this
@@ -108,15 +107,15 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
                 return
             }
 
-            field = value;
-            handleStateChanged();
+            field = value
+            handleStateChanged()
         }
 
     private val bytesReceived = ByteArrayOutputStream()
     private val receiveChannel = Channels.newChannel(bytesReceived)
 
     private var progressUpdate: NetworkRequestProgressUpdate? = null
-    private var request: UrlRequest? = null;
+    private var request: UrlRequest? = null
 
     // endregion
 
@@ -124,7 +123,7 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
 
     override fun equals(other: Any?): Boolean {
         if (super.equals(other)) {
-            return true;
+            return true
         }
 
         val otherAsNetworkRequest = other as? NetworkRequest ?: return false
@@ -141,7 +140,7 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
         this.progressUpdate = progressUpdate
         request?.start()
 
-        state = State.Started;
+        state = State.Started
         return true
     }
 
@@ -158,7 +157,7 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
     }
 
     override fun onResponseStarted(request: UrlRequest?, info: UrlResponseInfo?) {
-        state = State.ReceivingResponse;
+        state = State.ReceivingResponse
 
         val size = (1024 * 1024)
 
@@ -195,6 +194,18 @@ class NetworkRequest(val id: Int) : UrlRequest.Callback() {
     private fun createResponse(): NetworkResponse {
         val retVal = NetworkResponse(id, responseData)
         return retVal
+    }
+
+    override fun hashCode(): Int {
+        var result = id
+        result = 31 * result + responseData.contentHashCode()
+        result = 31 * result + (error?.hashCode() ?: 0)
+        result = 31 * result + state.hashCode()
+        result = 31 * result + bytesReceived.hashCode()
+        result = 31 * result + (receiveChannel?.hashCode() ?: 0)
+        result = 31 * result + (progressUpdate?.hashCode() ?: 0)
+        result = 31 * result + (request?.hashCode() ?: 0)
+        return result
     }
 
     // endregion

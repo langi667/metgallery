@@ -1,10 +1,9 @@
-package de.stefanlang.metgallerybrowser.domain.repository
+package de.stefanlang.metgallerybrowser.repository.metobject
 
-import de.stefanlang.metgallerybrowser.data.remote.METAPI
-import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.data.repository.Repository
-import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
-import de.stefanlang.metgallerybrowser.domain.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.api.METAPI
+import de.stefanlang.metgallerybrowser.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.repository.Repository
+import de.stefanlang.metgallerybrowser.repository.SingleEntryRepository
 import javax.inject.Inject
 
 typealias METObjectsSearchRepositoryEntry = Repository.Entry<String, METObjectsSearchResult>

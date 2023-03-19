@@ -1,7 +1,4 @@
-package de.stefanlang.network
-
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
+package de.stefanlang.network.model
 
 data class NetworkResponse(val id: Int, val data: ByteArray) {
 

@@ -1,11 +1,10 @@
-package de.stefanlang.metgallerybrowser.domain.repository
+package de.stefanlang.metgallerybrowser.repository.metobject
 
-import de.stefanlang.metgallerybrowser.data.remote.METAPI
-import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
-import de.stefanlang.metgallerybrowser.data.repository.Repository
-import de.stefanlang.metgallerybrowser.data.repository.SingleEntryRepository
-import de.stefanlang.metgallerybrowser.domain.models.METObject
-import de.stefanlang.network.NetworkError
+import de.stefanlang.metgallerybrowser.api.METAPI
+import de.stefanlang.metgallerybrowser.models.METObject
+import de.stefanlang.metgallerybrowser.repository.Repository
+import de.stefanlang.metgallerybrowser.repository.SingleEntryRepository
+import de.stefanlang.network.model.NetworkError
 import javax.inject.Inject
 
 typealias METObjectsRepositoryEntry = Repository.Entry<Int, METObject>

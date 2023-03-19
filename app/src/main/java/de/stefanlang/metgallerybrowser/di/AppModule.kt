@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import de.stefanlang.metgallerybrowser.domain.METObjectEntryBuilder
+import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 import javax.inject.Singleton
 
 @Module
@@ -16,11 +16,4 @@ class AppModule {
     fun provideMETObjectEntryBuilder(appContext: Application): METObjectEntryBuilder {
         return METObjectEntryBuilder(appContext)
     }
-
-    /*
-    @Provides
-    @Singleton
-    fun provideNetworkAPI(appContext: Application): NetworkAPI {
-        return NetworkAPI()
-    }*/
 }

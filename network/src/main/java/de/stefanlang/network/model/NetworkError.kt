@@ -1,4 +1,4 @@
-package de.stefanlang.network
+package de.stefanlang.network.model
 
 data class NetworkError(val code: Int, val text: String = "NetworkError") : Throwable(text) {
 
@@ -11,7 +11,7 @@ data class NetworkError(val code: Int, val text: String = "NetworkError") : Thro
         const val NotFoundError = 404
 
         val InvalidState =
-            NetworkError(InvalidStateError, "Invalid request state ${InvalidStateError}")
+            NetworkError(InvalidStateError, "Invalid request state $InvalidStateError")
 
         val Unknown =
             NetworkError(UnknownNetworkError, "Unknown error")

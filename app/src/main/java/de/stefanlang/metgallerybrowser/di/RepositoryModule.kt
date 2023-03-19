@@ -5,13 +5,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import dagger.hilt.android.scopes.ViewModelScoped
-import de.stefanlang.metgallerybrowser.data.remote.METAPI
-import de.stefanlang.metgallerybrowser.data.repository.ImageRepository
-import de.stefanlang.metgallerybrowser.data.repository.METObjectRepository
-import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectRepositoryImpl
-import de.stefanlang.metgallerybrowser.domain.repository.METObjectsSearchRepositoryImpl
+import de.stefanlang.metgallerybrowser.api.METAPI
+import de.stefanlang.metgallerybrowser.repository.image.ImageRepository
+import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
+import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepository
+import de.stefanlang.metgallerybrowser.repository.metobject.METObjectRepositoryImpl
+import de.stefanlang.metgallerybrowser.repository.metobject.METObjectsSearchRepository
+import de.stefanlang.metgallerybrowser.repository.metobject.METObjectsSearchRepositoryImpl
 import javax.inject.Named
 
 

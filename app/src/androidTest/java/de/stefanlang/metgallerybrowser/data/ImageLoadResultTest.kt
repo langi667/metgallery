@@ -3,10 +3,10 @@ package de.stefanlang.metgallerybrowser.data
 import android.graphics.Bitmap
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
-import de.stefanlang.metgallerybrowser.domain.imageLoadResultForImage
-import de.stefanlang.metgallerybrowser.domain.indexOfResultForImage
-import de.stefanlang.network.NetworkError
+import de.stefanlang.metgallerybrowser.models.ImageLoadResult
+import de.stefanlang.metgallerybrowser.models.imageLoadResultForImage
+import de.stefanlang.metgallerybrowser.models.indexOfResultForImage
+import de.stefanlang.network.model.NetworkError
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith

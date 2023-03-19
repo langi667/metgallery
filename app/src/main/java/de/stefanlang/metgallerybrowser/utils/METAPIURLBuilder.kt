@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.domain
+package de.stefanlang.metgallerybrowser.utils
 
 import android.net.Uri
 
@@ -6,8 +6,8 @@ object METAPIURLBuilder {
 
     // region Properties
 
-    private const val authority = "collectionapi.metmuseum.org";
-    private const val version = "v1";
+    private const val authority = "collectionapi.metmuseum.org"
+    private const val version = "v1"
 
     // endregion
 

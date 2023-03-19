@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.domain
+package de.stefanlang.metgallerybrowser.models
 
 import android.graphics.Bitmap
 

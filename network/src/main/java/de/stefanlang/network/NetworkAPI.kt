@@ -1,5 +1,6 @@
 package de.stefanlang.network
 
+import de.stefanlang.network.model.*
 import org.chromium.net.CronetEngine
 import java.util.concurrent.Executor
 import java.util.concurrent.atomic.AtomicInteger

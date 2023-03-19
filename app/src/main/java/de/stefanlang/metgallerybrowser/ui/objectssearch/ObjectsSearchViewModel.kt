@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import dagger.hilt.android.lifecycle.HiltViewModel
-import de.stefanlang.metgallerybrowser.data.repository.METObjectsSearchRepository
-import de.stefanlang.metgallerybrowser.domain.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.models.METObjectsSearchResult
+import de.stefanlang.metgallerybrowser.repository.metobject.METObjectsSearchRepository
 import de.stefanlang.metgallerybrowser.ui.navigation.navigateToObjectDetail
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -1,6 +1,6 @@
 package de.stefanlang
 
-import de.stefanlang.metgallerybrowser.data.utils.JSONParser
+import de.stefanlang.metgallerybrowser.utils.JSONParser
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.domain.models
+package de.stefanlang.metgallerybrowser.models
 
 data class ImageData(
     val imageURL: String,

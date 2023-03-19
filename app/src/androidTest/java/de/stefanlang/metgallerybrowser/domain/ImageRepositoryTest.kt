@@ -3,8 +3,8 @@ package de.stefanlang.metgallerybrowser.domain
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.metgallerybrowser.data.remote.METAPI
-import de.stefanlang.metgallerybrowser.domain.repository.ImageRepositoryImpl
+import de.stefanlang.metgallerybrowser.api.METAPI
+import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.Assert.*

@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.data.repository
+package de.stefanlang.metgallerybrowser.repository.image
 
 import android.graphics.Bitmap
 

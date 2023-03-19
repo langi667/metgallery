@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
-import de.stefanlang.metgallerybrowser.domain.ImageLoadResult
+import de.stefanlang.metgallerybrowser.models.ImageLoadResult
 import de.stefanlang.metgallerybrowser.ui.theme.Dimen
 
 @OptIn(ExperimentalFoundationApi::class)
