@@ -1,7 +1,7 @@
 package de.stefanlang
 
 import de.stefanlang.core.network.model.NetworkError
-import de.stefanlang.metgallerybrowser.repository.Repository
+import de.stefanlang.repository.Repository
 import org.junit.Assert.*
 import org.junit.Test
 

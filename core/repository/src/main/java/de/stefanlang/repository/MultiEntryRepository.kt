@@ -1,9 +1,6 @@
-package de.stefanlang.metgallerybrowser.repository
+package de.stefanlang.repository
 
-import androidx.annotation.IntRange
-
-// TODO: Consider either 0 or null as no limits
-abstract class MultiEntryRepository<QUERY, RESULT>(@IntRange(1) val maxEntries: Int = 15) :
+abstract class MultiEntryRepository<QUERY, RESULT>(val maxEntries: Int = 15) :
     Repository<QUERY, RESULT>() {
 
     // region Properties

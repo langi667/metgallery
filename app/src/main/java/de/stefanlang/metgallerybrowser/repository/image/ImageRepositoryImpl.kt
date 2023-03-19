@@ -2,8 +2,8 @@ package de.stefanlang.metgallerybrowser.repository.image
 
 import android.graphics.Bitmap
 import de.stefanlang.metgallerybrowser.api.METAPI
-import de.stefanlang.metgallerybrowser.repository.MultiEntryRepository
-import de.stefanlang.metgallerybrowser.repository.Repository
+import de.stefanlang.repository.MultiEntryRepository
+import de.stefanlang.repository.Repository
 import javax.inject.Inject
 
 typealias ImageRepositoryEntry = Repository.Entry<String, Bitmap>

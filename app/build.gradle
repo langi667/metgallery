@@ -52,6 +52,7 @@ dependencies {
     implementation project(path: ':core:network')
     implementation project(path: ':core:ui')
     implementation project(path: ':core:common')
+    implementation project(path: ':core:repository')
 
     implementation "androidx.core:core-ktx:$android_kotlin_ext_version"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:$android_lifecycle_version"

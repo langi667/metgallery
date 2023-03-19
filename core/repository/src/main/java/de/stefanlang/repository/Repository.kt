@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.repository
+package de.stefanlang.repository
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

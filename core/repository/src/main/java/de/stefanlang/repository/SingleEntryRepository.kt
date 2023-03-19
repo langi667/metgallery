@@ -1,4 +1,4 @@
-package de.stefanlang.metgallerybrowser.repository
+package de.stefanlang.repository
 
 abstract class SingleEntryRepository<QUERY, RESULT> : Repository<QUERY, RESULT>() {
 

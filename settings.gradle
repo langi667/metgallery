@@ -19,3 +19,5 @@ include ':core'
 include ':core:common'
 include ':core:ui'
 include ':core:network'
+
+include ':core:repository'
