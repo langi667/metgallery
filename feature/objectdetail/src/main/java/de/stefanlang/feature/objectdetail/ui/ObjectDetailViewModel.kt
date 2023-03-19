@@ -54,7 +54,7 @@ class ObjectDetailViewModel @Inject constructor(
             return retVal
         }
 
-    private val _uiState = MutableStateFlow<UIState>(UIState.Loading)
+    private val _uistate = MutableStateFlow<UIState>(UIState.Loading)
     private val objectID = MutableStateFlow<Int?>(null)
 
     val uiState = objectID
@@ -70,7 +70,7 @@ class ObjectDetailViewModel @Inject constructor(
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),
-            _uiState.value
+            _uistate.value
         )
 
     private val metObject: METObject?
