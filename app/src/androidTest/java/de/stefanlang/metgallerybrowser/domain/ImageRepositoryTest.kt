@@ -2,8 +2,9 @@ package de.stefanlang.metgallerybrowser.domain
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
+import de.stefanlang.core.domain.image.ImageAPI
+import de.stefanlang.core.domain.image.ImageRepositoryImpl
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.*
 import org.junit.Assert.*
@@ -15,7 +16,7 @@ import javax.inject.Inject
 class ImageRepositoryTest : HiltInstrumentedTest() {
 
     @Inject
-    lateinit var api: de.stefanlang.core.api.ImageAPI
+    lateinit var api: ImageAPI
 
     private lateinit var repo: ImageRepositoryImpl
 

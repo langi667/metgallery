@@ -3,8 +3,6 @@ package de.stefanlang.metgallerybrowser.domain
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.HiltInstrumentedTest
-import de.stefanlang.metgallerybrowser.search.api.ObjectsSearchAPI
-import de.stefanlang.metgallerybrowser.search.repository.METObjectsSearchRepositoryImpl
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.*
 import org.junit.Test
@@ -15,7 +13,7 @@ import javax.inject.Inject
 @RunWith(AndroidJUnit4::class)
 class METObjectsSearchRepositoryTest : HiltInstrumentedTest() {
     @Inject
-    lateinit var api: ObjectsSearchAPI
+    lateinit var api: de.stefanlang.objectssearch.api.ObjectsSearchAPI
     private val failQuery = "343hdfberj"
     private val successQuery = "sunflower"
 
@@ -117,8 +115,8 @@ class METObjectsSearchRepositoryTest : HiltInstrumentedTest() {
         }
     }
 
-    private fun createRepo(): METObjectsSearchRepositoryImpl {
-        val retVal = METObjectsSearchRepositoryImpl(api)
+    private fun createRepo(): de.stefanlang.objectssearch.repository.METObjectsSearchRepositoryImpl {
+        val retVal = de.stefanlang.objectssearch.repository.METObjectsSearchRepositoryImpl(api)
         return retVal
     }
 }

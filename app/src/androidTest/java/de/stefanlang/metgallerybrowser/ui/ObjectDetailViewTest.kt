@@ -7,13 +7,14 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.testing.HiltAndroidTest
+import de.stefanlang.core.domain.image.ImageAPI
+import de.stefanlang.core.domain.image.ImageRepositoryImpl
 import de.stefanlang.metgallerybrowser.*
 import de.stefanlang.metgallerybrowser.objectdetail.api.ObjectDetailAPI
 import de.stefanlang.metgallerybrowser.objectdetail.repository.METObjectRepositoryImpl
-import de.stefanlang.metgallerybrowser.repository.image.ImageRepositoryImpl
+import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailView
+import de.stefanlang.metgallerybrowser.objectdetail.ui.ObjectDetailViewModel
 import de.stefanlang.metgallerybrowser.ui.common.Tags
-import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailView
-import de.stefanlang.metgallerybrowser.ui.objectdetail.ObjectDetailViewModel
 import de.stefanlang.metgallerybrowser.utils.METObjectEntryBuilder
 import org.junit.Rule
 import org.junit.Test
@@ -29,7 +30,7 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
     lateinit var api: ObjectDetailAPI
 
     @Inject
-    lateinit var imageApi: de.stefanlang.core.api.ImageAPI
+    lateinit var imageApi: ImageAPI
 
     @get:Rule
     val rule = createComposeRule()
@@ -37,14 +38,18 @@ class ObjectDetailViewTest : HiltInstrumentedTest() {
     @Test
     fun testLoadingState() {
         setupRule()
-        rule.onNodeWithText(getString(R.string.loading_state_hint)).assertExists()
+        rule.onNodeWithText(getString(de.stefanlang.core.api.R.string.loading_state_hint))
+            .assertExists()
         rule.onNodeWithTag(Tags.PROGRESSBAR.name).assertExists()
     }
 
     @Test
     fun testNotFound() {
         setupRule(-1)
-        rule.waitUntilFoundWithText(Timeout.LONG, getString(R.string.no_results_state_hint))
+        rule.waitUntilFoundWithText(
+            Timeout.LONG,
+            getString(de.stefanlang.core.api.R.string.no_results_state_hint)
+        )
     }
 
     @Test

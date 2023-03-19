@@ -22,4 +22,5 @@ include ':core:network'
 
 include ':core:repository'
 include ':feature'
-include ':core:api'
+include ':core:domain'
+include ':feature:objectssearch'

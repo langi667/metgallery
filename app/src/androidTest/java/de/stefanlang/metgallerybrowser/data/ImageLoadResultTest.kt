@@ -4,9 +4,9 @@ import android.graphics.Bitmap
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import de.stefanlang.core.network.model.NetworkError
 import de.stefanlang.metgallerybrowser.NetworkInstrumentedTest
-import de.stefanlang.metgallerybrowser.models.ImageLoadResult
-import de.stefanlang.metgallerybrowser.models.imageLoadResultForImage
-import de.stefanlang.metgallerybrowser.models.indexOfResultForImage
+import de.stefanlang.metgallerybrowser.objectdetail.model.ImageLoadResult
+import de.stefanlang.metgallerybrowser.objectdetail.model.imageLoadResultForImage
+import de.stefanlang.metgallerybrowser.objectdetail.model.indexOfResultForImage
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith

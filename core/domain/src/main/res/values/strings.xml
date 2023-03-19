@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title">MET Gallery Browser</string>
+    <string name="no_results_state_hint">Sorry no results 😏 Try another!</string>
+    <string name="error_state_hint">Oopsi, something went wrong 😔\nCheck internet connection and try again.</string>
+    <string name="loading_state_hint">Searching for it!</string>
+    <string name="idle_state_hint">Type in your search term.</string>
+</resources>

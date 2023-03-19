@@ -4,9 +4,9 @@ import androidx.compose.ui.test.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import dagger.hilt.android.testing.HiltAndroidTest
 import de.stefanlang.metgallerybrowser.R
-import de.stefanlang.metgallerybrowser.ui.common.Tags
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithTag
 import de.stefanlang.metgallerybrowser.waitUntilFoundWithText
+import de.stefanlang.objectssearch.ui.Tags
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -33,7 +33,10 @@ class ObjectsSearchViewTest : MainActivityTest() {
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performTextInput("jjrerjkejdncdskerwkrmf")
         rule.onNodeWithTag(Tags.SEARCH_FIELD.name).performImeAction()
 
-        rule.waitUntilFoundWithText(Timeout.LONG, getString(R.string.no_results_state_hint))
+        rule.waitUntilFoundWithText(
+            Timeout.LONG,
+            getString(de.stefanlang.core.api.R.string.no_results_state_hint)
+        )
     }
 
     @Test
